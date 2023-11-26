@@ -50,16 +50,7 @@ fun PreviewRoomsToJoinScreen(){
             Box(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Button(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier.padding(start = 15.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.seta_esquerda),
-                        contentDescription = "back arrow",
-                        modifier = Modifier.width(20.dp)
-                    )
-                }
+                BackButton(onButtonClick={/*TODO: go to UserRoomsScreen*/})
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -103,6 +94,9 @@ fun PreviewRoomsToJoinScreen(){
         AppBottomMenu(inFriendScreen = false, inHomeScreen = true, inProfileScreen = false)
     }
 }
+
+
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewRoomsToJoinScreenPreview() {
