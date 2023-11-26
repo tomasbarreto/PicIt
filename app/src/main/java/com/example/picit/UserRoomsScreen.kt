@@ -118,7 +118,7 @@ fun SearchBar() {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun UserRoomsScreenPreview() {
     PicItTheme {
         UserRoomsScreen()
     }
