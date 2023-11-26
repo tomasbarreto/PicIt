@@ -31,7 +31,13 @@ fun LeaderboardScreen(){
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         RoomHeader()
-        BackButton()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            BackButton(onButtonClick={/*TODO: go to UserRoomsScreen*/})
+        }
+
 
         Row(
             modifier = Modifier.fillMaxWidth(),
