@@ -22,5 +22,5 @@ fun RoomHeader() {
     {
         Text(text="Room Name", fontSize = 25.sp)
     }
-    Divider(color = Color.Black, thickness = 1.dp)
+//    Divider(color = Color.Black, thickness = 1.dp)
 }

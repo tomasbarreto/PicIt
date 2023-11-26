@@ -2,8 +2,10 @@ package com.example.picit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,21 +32,21 @@ fun LeaderboardScreen(){
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        RoomHeader()
-        Row(
+        Spacer(modifier = Modifier.height(60.dp))
+        Box(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
         ) {
             BackButton(onButtonClick={/*TODO: go to UserRoomsScreen*/})
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Leaderboard", fontSize = 32.sp, fontWeight = FontWeight.Bold)
+            }
         }
 
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(text = "Leaderboard", fontSize = 32.sp, fontWeight = FontWeight.Bold)
-        }
+        RoomHeader()
 
         Row(
             modifier = Modifier
