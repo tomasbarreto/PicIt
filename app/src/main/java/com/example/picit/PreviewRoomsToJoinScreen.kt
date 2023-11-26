@@ -1,5 +1,6 @@
 package com.example.picit
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,29 +48,25 @@ fun PreviewRoomsToJoinScreen(){
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
-                modifier = Modifier
-                    .weight(1f)
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Button(
-                    colors = ButtonDefaults.buttonColors(Color.Transparent),
-                    onClick = { /*TODO: go to UserRoomsScreen*/ },
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.padding(start = 15.dp)
                 ) {
-                    Icon(
-                        Icons.Filled.ArrowBack,
-                        contentDescription = null,
-                        tint =Color.Black,
-                        modifier = Modifier
-                            .size(32.dp)
+                    Image(
+                        painter = painterResource(id = R.drawable.seta_esquerda),
+                        contentDescription = "back arrow",
+                        modifier = Modifier.width(20.dp)
                     )
                 }
-                Text(
-                    text = "Rooms to Join",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(text = "Join room", fontSize = 32.sp, fontWeight = FontWeight.Bold)
+                }
             }
 
 
