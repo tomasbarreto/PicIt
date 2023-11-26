@@ -102,36 +102,6 @@ fun UserRoomsScreen(){
     }
 }
 
-@Composable
-fun RoomPreview(roomName: String, roomMaxSize: Int, usersInRoom: Int, gameType: String, maxDailyChallenges: Int, challengesDone: Int) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(.8f)
-            .height(160.dp)
-            .border(
-                width = 2.dp,
-                color = Color.Black,
-                shape = RoundedCornerShape(30.dp)
-            )
-            .padding(12.dp)
-            .clickable { }, // TODO: vai ser preciso um room id para direcionar para a salar certa?
-        verticalArrangement = Arrangement.SpaceAround
-    ) {
-        Text(text = roomName, fontSize = 20.sp)
-        Row{
-            Text(text = "$usersInRoom/$roomMaxSize" )
-            Icon(Icons.Filled.Person, contentDescription = null)
-        }
-        Row{
-            Text(text = gameType)
-        }
-        Row{
-            Text(text = "$challengesDone/$maxDailyChallenges")
-            Icon(Icons.Filled.Done, contentDescription = null)
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar() {
