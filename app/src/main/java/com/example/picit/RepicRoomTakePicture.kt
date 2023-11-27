@@ -50,7 +50,9 @@ fun RepicRoomTakePicture(){
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        Row (modifier = Modifier.fillMaxWidth().height(50.dp),
+        Row (modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically)
         {
@@ -58,7 +60,9 @@ fun RepicRoomTakePicture(){
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(20.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Image(
@@ -66,6 +70,8 @@ fun RepicRoomTakePicture(){
                 contentDescription = "woman kissing the sunset",
             )
         }
+        TimeLeftDisplay("Photo")
+
 
 
 
