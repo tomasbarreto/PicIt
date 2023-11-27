@@ -63,10 +63,20 @@ fun RepicRoomTakePicture(){
             )
         }
 
+        Spacer(modifier = Modifier.height(20.dp))
+
         TimeLeftDisplay("Photo")
-        Row(modifier = Modifier.fillMaxWidth().padding(40.dp),
-            horizontalArrangement = Arrangement.Center) {
-            TakePhotoButton(onButtonClick = {/*TODO: go to Camera*/ })
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start=20.dp, end=20.dp, top=65.dp, bottom = 120.dp)) {
+            Column (modifier = Modifier.weight(0.70F),
+                horizontalAlignment = Alignment.CenterHorizontally){
+                TakePhotoButton(onButtonClick = {/*TODO: go to Camera*/ })
+            }
+            Column(modifier = Modifier.weight(0.30F),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                LeaderboardButton(onButtonClick = {/*TODO: go to Leaderboard*/ })
+            }
         }
 
 
