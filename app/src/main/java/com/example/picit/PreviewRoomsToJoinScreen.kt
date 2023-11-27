@@ -62,8 +62,25 @@ fun PreviewRoomsToJoinScreen(){
 
 
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.9f),
+            horizontalArrangement = Arrangement.End
+        ){
+            Button(
+                onClick = { /*TODO: screen/window to filter rooms*/ },
+                colors = ButtonDefaults.buttonColors(Color.Transparent)
 
-        Spacer(modifier = Modifier.height(32.dp))
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.filter),
+                    contentDescription = "filter",
+                    modifier = Modifier
+                        .size(40.dp)
+                )
+            }
+        }
 
         // Public rooms in the system, get from databse
         var nRooms = 2;
