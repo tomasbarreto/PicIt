@@ -1,8 +1,6 @@
 package com.example.picit.picdesccreateroom
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,19 +21,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.picit.R
 import com.example.picit.ScreenHeader
+import com.example.picit.createroom.InsertTime
 import com.example.picit.ui.theme.PicItTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoomTimeSettings(modifier: Modifier = Modifier) {
+fun RoomTimeSettingsPicDesc(modifier: Modifier = Modifier) {
     var hoursDescRelease by remember { mutableStateOf("") }
     var minutesDescRelease by remember { mutableStateOf("") }
 
@@ -100,49 +96,10 @@ fun RoomTimeSettings(modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun InsertTime(modifier: Modifier = Modifier) {
-    var hours by remember { mutableStateOf("") }
-    var minutes by remember { mutableStateOf("") }
-
-    var maxHours = 23
-    var maxMinutes = 59
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        TextField(
-            value = hours,
-            onValueChange = { if (it == "") { hours = "" } else { if (it.toInt() <= maxHours) { if (it.length <= 2) { hours = it } } else {
-                hours =
-                    maxHours.toString()
-            } } },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            maxLines = 1,
-            modifier = Modifier.width(70.dp)
-        )
-
-        Text(text = " : ", fontSize = 32.sp, modifier = Modifier.padding(vertical = 5.dp))
-
-        TextField(
-            value = minutes,
-            onValueChange = { if (it == "") { minutes = "" } else { if (it.toInt() <= maxMinutes) { if (it.length <= 2) { minutes = it }} else {
-                minutes =
-                    maxMinutes.toString()
-            } } },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            maxLines = 1,
-            modifier = Modifier.width(70.dp)
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun RoomTimeSettingsPicDescPreview() {
     PicItTheme {
-        RoomTimeSettings()
+        RoomTimeSettingsPicDesc()
     }
 }
