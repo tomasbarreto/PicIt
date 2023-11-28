@@ -1,4 +1,4 @@
-package com.example.picit.createroom
+package com.example.picit.picdesccreateroom
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
