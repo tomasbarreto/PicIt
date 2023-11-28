@@ -101,7 +101,7 @@ fun PromptRoomVote(){
 
 @Preview(showBackground = true)
 @Composable
-fun RepicRoomVotePreview() {
+fun PromptRoomVotePreview() {
     PicItTheme {
         PromptRoomVote()
     }
