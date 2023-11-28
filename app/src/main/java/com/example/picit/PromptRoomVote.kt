@@ -43,22 +43,7 @@ fun PromptRoomVote(){
             Text(text="Time To Vote!", fontSize = 30.sp)
         }
 
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp)
-            .height(50.dp)
-            .background(Color.LightGray),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically)
-        {
-            Column {
-                Text(text = "Prompt:", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-            }
-            Column(modifier = Modifier.padding(start=5.dp)) {
-                Text(text = "Pose with the sunset", fontSize = 20.sp)
-            }
-        }
-
+        PromptDisplay("Pose with the sunset")
         Row (modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)
