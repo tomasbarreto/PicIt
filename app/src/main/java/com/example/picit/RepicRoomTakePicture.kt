@@ -26,19 +26,7 @@ fun RepicRoomTakePicture(){
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Spacer(modifier = Modifier.height(60.dp))
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            BackButton(onButtonClick={/*TODO: go to UserRoomsScreen*/})
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                RoomHeader()
-            }
-        }
+        ScreenHeader(text = "Room name", withButton = true)
 
         Spacer(modifier = Modifier.height(40.dp))
 
@@ -68,24 +56,16 @@ fun RepicRoomTakePicture(){
         TimeLeftDisplay("Photo")
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(start=20.dp, end=20.dp, top=65.dp, bottom = 120.dp)) {
+            .padding(start = 20.dp, end = 20.dp, top = 65.dp, bottom = 120.dp)) {
             Column (modifier = Modifier.weight(0.70F),
                 horizontalAlignment = Alignment.CenterHorizontally){
                 TakePhotoButton(onButtonClick = {/*TODO: go to Camera*/ })
             }
             Column(modifier = Modifier.weight(0.30F),
                 horizontalAlignment = Alignment.CenterHorizontally) {
-                LeaderboardButton(onButtonClick = {/*TODO: go to Leaderboard*/ })
+                LeaderboardButton()
             }
         }
-
-
-
-
-
-
-
-
 
         AppBottomMenu(inFriendScreen = false, inHomeScreen = false, inProfileScreen = false)
     }
