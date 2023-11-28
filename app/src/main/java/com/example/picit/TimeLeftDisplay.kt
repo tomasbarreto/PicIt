@@ -24,8 +24,7 @@ fun TimeLeftDisplay(timeFor: String, hours:Int, mins:Int, secs:Int) {
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            Text(text= timeFor, textAlign = TextAlign.Center, fontSize = 24.sp)
-            Text(text= "Time Remaining:", fontSize = 24.sp)
+            Text(text= "$timeFor Time Remaining:", textAlign = TextAlign.Center, fontSize = 24.sp)
         }
         Spacer(modifier = Modifier.height(4.dp))
         Row (modifier = Modifier
