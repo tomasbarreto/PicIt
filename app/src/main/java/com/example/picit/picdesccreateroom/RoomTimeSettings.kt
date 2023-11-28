@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
+import com.example.picit.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,29 +46,7 @@ fun RoomTimeSettings(modifier: Modifier = Modifier) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(60.dp))
-
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.padding(start = 15.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.seta_esquerda),
-                    contentDescription = "back arrow",
-                    modifier = Modifier.width(20.dp)
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Create room", fontSize = 32.sp, fontWeight = FontWeight.Bold)
-            }
-        }
+        ScreenHeader(true, "Create room")
 
         Spacer(modifier = Modifier.height(40.dp))
 
