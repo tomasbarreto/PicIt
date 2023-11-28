@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun JoinPublicRoomScreen(modifier: Modifier = Modifier) {
@@ -178,19 +179,19 @@ fun JoinPublicRoomScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(
-                onClick = { /*TODO*/ }
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.trofeu),
-                    contentDescription = "leaderboard",
-                    modifier = Modifier.width(29.dp)
-                )
-            }
+            LeaderboardButton()
 
             Button(onClick = { /*TODO*/ }) {
                 Text(text = "Join room", fontSize = 22.sp)
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ScreenPreview() {
+    PicItTheme {
+        JoinPublicRoomScreen()
     }
 }
