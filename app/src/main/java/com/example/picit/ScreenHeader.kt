@@ -43,7 +43,8 @@ fun ScreenHeader(withButton: Boolean=false,text:String, headerFontSize: TextUnit
                 text = text,
                 fontSize = headerFontSize,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                lineHeight = headerFontSize
             )
         }
     }
