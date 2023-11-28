@@ -1,6 +1,5 @@
 package com.example.picit
 
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun JoinPublicRoomScreen(modifier: Modifier = Modifier) {
+fun JoinRepicRoomScreen(modifier: Modifier = Modifier) {
     var roomName = "Room Name"
     var roomMaxSize = 10
     var usersInRoom = 9
@@ -192,6 +190,6 @@ fun JoinPublicRoomScreen(modifier: Modifier = Modifier) {
 @Composable
 fun ScreenPreview() {
     PicItTheme {
-        JoinPublicRoomScreen()
+        JoinRepicRoomScreen()
     }
 }
