@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
@@ -59,7 +60,12 @@ fun PromptRoomVote(){
                         .fillMaxWidth(0.1F))
                     Text(text = "User name", modifier = Modifier
                         .height(22.dp)
-                        .fillMaxWidth(0.55F))
+                        .fillMaxWidth(0.50F))
+                    Image(
+                        painter = painterResource(id = R.drawable.clock),
+                        contentDescription = "clock",
+                        modifier = Modifier.width(15.dp).fillMaxWidth(0.05F)
+                    )
                     Text(text="08:00", fontSize = 12.sp)
                 }
                 Image(
@@ -82,8 +88,8 @@ fun PromptRoomVote(){
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically)
         {
-            ValidButton()
             InvalidButton()
+            ValidButton()
         }
 
         TimeLeftDisplay("Vote")
