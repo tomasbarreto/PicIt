@@ -51,11 +51,7 @@ fun SubmitPhotoDescriptionScreen() {
            ){
                Text(text = "You are the leader", fontSize = 32.sp)
                Spacer(modifier = Modifier.height(12.dp))
-               Text(
-                   text = "Provide a description for today's challenge",
-                   fontSize = 20.sp,
-                   textAlign = TextAlign.Center
-               )
+               TimeLeftDisplay(timeFor = "Submit photo description",2,34,12)
                Spacer(modifier = Modifier.height(8.dp))
 
                var text by remember { mutableStateOf("") } // TODO: check if its this
@@ -65,8 +61,11 @@ fun SubmitPhotoDescriptionScreen() {
                    label = { Text("Photo Description") },
                    modifier = Modifier.fillMaxWidth(0.8f)
                )
+               // TODO: MEtre aqu uma secaco para recomendacoes de descritpions
            }
-           Box(modifier = Modifier.align(Alignment.BottomEnd).padding(end = 32.dp)){
+           Box(modifier = Modifier
+               .align(Alignment.BottomEnd)
+               .padding(end = 32.dp)){
                LeaderboardButton()
            }
 
