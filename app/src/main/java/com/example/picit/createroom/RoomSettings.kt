@@ -74,94 +74,126 @@ fun RoomSettings() {
             }
         }
 
-        Spacer(modifier = Modifier.height(90.dp))
-
-        //Room name field
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            TextField(
-                value = roomName,
-                onValueChange = { if (it.length <= 20) { roomName = it } },
-                label = { Text("Room name") },
-                maxLines = 1
-            )
-        }
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        //Room capacity
-        TextField(
-            value = roomCapacity,
-            onValueChange = { if (it == "") { roomCapacity = "" } else { if (it.toInt() <= maxCapacity) { roomCapacity = it} else {
-                roomCapacity =
-                    maxCapacity.toString()
-            } } },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            label = { Text("Room capacity") },
-            maxLines = 1
-        )
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        // Max Daily Challenges
-        TextField(
-            value = maxDailyChallenges,
-            onValueChange = { if (it == "") { maxDailyChallenges = "" } else { if (it.toInt() <= maxChallenges) { maxDailyChallenges = it} else {
-                maxDailyChallenges =
-                    maxChallenges.toString()
-            } } },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            label = { Text("Daily challenges quantity") },
-            maxLines = 1
-        )
-
-        if (isPrivate) {
+            //Room name field
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                TextField(
+                    value = roomName,
+                    onValueChange = {
+                        if (it.length <= 20) {
+                            roomName = it
+                        }
+                    },
+                    label = { Text("Room name") },
+                    maxLines = 1
+                )
+            }
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            // Code for private room
+            //Room capacity
             TextField(
-                value = code,
-                onValueChange = { if (it == "") { code = "" } else { if (it.length <= maxCodeDigits) { code = it} } },
+                value = roomCapacity,
+                onValueChange = {
+                    if (it == "") {
+                        roomCapacity = ""
+                    } else {
+                        if (it.toInt() <= maxCapacity) {
+                            roomCapacity = it
+                        } else {
+                            roomCapacity =
+                                maxCapacity.toString()
+                        }
+                    }
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                label = { Text("Code for private room") },
+                label = { Text("Room capacity") },
                 maxLines = 1
             )
 
-        }
+            Spacer(modifier = Modifier.height(30.dp))
 
-        Spacer(modifier = Modifier.height(distanceToPrivacyButtons))
+            // Max Daily Challenges
+            TextField(
+                value = maxDailyChallenges,
+                onValueChange = {
+                    if (it == "") {
+                        maxDailyChallenges = ""
+                    } else {
+                        if (it.toInt() <= maxChallenges) {
+                            maxDailyChallenges = it
+                        } else {
+                            maxDailyChallenges =
+                                maxChallenges.toString()
+                        }
+                    }
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                label = { Text("Daily challenges quantity") },
+                maxLines = 1
+            )
 
-        // Public Private buttons
-        Text(text = "Select room privacy", fontSize = 20.sp)
+            if (isPrivate) {
 
-        Spacer(modifier = Modifier.height(10.dp))
-        
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(onClick = {
-                isPrivate = false
-                distanceToPrivacyButtons = 120.dp
-            }) {
-                Text(text = "Public", fontSize = 22.sp)
+                Spacer(modifier = Modifier.height(30.dp))
+
+                // Code for private room
+                TextField(
+                    value = code,
+                    onValueChange = {
+                        if (it == "") {
+                            code = ""
+                        } else {
+                            if (it.length <= maxCodeDigits) {
+                                code = it
+                            }
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    label = { Text("Code for private room") },
+                    maxLines = 1
+                )
+
             }
 
-            Button(onClick = {
-                isPrivate = true
-                distanceToPrivacyButtons = 33.5.dp
-            }) {
-                Text(text = "Private", fontSize = 22.sp)
+            Spacer(modifier = Modifier.height(distanceToPrivacyButtons))
+
+            // Public Private buttons
+            Text(text = "Select room privacy", fontSize = 20.sp)
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(onClick = {
+                    isPrivate = false
+                    distanceToPrivacyButtons = 120.dp
+                }) {
+                    Text(text = "Public", fontSize = 22.sp)
+                }
+
+                Button(onClick = {
+                    isPrivate = true
+                    distanceToPrivacyButtons = 33.5.dp
+                }) {
+                    Text(text = "Private", fontSize = 22.sp)
+                }
             }
-        }
 
-        Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-        Button(onClick = {  }) {
-            Text(text = "Next", fontSize = 22.sp)
+            Button(onClick = { }) {
+                Text(text = "Next", fontSize = 22.sp)
+            }
         }
     }
 }

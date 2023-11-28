@@ -69,11 +69,10 @@ fun ChooseGame() {
             }
         }
 
-        Spacer(modifier = Modifier.height(75.dp))
-
         Column(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
