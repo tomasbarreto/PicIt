@@ -19,12 +19,13 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TimeLeftDisplay(timeFor: String, hours:Int, mins:Int, secs:Int) {
     Column {
-        Row (modifier = Modifier
+        Column (modifier = Modifier
             .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically)
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
         {
-            Text(text= "$timeFor Time Remaining:", fontSize = 25.sp, textAlign = TextAlign.Center)
+            Text(text= timeFor, textAlign = TextAlign.Center, fontSize = 24.sp)
+            Text(text= "Time Remaining:", fontSize = 24.sp)
         }
         Spacer(modifier = Modifier.height(4.dp))
         Row (modifier = Modifier
