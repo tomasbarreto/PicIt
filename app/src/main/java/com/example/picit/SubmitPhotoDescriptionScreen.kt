@@ -76,6 +76,8 @@ fun SubmitPhotoDescriptionScreen() {
                     Text(text = "Suggestions", textAlign = TextAlign.Center, fontSize = 24.sp,
                         modifier = Modifier.fillMaxWidth())
                     Spacer(modifier = Modifier.height(12.dp))
+
+                    // get this dynamically (Text generator API)
                     var suggestions = arrayOf("suggestion1","suggestion2","suggestion3")
                     for (s in suggestions){
                         Text(text = s, fontSize = 20.sp, textAlign = TextAlign.Center,
