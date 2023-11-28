@@ -92,7 +92,7 @@ fun PromptRoomVote(){
             ValidButton()
         }
 
-        TimeLeftDisplay("Vote")
+        TimeLeftDisplay("Vote",1,32,23)
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 20.dp),
