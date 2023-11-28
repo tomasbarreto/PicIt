@@ -178,15 +178,7 @@ fun JoinPublicRoomScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(
-                onClick = { /*TODO*/ }
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.trofeu),
-                    contentDescription = "leaderboard",
-                    modifier = Modifier.width(29.dp)
-                )
-            }
+            LeaderboardButton()
 
             Button(onClick = { /*TODO*/ }) {
                 Text(text = "Join room", fontSize = 22.sp)
