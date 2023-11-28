@@ -85,20 +85,12 @@ fun RepicRoomVote(){
             InvalidButton()
         }
 
-
-
-        TimeLeftDisplay("Photo")
+        TimeLeftDisplay("Vote")
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, top = 65.dp, bottom = 120.dp)) {
-            Column (modifier = Modifier.weight(0.70F),
-                horizontalAlignment = Alignment.CenterHorizontally){
-                TakePhotoButton(onButtonClick = {/*TODO: go to Camera*/ })
-            }
-            Column(modifier = Modifier.weight(0.30F),
-                horizontalAlignment = Alignment.CenterHorizontally) {
-                LeaderboardButton()
-            }
+            .padding(start = 20.dp, end = 20.dp, top=30.dp, bottom = 30.dp),
+            horizontalArrangement = Arrangement.End) {
+            LeaderboardButton()
         }
 
         AppBottomMenu(inFriendScreen = false, inHomeScreen = false, inProfileScreen = false)
