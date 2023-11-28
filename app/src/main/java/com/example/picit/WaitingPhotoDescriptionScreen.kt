@@ -67,16 +67,6 @@ fun WaitingPhotoDescriptionScreen(){
     }
 }
 
-@Composable
-fun LeaderboardButton() {
-    Button(
-        onClick = { /*TODO*/ },
-    ) {
-        Icon(Icons.Outlined.Star, contentDescription = null,)
-    }
-}
-
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewWaitingPhotoDescriptionScreen() {

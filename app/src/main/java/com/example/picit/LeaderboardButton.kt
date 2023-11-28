@@ -9,14 +9,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LeaderBoard(){
+fun LeaderboardButton(){
     Button(
         onClick = { /*TODO*/ }
     ) {
         Image(
             painter = painterResource(id = R.drawable.trofeu),
             contentDescription = "leaderboard",
-            modifier = Modifier.width(29.dp)
+            modifier = Modifier.width(32.dp)
         )
     }
 }

@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun JoinPublicRoomScreen(modifier: Modifier = Modifier) {
@@ -184,5 +185,13 @@ fun JoinPublicRoomScreen(modifier: Modifier = Modifier) {
                 Text(text = "Join room", fontSize = 22.sp)
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ScreenPreview() {
+    PicItTheme {
+        JoinPublicRoomScreen()
     }
 }
