@@ -46,21 +46,11 @@ fun RoomTimeSettingsRepic(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        Text(text = "Description submission time", fontSize = 20.sp)
+        Text(text = "Picture release time", fontSize = 20.sp)
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            InsertTime()
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = " to ", fontSize = 20.sp)
-            Spacer(modifier = Modifier.height(10.dp))
-            InsertTime()
-        }
+        InsertTime()
 
         Spacer(modifier = Modifier.height(30.dp))
 
