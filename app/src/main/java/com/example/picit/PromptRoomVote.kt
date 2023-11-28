@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -46,8 +47,7 @@ fun PromptRoomVote(){
         PromptDisplay("Pose with the sunset")
         Row (modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
-            .height(200.dp),
+            .padding(10.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically)
         {
@@ -66,6 +66,13 @@ fun PromptRoomVote(){
                     painter = painterResource(id = R.drawable.imagetorepic),
                     contentDescription = "woman kissing the sunset"
                 )
+                Row (modifier = Modifier.height(25.dp)) {
+                    Icon(Icons.Filled.LocationOn, contentDescription = null, modifier = Modifier
+                        .fillMaxWidth(0.1F))
+                    Text(text = "Location", modifier = Modifier
+                        .height(22.dp)
+                        .fillMaxWidth(0.55F))
+                }
             }
         }
 
@@ -82,7 +89,7 @@ fun PromptRoomVote(){
         TimeLeftDisplay("Vote")
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, top = 30.dp, bottom = 30.dp),
+            .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 20.dp),
             horizontalArrangement = Arrangement.End) {
             LeaderboardButton()
         }
