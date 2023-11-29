@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.lang.Integer.parseInt
 
 @Composable
 fun ScreenHeader(withButton: Boolean=false,text:String, headerFontSize: TextUnit = 32.sp){
@@ -44,7 +45,6 @@ fun ScreenHeader(withButton: Boolean=false,text:String, headerFontSize: TextUnit
                 fontSize = headerFontSize,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                lineHeight = headerFontSize
             )
         }
     }
