@@ -81,7 +81,7 @@ fun RoomTimeSettingsRepic(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(50.dp))
 
         Button(onClick = {  }) {
-            Text(text = "Create room", fontSize = 22.sp)
+            Text(text = "Next", fontSize = 22.sp)
         }
     }
 }
