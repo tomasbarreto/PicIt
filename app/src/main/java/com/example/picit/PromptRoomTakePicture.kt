@@ -49,7 +49,7 @@ fun PromptRoomTakePicture(){
 
         Spacer(modifier = Modifier.height(60.dp))
 
-        TimeLeftDisplay("Photo")
+        TimeLeftDisplay("Photo", 1, 20, 54)
         Spacer(modifier = Modifier.height(70.dp))
 
         Row(modifier = Modifier
