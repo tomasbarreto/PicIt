@@ -1,5 +1,6 @@
 package com.example.picit
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,12 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
@@ -21,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import java.lang.Integer.parseInt
 
 @Composable
-fun ScreenHeader(withButton: Boolean=false,text:String, headerFontSize: TextUnit = 32.sp){
+fun ScreenHeader(withButton: Boolean=false,text:String, headerFontSize: TextUnit = 32.sp, withSettings: Boolean=false){
     Spacer(modifier = Modifier.height(60.dp))
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -46,6 +49,17 @@ fun ScreenHeader(withButton: Boolean=false,text:String, headerFontSize: TextUnit
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
             )
+        }
+
+        if(withSettings){
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 40.dp)
+                    .width(35.dp)
+            ){
+                Image(painter = painterResource(id = R.drawable.setting), contentDescription = "settings" )
+            }
         }
     }
 }
