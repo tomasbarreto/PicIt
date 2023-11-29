@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -66,6 +67,14 @@ fun UserRoomsScreen(){
         }
 
         Spacer(modifier = Modifier.height(32.dp))
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth(0.8f)
+        ){
+            Button(onClick = { /*TODO go to request to join room scree*/ }) {
+                Icon(Icons.Filled.Email, contentDescription = null)
+            }
+        }
 
         // Rooms of the user, get from databse
         var nRooms = 2;

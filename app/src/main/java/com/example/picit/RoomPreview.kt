@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun RoomPreview(roomName: String, roomMaxSize: Int, usersInRoom: Int, gameType: String, maxDailyChallenges: Int, challengesDone: Int) {
     Column(
+        verticalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
             .fillMaxWidth(.8f)
             .height(160.dp)
@@ -31,9 +32,8 @@ fun RoomPreview(roomName: String, roomMaxSize: Int, usersInRoom: Int, gameType: 
                 color = Color.Black,
                 shape = RoundedCornerShape(30.dp)
             )
+            .clickable { } // TODO: vai ser preciso um room id para direcionar para a salar certa?
             .padding(12.dp)
-            .clickable { }, // TODO: vai ser preciso um room id para direcionar para a salar certa?
-        verticalArrangement = Arrangement.SpaceAround
     ) {
         Text(text = roomName, fontSize = 20.sp)
         Row{
