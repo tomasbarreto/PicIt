@@ -27,10 +27,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
 import com.example.picit.ScreenHeader
+import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun ChooseGame() {
@@ -135,5 +137,13 @@ fun ChooseGame() {
                 Text(text = "Next", fontSize = 22.sp)
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ChooseGamePreview() {
+    PicItTheme {
+        ChooseGame()
     }
 }

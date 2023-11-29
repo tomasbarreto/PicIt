@@ -26,10 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
 import com.example.picit.ScreenHeader
+import com.example.picit.ui.theme.PicItTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -174,5 +176,13 @@ fun RoomSettings() {
                 Text(text = "Next", fontSize = 22.sp)
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RoomSettingsPreview() {
+    PicItTheme {
+        RoomSettings()
     }
 }
