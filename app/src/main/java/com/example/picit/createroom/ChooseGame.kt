@@ -51,6 +51,10 @@ fun ChooseGame() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Text("Select game mode", fontSize = 23.sp, fontWeight = FontWeight.Bold)
+
+            Spacer(modifier = Modifier.height(15.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
