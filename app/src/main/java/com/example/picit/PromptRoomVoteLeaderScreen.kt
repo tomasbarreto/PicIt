@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun PromptRoomVote(){
+fun PromptRoomVoteLeaderScreen(){
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -106,6 +106,6 @@ fun PromptRoomVote(){
 @Composable
 fun PromptRoomVotePreview() {
     PicItTheme {
-        PromptRoomVote()
+        PromptRoomVoteLeaderScreen()
     }
 }
