@@ -38,7 +38,7 @@ import com.example.picit.ui.theme.PicItTheme
 fun UserProfileScreen(){
 
     Scaffold(
-        bottomBar = { AppBottomMenu(selectedItem = 3) }
+        bottomBar = { AppBottomMenu(selectedItem = 1, onItemClick = listOf({},{},{})) }
     ) {
         Column (
             modifier = Modifier

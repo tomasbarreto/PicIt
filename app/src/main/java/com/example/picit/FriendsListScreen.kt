@@ -45,7 +45,7 @@ fun FriendsListScreen(){
             Text(text = "Add a friend", fontSize = 24.sp)
         }
         Spacer(modifier = Modifier.height(32.dp))
-        AppBottomMenu(selectedItem = 1)
+        AppBottomMenu(selectedItem = 1, onItemClick = listOf({},{},{}))
     }
 }
 

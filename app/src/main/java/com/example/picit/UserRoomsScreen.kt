@@ -105,7 +105,7 @@ fun UserRoomsScreen(){
         }
         Spacer(modifier = Modifier.height(32.dp))
 
-        AppBottomMenu(selectedItem = 2)
+        AppBottomMenu(selectedItem = 1, onItemClick = listOf({},{},{}))
     }
 }
 
