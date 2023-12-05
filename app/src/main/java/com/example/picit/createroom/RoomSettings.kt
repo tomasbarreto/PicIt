@@ -29,7 +29,8 @@ import com.example.picit.ui.theme.PicItTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomSettings(
-    onClickBackButton: ()->Unit = {}
+    onClickBackButton: ()->Unit = {},
+    onClickNextButton: ()->Unit = {}
 ) {
 
     var roomName by remember { mutableStateOf("") }
@@ -171,7 +172,7 @@ fun RoomSettings(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Button(onClick = { }) {
+            Button(onClick = { onClickNextButton()}) {
                 Text(text = "Next", fontSize = 22.sp)
             }
         }

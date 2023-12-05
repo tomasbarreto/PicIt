@@ -13,6 +13,9 @@ import com.example.picit.SettingsScreen
 import com.example.picit.UserProfileScreen
 import com.example.picit.UserRoomsScreen
 import com.example.picit.picdesccreateroom.ChooseGame
+import com.example.picit.picdesccreateroom.RoomSettings
+import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDesc
+import com.example.picit.picdesccreateroom.RoomTimeSettingsRepic
 
 @Composable
 fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -49,6 +52,30 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route= Screens.CreateRoomChooseGame.route){
             ChooseGame(
+                onClickBackButton = { onClickBackButton() },
+                onClickNextButon = {
+                        gameType->
+                    navController.navigate(Screens.DefineRoomSettings.route
+                        .replace("{game_type}",gameType))
+                }
+            )
+        }
+        composable(route = Screens.DefineRoomSettings.route){backStackEntry->
+            val gameType = backStackEntry.arguments?.getString("game_type")
+            val route = if( gameType.equals("0")) Screens.PicDescTimeSettings.route
+                        else Screens.RePicTimeSettings.route
+            RoomSettings(
+                onClickBackButton = { onClickBackButton() },
+                onClickNextButton = {navController.navigate( route ) }
+            )
+        }
+        composable(route = Screens.PicDescTimeSettings.route){
+            RoomTimeSettingsPicDesc(
+                onClickBackButton = { onClickBackButton() }
+            )
+        }
+        composable(route = Screens.RePicTimeSettings.route){
+            RoomTimeSettingsRepic(
                 onClickBackButton = { onClickBackButton() }
             )
         }

@@ -32,13 +32,17 @@ import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun ChooseGame(
-    onClickBackButton: ()->Unit = {}
+    onClickBackButton: ()->Unit = {},
+    onClickNextButon: (String) -> Unit = {} // "0"-> PicDesc; "1" -> RePic
 ) {
     var rePicTextColor by remember { mutableStateOf(Color.hsl(hue = 196.0f, saturation = 1.0f, lightness = 0.27f)) }
     var rePicBGColor by remember { mutableStateOf(Color.LightGray) }
 
     var picDescTextColor by remember { mutableStateOf(Color.White) }
     var picDescBGColor by remember { mutableStateOf(Color.hsl(hue = 196.0f, saturation = 1.0f, lightness = 0.27f)) }
+    var gameType = remember { // to viewModel
+        mutableStateOf("0")
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -77,6 +81,7 @@ fun ChooseGame(
                         picDescTextColor = Color.White
                         picDescBGColor =
                             Color.hsl(hue = 196.0f, saturation = 1.0f, lightness = 0.27f)
+                        gameType.value = "0"
                     }
                 )
                 {
@@ -110,6 +115,7 @@ fun ChooseGame(
                         picDescTextColor =
                             Color.hsl(hue = 196.0f, saturation = 1.0f, lightness = 0.27f)
                         picDescBGColor = Color.LightGray
+                        gameType.value = "1"
                     }
                 )
                 {
@@ -135,7 +141,7 @@ fun ChooseGame(
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            Button(onClick = {  }) {
+            Button(onClick = { onClickNextButon(gameType.value) }) {
                 Text(text = "Next", fontSize = 22.sp)
             }
         }
