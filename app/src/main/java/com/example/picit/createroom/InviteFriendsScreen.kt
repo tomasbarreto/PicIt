@@ -26,12 +26,19 @@ import com.example.picit.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun InviteFriends(modifier: Modifier = Modifier) {
+fun InviteFriends(
+    modifier: Modifier = Modifier,
+    onClickBackButton: ()->Unit = {}
+    ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ScreenHeader(withButton = true, text = "Create room")
+        ScreenHeader(
+            withBackButton = true,
+            text = "Create room",
+            onClickBackButton = onClickBackButton
+        )
 
         Spacer(modifier = Modifier.height(40.dp))
 

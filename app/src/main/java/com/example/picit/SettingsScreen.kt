@@ -22,14 +22,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SettingsScreen(modifier: Modifier = Modifier) {
+fun SettingsScreen(
+    modifier: Modifier = Modifier,
+    onClickBackButton: ()->Unit = {}
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var checked by remember { mutableStateOf(true) }
 
-        ScreenHeader(withButton = true, text = "Settings")
+        ScreenHeader(
+            withBackButton = true,
+            text = "Settings",
+            onClickBackButton = onClickBackButton
+        )
 
         Column(
             modifier = Modifier.fillMaxSize(),

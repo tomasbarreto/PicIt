@@ -21,12 +21,18 @@ import androidx.compose.ui.unit.sp
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun PromptRoomTakePicture(){
+fun PromptRoomTakePicture(
+    onClickBackButton: ()->Unit = {}
+){
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        ScreenHeader(text = "Room name", withButton = true)
+        ScreenHeader(
+            withBackButton = true,
+            text = "Room name",
+            onClickBackButton = onClickBackButton
+        )
 
         Spacer(modifier = Modifier.height(80.dp))
 

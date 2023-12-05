@@ -25,12 +25,18 @@ import androidx.compose.ui.unit.sp
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun PromptRoomVoteLeaderScreen(){
+fun PromptRoomVoteLeaderScreen(
+    onClickBackButton: ()->Unit = {}
+){
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        ScreenHeader(text = "Room name", withButton = true)
+        ScreenHeader(
+            withBackButton = true,
+            text = "Room name",
+            onClickBackButton = onClickBackButton
+        )
 
         Spacer(modifier = Modifier.height(15.dp))
         Row (modifier = Modifier

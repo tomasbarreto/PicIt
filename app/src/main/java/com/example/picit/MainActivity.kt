@@ -1,6 +1,7 @@
 package com.example.picit
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.picit.navigation.Screens
+import com.example.picit.picdesccreateroom.ChooseGame
 import com.example.picit.ui.theme.PicItTheme
 
 class MainActivity : ComponentActivity() {
@@ -42,14 +44,30 @@ fun PicItApp() {
                 { navController.navigate(Screens.Home.route){ launchSingleTop = true } },
                 { navController.navigate(Screens.Profile.route){ launchSingleTop = true } },
                 )
+            val onClickBackButton= {navController.popBackStack()}
             composable(route= Screens.Home.route){
-                UserRoomsScreen(bottomNavigationsList)
+                UserRoomsScreen(
+                    bottomNavigationsList,
+                    onClickJoinRoom = { navController.navigate(Screens.RoomsToJoin.route)},
+                    onClickCreateRoom = {navController.navigate(Screens.CreateRoomChooseGame.route)},
+                    onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)}
+                )
             }
             composable(route= Screens.Friends.route){
                 FriendsListScreen(bottomNavigationsList)
             }
             composable(route = Screens.Profile.route){
                 UserProfileScreen(bottomNavigationsList)
+            }
+            composable(route= Screens.RoomsToJoin.route){
+                PreviewRoomsToJoinScreen(
+                    onClickBackButton = {onClickBackButton()}
+                )
+            }
+            composable(route= Screens.CreateRoomChooseGame.route){
+                ChooseGame(
+                    onClickBackButton = { onClickBackButton() }
+                )
             }
         }
     }

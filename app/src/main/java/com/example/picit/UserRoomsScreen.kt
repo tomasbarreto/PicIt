@@ -28,13 +28,22 @@ import androidx.compose.ui.unit.sp
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun UserRoomsScreen(bottomNavigationsList: List<() -> Unit> = listOf({},{},{})) {
+fun UserRoomsScreen(
+    bottomNavigationsList: List<() -> Unit> = listOf({}, {}, {}),
+    onClickJoinRoom: () -> Unit = {},
+    onClickCreateRoom: () -> Unit = {},
+    onClickInvitesButton: ()-> Unit = {}
+) {
     Column (
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        ScreenHeader(withSettings = true, text = "Your rooms", headerFontSize = 30.sp)
+        ScreenHeader(
+            text = "Your rooms",
+            headerFontSize = 30.sp,
+            withSettings = true,
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
         Row(
@@ -50,7 +59,7 @@ fun UserRoomsScreen(bottomNavigationsList: List<() -> Unit> = listOf({},{},{})) 
             horizontalArrangement = Arrangement.End,
             modifier = Modifier.fillMaxWidth(0.8f)
         ){
-            Button(onClick = { /*TODO go to request to join room scree*/ }) {
+            Button(onClick = { onClickInvitesButton }) {
                 Icon(Icons.Filled.Email, contentDescription = null)
             }
         }
@@ -75,10 +84,10 @@ fun UserRoomsScreen(bottomNavigationsList: List<() -> Unit> = listOf({},{},{})) 
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ){
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { onClickJoinRoom() } ) {
                 Text(text = "Join Room")
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { onClickCreateRoom() }) {
                 Text(text = "Create Room")
             }
         }
