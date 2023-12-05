@@ -7,4 +7,5 @@ sealed class Screens(val route:String){
     object RoomsToJoin: Screens("rooms_to_join")
     object CreateRoomChooseGame: Screens("create_room_choose_game")
     object InvitesNotifications: Screens("invite_notifications")
+    object Settings: Screens("settings")
 }

@@ -47,17 +47,19 @@ fun PicItApp() {
             val onClickBackButton= {navController.popBackStack()}
             composable(route= Screens.Home.route){
                 UserRoomsScreen(
-                    bottomNavigationsList,
+                    bottomNavigationsList= bottomNavigationsList,
                     onClickJoinRoom = { navController.navigate(Screens.RoomsToJoin.route)},
                     onClickCreateRoom = {navController.navigate(Screens.CreateRoomChooseGame.route)},
-                    onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)}
+                    onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
+                    onClickSettings = {navController.navigate(Screens.Settings.route)}
                 )
             }
+            // To go to a friend make func (firendId) -> navigate(freindId)
             composable(route= Screens.Friends.route){
-                FriendsListScreen(bottomNavigationsList)
+                FriendsListScreen(bottomNavigationsList= bottomNavigationsList)
             }
             composable(route = Screens.Profile.route){
-                UserProfileScreen(bottomNavigationsList)
+                UserProfileScreen(bottomNavigationsList = bottomNavigationsList)
             }
             composable(route= Screens.RoomsToJoin.route){
                 PreviewRoomsToJoinScreen(
@@ -67,6 +69,16 @@ fun PicItApp() {
             composable(route= Screens.CreateRoomChooseGame.route){
                 ChooseGame(
                     onClickBackButton = { onClickBackButton() }
+                )
+            }
+            composable(route = Screens.InvitesNotifications.route){
+                RoomInviteNotificationsScreen(
+                    onClickBackButton = {onClickBackButton()}
+                )
+            }
+            composable(route = Screens.Settings.route){
+                SettingsScreen(
+                    onClickBackButton = {onClickBackButton()}
                 )
             }
         }

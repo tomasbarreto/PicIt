@@ -32,7 +32,8 @@ fun UserRoomsScreen(
     bottomNavigationsList: List<() -> Unit> = listOf({}, {}, {}),
     onClickJoinRoom: () -> Unit = {},
     onClickCreateRoom: () -> Unit = {},
-    onClickInvitesButton: ()-> Unit = {}
+    onClickInvitesButton: ()-> Unit = {},
+    onClickSettings: ()-> Unit = {}
 ) {
     Column (
         modifier = Modifier
@@ -43,6 +44,7 @@ fun UserRoomsScreen(
             text = "Your rooms",
             headerFontSize = 30.sp,
             withSettings = true,
+            onClickSettings= {onClickSettings()}
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -59,7 +61,7 @@ fun UserRoomsScreen(
             horizontalArrangement = Arrangement.End,
             modifier = Modifier.fillMaxWidth(0.8f)
         ){
-            Button(onClick = { onClickInvitesButton }) {
+            Button(onClick = { onClickInvitesButton() }) {
                 Icon(Icons.Filled.Email, contentDescription = null)
             }
         }

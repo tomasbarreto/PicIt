@@ -1,6 +1,7 @@
 package com.example.picit
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -26,7 +27,8 @@ fun ScreenHeader(
     text: String,
     headerFontSize: TextUnit = 32.sp,
     withSettings: Boolean = false,
-    onClickBackButton: () -> Unit={}
+    onClickBackButton: () -> Unit={},
+    onClickSettings: () -> Unit = {}
 ){
     Spacer(modifier = Modifier.height(60.dp))
     Box(
@@ -60,6 +62,7 @@ fun ScreenHeader(
                     .align(Alignment.CenterEnd)
                     .padding(end = 40.dp)
                     .width(35.dp)
+                    .clickable { onClickSettings() }
             ){
                 Image(painter = painterResource(id = R.drawable.setting), contentDescription = "settings" )
             }
