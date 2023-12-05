@@ -78,6 +78,6 @@ fun RepicRoomTakePicture(){
 @Composable
 fun RepicRoomTakePicturePreview() {
     PicItTheme {
-        SettingsScreen()
+        RepicRoomTakePicture()
     }
 }
