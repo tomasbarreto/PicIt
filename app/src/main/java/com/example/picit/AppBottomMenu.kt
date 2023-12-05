@@ -14,37 +14,40 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationDefaults
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AppBottomMenu(inFriendScreen: Boolean, inHomeScreen: Boolean,  inProfileScreen: Boolean) {
-    Divider(color = Color.Black, thickness = 1.dp)
-    Row(
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = Modifier
-            .fillMaxWidth()
-    ){
-        if(inFriendScreen){
-            Icon(Icons.Filled.Person, contentDescription = null, modifier = Modifier.size(50.dp))
-        }
-        else{
-            Icon(Icons.Outlined.Person, contentDescription = null, modifier = Modifier.size(50.dp))
-        }
-
-        if(inHomeScreen){
-            Icon(Icons.Filled.Home, contentDescription = null, modifier = Modifier.size(50.dp))
-        }
-        else{
-            Icon(Icons.Outlined.Home, contentDescription = null, modifier = Modifier.size(50.dp))
-        }
-
-        if(inProfileScreen){
-            Icon(Icons.Filled.AccountCircle, contentDescription = null, modifier = Modifier.size(50.dp))
-        }
-        else{
-            Icon(Icons.Outlined.AccountCircle, contentDescription = null, modifier = Modifier.size(50.dp))
+fun AppBottomMenu(selectedItem: Int) {
+    val contentColor = Color(255,255,250)
+    val items = listOf("Friends", "Home", "Profile")
+    val iconsFilled = listOf(Icons.Filled.Person,Icons.Filled.Home, Icons.Filled.AccountCircle)
+    val iconsOutlined = listOf(Icons.Outlined.Person,Icons.Outlined.Home, Icons.Outlined.AccountCircle)
+    val onClicks = listOf({/*TODO: go to friends*/})
+    BottomNavigation(
+        backgroundColor = Color(13,92,99),
+    ) {
+        items.forEachIndexed { index, item ->
+            BottomNavigationItem(
+                icon = {
+                    if(selectedItem == index)
+                        Icon(iconsFilled[index], contentDescription = null,
+                            tint = contentColor)
+                    else
+                        Icon(iconsOutlined[index], contentDescription = null,
+                            tint = contentColor)
+                       },
+                label = { Text(item, color = contentColor) },
+                selected = selectedItem == index,
+                onClick = {}
+            )
         }
     }
 }

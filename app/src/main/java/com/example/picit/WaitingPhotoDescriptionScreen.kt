@@ -63,7 +63,6 @@ fun WaitingPhotoDescriptionScreen(){
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        AppBottomMenu(inFriendScreen = false, inHomeScreen = true, inProfileScreen = false)
     }
 }
 

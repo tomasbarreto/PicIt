@@ -59,7 +59,6 @@ fun LeaderboardScreen(){
         }
 
 
-        AppBottomMenu(inFriendScreen = false, inHomeScreen = false, inProfileScreen = false)
     }
 }
 

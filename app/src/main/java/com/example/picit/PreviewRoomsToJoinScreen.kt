@@ -106,7 +106,6 @@ fun PreviewRoomsToJoinScreen(){
         }
         Spacer(modifier = Modifier.height(32.dp))
 
-        AppBottomMenu(inFriendScreen = false, inHomeScreen = true, inProfileScreen = false)
     }
 }
 
