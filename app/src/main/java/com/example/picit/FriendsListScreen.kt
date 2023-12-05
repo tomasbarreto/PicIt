@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun FriendsListScreen(){
+fun FriendsListScreen(bottomNavigationsList: List<() -> Unit> = listOf({},{},{})){
     Column (
         modifier = Modifier
             .fillMaxSize(),
@@ -45,7 +45,7 @@ fun FriendsListScreen(){
             Text(text = "Add a friend", fontSize = 24.sp)
         }
         Spacer(modifier = Modifier.height(32.dp))
-        AppBottomMenu(selectedItem = 1, onItemClick = listOf({},{},{}))
+        AppBottomMenu(selectedItem = 0,  onClickForItems =bottomNavigationsList)
     }
 }
 

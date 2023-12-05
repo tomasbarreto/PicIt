@@ -35,10 +35,10 @@ import com.example.picit.ui.theme.PicItTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserProfileScreen(){
+fun UserProfileScreen(bottomNavigationsList: List<() -> Unit> = listOf({},{},{})){
 
     Scaffold(
-        bottomBar = { AppBottomMenu(selectedItem = 1, onItemClick = listOf({},{},{})) }
+        bottomBar = { AppBottomMenu(selectedItem = 2,  onClickForItems =bottomNavigationsList) }
     ) {
         Column (
             modifier = Modifier

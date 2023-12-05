@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AppBottomMenu(selectedItem: Int, onItemClick: List<()->Unit>) {
+fun AppBottomMenu(selectedItem: Int, onClickForItems: List<()->Unit>) {
     val contentColor = Color(255,255,250)
     val items = listOf("Friends", "Home", "Profile")
     val iconsFilled = listOf(Icons.Filled.Person,Icons.Filled.Home, Icons.Filled.AccountCircle)
@@ -45,7 +45,7 @@ fun AppBottomMenu(selectedItem: Int, onItemClick: List<()->Unit>) {
                        },
                 label = { Text(item, color = contentColor) },
                 selected = selectedItem == index,
-                onClick = onItemClick[index]
+                onClick = onClickForItems[index]
             )
         }
     }

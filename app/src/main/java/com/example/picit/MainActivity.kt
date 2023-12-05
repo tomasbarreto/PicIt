@@ -3,17 +3,14 @@ package com.example.picit
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.picit.navigation.Screens
 import com.example.picit.ui.theme.PicItTheme
@@ -40,7 +37,20 @@ fun PicItApp() {
             startDestination = Screens.Home.route,
             modifier = Modifier.padding(it)
         ) {
-            // builder parameter will be defined here as the graph
+            val bottomNavigationsList = listOf(
+                { navController.navigate(Screens.Friends.route) },
+                { navController.navigate(Screens.Home.route) },
+                { navController.navigate(Screens.Profile.route) },
+                )
+            composable(route= Screens.Home.route){
+                UserRoomsScreen(bottomNavigationsList)
+            }
+            composable(route= Screens.Friends.route){
+                FriendsListScreen(bottomNavigationsList)
+            }
+            composable(route = Screens.Profile.route){
+                UserProfileScreen(bottomNavigationsList)
+            }
         }
     }
 }
