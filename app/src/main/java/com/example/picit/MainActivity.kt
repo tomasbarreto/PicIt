@@ -38,9 +38,9 @@ fun PicItApp() {
             modifier = Modifier.padding(it)
         ) {
             val bottomNavigationsList = listOf(
-                { navController.navigate(Screens.Friends.route) },
-                { navController.navigate(Screens.Home.route) },
-                { navController.navigate(Screens.Profile.route) },
+                { navController.navigate(Screens.Friends.route){ launchSingleTop = true } },
+                { navController.navigate(Screens.Home.route){ launchSingleTop = true } },
+                { navController.navigate(Screens.Profile.route){ launchSingleTop = true } },
                 )
             composable(route= Screens.Home.route){
                 UserRoomsScreen(bottomNavigationsList)
