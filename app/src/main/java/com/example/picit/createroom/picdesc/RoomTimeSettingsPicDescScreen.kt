@@ -25,7 +25,7 @@ import com.example.picit.ui.theme.PicItTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoomTimeSettingsRepic(
+fun RoomTimeSettingsPicDescScreen(
     modifier: Modifier = Modifier,
     onClickBackButton: ()->Unit = {}
 ) {
@@ -47,11 +47,21 @@ fun RoomTimeSettingsRepic(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        Text(text = "Picture release time", fontSize = 20.sp)
+        Text(text = "Description submission time", fontSize = 20.sp)
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        InsertTime()
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            InsertTime()
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(text = " to ", fontSize = 20.sp)
+            Spacer(modifier = Modifier.height(10.dp))
+            InsertTime()
+        }
 
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -89,8 +99,8 @@ fun RoomTimeSettingsRepic(
 
 @Preview(showBackground = true)
 @Composable
-fun RoomTimeSettingsRepicPreview() {
+fun RoomTimeSettingsPicDescPreview() {
     PicItTheme {
-        RoomTimeSettingsRepic()
+        RoomTimeSettingsPicDescScreen()
     }
 }

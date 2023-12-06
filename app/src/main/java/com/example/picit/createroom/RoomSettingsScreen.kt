@@ -28,7 +28,7 @@ import com.example.picit.ui.theme.PicItTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoomSettings(
+fun RoomSettingsScreen(
     onClickBackButton: ()->Unit = {},
     onClickNextButton: ()->Unit = {}
 ) {
@@ -183,6 +183,6 @@ fun RoomSettings(
 @Composable
 fun RoomSettingsPreview() {
     PicItTheme {
-        RoomSettings()
+        RoomSettingsScreen()
     }
 }

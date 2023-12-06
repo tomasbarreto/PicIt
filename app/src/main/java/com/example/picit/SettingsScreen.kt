@@ -18,8 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.picdesccreateroom.RoomSettingsScreen
+import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun SettingsScreen(
@@ -65,5 +68,13 @@ fun SettingsScreen(
                 Text(text = "Logout", fontSize = 22.sp)
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SettingsScreenPreview() {
+    PicItTheme {
+        SettingsScreen()
     }
 }

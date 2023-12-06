@@ -31,7 +31,7 @@ import com.example.picit.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun ChooseGame(
+fun ChooseGameScreen(
     onClickBackButton: ()->Unit = {},
     onClickNextButon: (String) -> Unit = {} // "0"-> PicDesc; "1" -> RePic
 ) {
@@ -152,6 +152,6 @@ fun ChooseGame(
 @Composable
 fun ChooseGamePreview() {
     PicItTheme {
-        ChooseGame()
+        ChooseGameScreen()
     }
 }
