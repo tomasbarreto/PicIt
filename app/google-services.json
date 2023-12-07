@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "58507857948",
+    "project_id": "picit-11f32",
+    "storage_bucket": "picit-11f32.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58507857948:android:b360a73303c38ce5644fd9",
+        "android_client_info": {
+          "package_name": "com.example.picit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBb0y_R04rhKxA0bxIMSQM6kEuSiRhdpOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
