@@ -12,10 +12,10 @@ import com.example.picit.RoomInviteNotificationsScreen
 import com.example.picit.SettingsScreen
 import com.example.picit.UserProfileScreen
 import com.example.picit.UserRoomsScreen
-import com.example.picit.picdesccreateroom.ChooseGame
-import com.example.picit.picdesccreateroom.RoomSettings
-import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDesc
-import com.example.picit.picdesccreateroom.RoomTimeSettingsRepic
+import com.example.picit.picdesccreateroom.ChooseGameScreen
+import com.example.picit.picdesccreateroom.RoomSettingsScreen
+import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
+import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
 
 @Composable
 fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -51,7 +51,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route= Screens.CreateRoomChooseGame.route){
-            ChooseGame(
+            ChooseGameScreen(
                 onClickBackButton = { onClickBackButton() },
                 onClickNextButon = {
                         gameType->
@@ -64,18 +64,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val gameType = backStackEntry.arguments?.getString("game_type")
             val route = if( gameType.equals("0")) Screens.PicDescTimeSettings.route
                         else Screens.RePicTimeSettings.route
-            RoomSettings(
+            RoomSettingsScreen(
                 onClickBackButton = { onClickBackButton() },
                 onClickNextButton = {navController.navigate( route ) }
             )
         }
         composable(route = Screens.PicDescTimeSettings.route){
-            RoomTimeSettingsPicDesc(
+            RoomTimeSettingsPicDescScreen(
                 onClickBackButton = { onClickBackButton() }
             )
         }
         composable(route = Screens.RePicTimeSettings.route){
-            RoomTimeSettingsRepic(
+            RoomTimeSettingsRepicScreen(
                 onClickBackButton = { onClickBackButton() }
             )
         }
