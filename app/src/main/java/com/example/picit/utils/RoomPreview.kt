@@ -1,4 +1,4 @@
-package com.example.picit
+package com.example.picit.utils
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

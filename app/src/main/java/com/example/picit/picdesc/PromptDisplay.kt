@@ -1,4 +1,4 @@
-package com.example.picit
+package com.example.picit.picdesc
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

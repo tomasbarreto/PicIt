@@ -1,4 +1,4 @@
-package com.example.picit
+package com.example.picit.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,6 +31,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.utils.AppBottomMenu
+import com.example.picit.R
+import com.example.picit.utils.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,7 +87,7 @@ fun UserProfileScreen(bottomNavigationsList: List<() -> Unit> = listOf({},{},{})
                 Box(
                     modifier = Modifier.align(Alignment.BottomStart)//diff padd
                 ){
-                    Achievement(s="Max challenge win streak", imageId =R.drawable.fire_icon, value="7")
+                    Achievement(s="Max challenge win streak", imageId = R.drawable.fire_icon, value="7")
                 }
                 Box(
                     modifier = Modifier

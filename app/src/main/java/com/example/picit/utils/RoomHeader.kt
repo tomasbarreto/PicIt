@@ -1,4 +1,4 @@
-package com.example.picit
+package com.example.picit.utils
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

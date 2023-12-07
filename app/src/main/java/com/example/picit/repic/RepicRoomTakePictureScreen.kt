@@ -1,4 +1,4 @@
-package com.example.picit
+package com.example.picit.repic
 
 
 import androidx.compose.foundation.Image
@@ -18,6 +18,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.R
+import com.example.picit.utils.ScreenHeader
+import com.example.picit.utils.TakePhotoButton
+import com.example.picit.utils.TimeLeftDisplay
+import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable

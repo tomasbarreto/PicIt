@@ -1,4 +1,4 @@
-package com.example.picit
+package com.example.picit.joinroom
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.utils.AppBottomMenu
+import com.example.picit.utils.RoomPreview
+import com.example.picit.utils.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable

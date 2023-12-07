@@ -1,4 +1,4 @@
-package com.example.picit
+package com.example.picit.joinroom
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +21,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.R
+import com.example.picit.utils.RoomPreview
+import com.example.picit.utils.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable

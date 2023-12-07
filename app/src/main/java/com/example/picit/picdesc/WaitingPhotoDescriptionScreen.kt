@@ -1,4 +1,4 @@
-package com.example.picit
+package com.example.picit.picdesc
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.example.picit.utils.ScreenHeader
+import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable

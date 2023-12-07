@@ -1,4 +1,4 @@
-package com.example.picit
+package com.example.picit.leaderboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.utils.BackButton
+import com.example.picit.utils.RoomHeader
 import com.example.picit.ui.theme.PicItTheme
 
 

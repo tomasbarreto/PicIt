@@ -1,17 +1,16 @@
 package com.example.picit.navigation
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.picit.FriendsListScreen
-import com.example.picit.PreviewRoomsToJoinScreen
-import com.example.picit.RoomInviteNotificationsScreen
-import com.example.picit.SettingsScreen
-import com.example.picit.UserProfileScreen
-import com.example.picit.UserRoomsScreen
+import com.example.picit.friendslist.FriendsListScreen
+import com.example.picit.joinroom.PreviewRoomsToJoinScreen
+import com.example.picit.notifications.RoomInviteNotificationsScreen
+import com.example.picit.settings.SettingsScreen
+import com.example.picit.profile.UserProfileScreen
+import com.example.picit.joinroom.UserRoomsScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
