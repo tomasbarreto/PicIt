@@ -17,13 +17,15 @@ import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
+import com.example.picit.repic.RepicRoomTakePicture
 
 @Composable
 fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
-//        startDestination = Screens.Home.route,
-        startDestination = Screens.PromptRoomTakePicture.route, //para testar camera
+        startDestination = Screens.Home.route,
+//        startDestination = Screens.PromptRoomTakePicture.route, //para testar camera
+//        startDestination = Screens.RepicRoomTakePicture.route, //para testar camera
         modifier = modifier
     ) {
         val bottomNavigationsList = listOf(
@@ -31,7 +33,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             { navController.navigate(Screens.Home.route){ launchSingleTop = true } },
             { navController.navigate(Screens.Profile.route){ launchSingleTop = true } },
         )
-        val onClickBackButton= {navController.popBackStack()}
+        val onClickBackButton = {navController.popBackStack()}
+        val onClickCameraButton = {navController.navigate(Screens.Camera.route)}
         composable(route= Screens.Home.route){
             UserRoomsScreen(
                 bottomNavigationsList= bottomNavigationsList,
@@ -97,7 +100,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route = Screens.PromptRoomTakePicture.route){
             PromptRoomTakePicture(
                 onClickBackButton = {onClickBackButton()},
-                onClickCameraButton = {navController.navigate(Screens.Camera.route)}
+                onClickCameraButton = onClickCameraButton
+            )
+        }
+        composable(route = Screens.RepicRoomTakePicture.route){
+            RepicRoomTakePicture(
+                onClickBackButton = {onClickBackButton()},
+                onClickCameraButton = onClickCameraButton
             )
         }
     }

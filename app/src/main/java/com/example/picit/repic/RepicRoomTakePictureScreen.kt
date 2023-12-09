@@ -27,7 +27,8 @@ import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun RepicRoomTakePicture(
-    onClickBackButton: ()->Unit = {}
+    onClickBackButton: ()->Unit = {},
+    onClickCameraButton: ()->Unit = {}
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -70,7 +71,7 @@ fun RepicRoomTakePicture(
             .fillMaxWidth()
             .padding(20.dp),
             horizontalArrangement = Arrangement.Center) {
-            TakePhotoButton(onButtonClick = {/*TODO: go to Camera*/ })
+            TakePhotoButton(onButtonClick = onClickCameraButton)
         }
 
         Row(modifier = Modifier
