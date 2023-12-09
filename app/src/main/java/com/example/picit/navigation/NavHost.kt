@@ -92,7 +92,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route= Screens.Camera.route){
-            CameraScreen()
+            CameraScreen(onClickBackButton = {onClickBackButton()})
         }
         composable(route = Screens.PromptRoomTakePicture.route){
             PromptRoomTakePicture(
