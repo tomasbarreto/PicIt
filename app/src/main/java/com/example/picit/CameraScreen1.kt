@@ -17,7 +17,7 @@ import com.example.picit.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class CameraScreen() : AppCompatActivity() {
+class CameraScreen1() : AppCompatActivity() {
 
     private lateinit var viewBinding: ActivityMainBinding
     private lateinit var cameraExecutor: ExecutorService

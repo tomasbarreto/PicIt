@@ -80,4 +80,5 @@ dependencies {
     implementation ("androidx.camera:camera-extensions:${camerax_version}")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation ("com.google.accompanist:accompanist-permissions:0.32.0")
 }

@@ -5,12 +5,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.picit.camera.CameraScreen
 import com.example.picit.friendslist.FriendsListScreen
 import com.example.picit.joinroom.PreviewRoomsToJoinScreen
 import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.profile.UserProfileScreen
 import com.example.picit.joinroom.UserRoomsScreen
+import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
@@ -20,7 +22,8 @@ import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
 fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Home.route,
+//        startDestination = Screens.Home.route,
+        startDestination = Screens.PromptRoomTakePicture.route, //para testar camera
         modifier = modifier
     ) {
         val bottomNavigationsList = listOf(
@@ -86,6 +89,15 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route = Screens.Settings.route){
             SettingsScreen(
                 onClickBackButton = {onClickBackButton()}
+            )
+        }
+        composable(route= Screens.Camera.route){
+            CameraScreen()
+        }
+        composable(route = Screens.PromptRoomTakePicture.route){
+            PromptRoomTakePicture(
+                onClickBackButton = {onClickBackButton()},
+                onClickCameraButton = {navController.navigate(Screens.Camera.route)}
             )
         }
     }

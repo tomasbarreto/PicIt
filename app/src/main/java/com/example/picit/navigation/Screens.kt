@@ -11,4 +11,6 @@ sealed class Screens(val route:String){
     object RePicTimeSettings: Screens("repic_time_settings")
     object InvitesNotifications: Screens("invite_notifications")
     object Settings: Screens("settings")
+    object Camera: Screens("camera")
+    object PromptRoomTakePicture: Screens("prompt_room_take_picture")
 }
