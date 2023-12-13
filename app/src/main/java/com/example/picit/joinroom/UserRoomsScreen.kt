@@ -36,7 +36,8 @@ fun UserRoomsScreen(
     onClickJoinRoom: () -> Unit = {},
     onClickCreateRoom: () -> Unit = {},
     onClickInvitesButton: ()-> Unit = {},
-    onClickSettings: ()-> Unit = {}
+    onClickSettings: ()-> Unit = {},
+    onClickRooms: () -> Unit = {}
 ) {
     Column (
         modifier = Modifier
@@ -79,7 +80,7 @@ fun UserRoomsScreen(
             var maxDailyChallenges = 30
             var challengesDone = 13
             Spacer(modifier = Modifier.height(16.dp))
-            RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone)
+            RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
         }
 
         Spacer(modifier = Modifier.weight(1f))

@@ -41,7 +41,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickJoinRoom = { navController.navigate(Screens.RoomsToJoin.route)},
                 onClickCreateRoom = {navController.navigate(Screens.CreateRoomChooseGame.route)},
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
-                onClickSettings = {navController.navigate(Screens.Settings.route)}
+                onClickSettings = {navController.navigate(Screens.Settings.route)},
+                onClickRooms = {navController.navigate(Screens.RepicRoomTakePicture.route)}
             )
         }
         composable(route= Screens.Friends.route){
