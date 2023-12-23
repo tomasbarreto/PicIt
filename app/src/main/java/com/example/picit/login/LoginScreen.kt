@@ -30,7 +30,7 @@ import com.example.picit.ui.theme.PicItTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(modifier: Modifier = Modifier) {
-    var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(
@@ -43,13 +43,13 @@ fun LoginScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(60.dp))
 
         TextField(
-            value = username,
+            value = email,
             onValueChange = {
                 if (it.length <= 20) {
-                    username = it
+                    email = it
                 }
             },
-            label = { Text("Username") },
+            label = { Text("Email") },
             maxLines = 1
         )
 
