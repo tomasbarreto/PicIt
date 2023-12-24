@@ -11,7 +11,7 @@ import com.google.firebase.auth.auth
 
 private lateinit var auth: FirebaseAuth
 
-fun registerAccount(email: String, password: String, context: Context) {
+fun registerAccount(email: String, password: String, context: Context, onClickGoBackToLogin: () -> Unit={}) {
     auth = Firebase.auth
 
     if(email.isNotEmpty() && password.isNotEmpty()) {
@@ -20,7 +20,7 @@ fun registerAccount(email: String, password: String, context: Context) {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(ContentValues.TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
+                    onClickGoBackToLogin()
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)

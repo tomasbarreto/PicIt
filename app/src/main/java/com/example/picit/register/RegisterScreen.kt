@@ -31,7 +31,7 @@ import com.google.firebase.database.core.Context
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(onClickBackButton: ()->Unit={}, modifier: Modifier = Modifier) {
+fun RegisterScreen(onClickBackButton: ()->Unit={}, onClickGoBackToLogin: () -> Unit={}, modifier: Modifier = Modifier) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -86,7 +86,7 @@ fun RegisterScreen(onClickBackButton: ()->Unit={}, modifier: Modifier = Modifier
         Spacer(modifier = Modifier.height(60.dp))
 
         Button(onClick = {
-            registerAccount(email, password, baseContext)
+            registerAccount(email, password, baseContext, onClickGoBackToLogin)
         }) {
             Text(text = "Register", fontSize = 22.sp)
         }

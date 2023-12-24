@@ -38,6 +38,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         val onClickBackButton = {navController.popBackStack()}
         val onClickCameraButton = {navController.navigate(Screens.Camera.route)}
         val onClickGoToRegistry = {navController.navigate(Screens.Register.route)}
+        val onClickGoBackToLogin = {navController.navigate(Screens.Login.route)}
         val onClickGoToMainScreen = {
                             uid:String ->
                         navController.navigate(Screens.Home.route
@@ -47,7 +48,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             LoginScreen(onClickGoToRegistry = onClickGoToRegistry, onClickGoToMainScreen = onClickGoToMainScreen)
         }
         composable(route= Screens.Register.route) {
-            RegisterScreen(onClickBackButton = {onClickBackButton()})
+            RegisterScreen(onClickBackButton = {onClickBackButton()}, onClickGoBackToLogin = onClickGoBackToLogin)
         }
         composable(route= Screens.Home.route){
             UserRoomsScreen(
