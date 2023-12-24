@@ -1,5 +1,8 @@
 package com.example.picit.register
 
+import android.content.ContentValues.TAG
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,25 +18,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.database.core.Context
+
+private lateinit var auth: FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier) {
+fun RegisterScreen(onClickBackButton: ()->Unit={}, modifier: Modifier = Modifier) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
 
+    auth = Firebase.auth
+    var baseContext = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ScreenHeader(text = "Register", withBackButton = true)
+        ScreenHeader(text = "Register", withBackButton = true, onClickBackButton = onClickBackButton)
 
         Spacer(modifier = Modifier.height(200.dp))
 
@@ -76,7 +88,26 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(60.dp))
 
-        Button(onClick = { }) {
+        Button(onClick = {
+
+            Firebase.auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "createUserWithEmail:success")
+                        val user = auth.currentUser
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                        Toast.makeText(
+                            baseContext,
+                            "Authentication failed.",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
+
+        }) {
             Text(text = "Register", fontSize = 22.sp)
         }
     }

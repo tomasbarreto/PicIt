@@ -12,18 +12,20 @@ import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.profile.UserProfileScreen
 import com.example.picit.joinroom.UserRoomsScreen
+import com.example.picit.login.LoginScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
+import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 
 @Composable
 fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Home.route,
+        startDestination = Screens.Login.route,
 //        startDestination = Screens.PromptRoomTakePicture.route, //para testar camera
 //        startDestination = Screens.RepicRoomTakePicture.route, //para testar camera
         modifier = modifier
@@ -35,6 +37,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         )
         val onClickBackButton = {navController.popBackStack()}
         val onClickCameraButton = {navController.navigate(Screens.Camera.route)}
+        val onClickGoToRegistry = {navController.navigate(Screens.Register.route)}
+        val onClickGoToMainScreen = {
+                            uid:String ->
+                        navController.navigate(Screens.Home.route
+                            .replace("{uid}",uid))
+                        }
+        composable(route= Screens.Login.route) {
+            LoginScreen(onClickGoToRegistry = onClickGoToRegistry, onClickGoToMainScreen = onClickGoToMainScreen)
+        }
+        composable(route= Screens.Register.route) {
+            RegisterScreen(onClickBackButton = {onClickBackButton()})
+        }
         composable(route= Screens.Home.route){
             UserRoomsScreen(
                 bottomNavigationsList= bottomNavigationsList,

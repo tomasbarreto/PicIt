@@ -1,7 +1,9 @@
 package com.example.picit.navigation
 
 sealed class Screens(val route:String){
-    object Home: Screens("home")
+    object Login: Screens("login")
+    object Register: Screens("register")
+    object Home: Screens("home/{uid}")
     object Friends: Screens("friends")
     object Profile: Screens("profile")
     object RoomsToJoin: Screens("rooms_to_join")

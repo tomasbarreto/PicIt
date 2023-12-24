@@ -1,5 +1,8 @@
 package com.example.picit.login
 
+import android.content.ContentValues.TAG
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,18 +23,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
 import com.example.picit.ui.theme.PicItTheme
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+
+private lateinit var auth: FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(onClickGoToRegistry: () -> Unit={}, onClickGoToMainScreen: (String) -> Unit ={}, modifier: Modifier = Modifier) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    auth = Firebase.auth
+    var baseContext = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -74,13 +86,38 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.Center
             ) {
 
-                Button(onClick = { }) {
+                Button(onClick = {
+                    if(email.isNotEmpty() && password.isNotEmpty()) {
+                        auth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "signInWithEmail:success")
+                                    val user = auth.currentUser
+                                    if (user != null) {
+                                        onClickGoToMainScreen(user.uid)
+                                    }
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w(TAG, "signInWithEmail:failure", task.exception)
+                                    Toast.makeText(
+                                        baseContext,
+                                        "Authentication failed.",
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                                }
+                            }
+                    }
+
+                }) {
                     Text(text = "Login", fontSize = 22.sp)
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Button(onClick = { }) {
+                Button(onClick = {
+                    onClickGoToRegistry()
+                }) {
                     Text(text = "Register", fontSize = 22.sp)
                 }
 
