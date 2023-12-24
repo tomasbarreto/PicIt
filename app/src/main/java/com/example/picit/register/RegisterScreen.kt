@@ -29,8 +29,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.database.core.Context
 
-private lateinit var auth: FirebaseAuth
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(onClickBackButton: ()->Unit={}, modifier: Modifier = Modifier) {
@@ -38,7 +36,6 @@ fun RegisterScreen(onClickBackButton: ()->Unit={}, modifier: Modifier = Modifier
     var password by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
 
-    auth = Firebase.auth
     var baseContext = LocalContext.current
 
     Column(
@@ -89,24 +86,7 @@ fun RegisterScreen(onClickBackButton: ()->Unit={}, modifier: Modifier = Modifier
         Spacer(modifier = Modifier.height(60.dp))
 
         Button(onClick = {
-
-            Firebase.auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "createUserWithEmail:success")
-                        val user = auth.currentUser
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                        Toast.makeText(
-                            baseContext,
-                            "Authentication failed.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
-                }
-
+            registerAccount(email, password, baseContext)
         }) {
             Text(text = "Register", fontSize = 22.sp)
         }

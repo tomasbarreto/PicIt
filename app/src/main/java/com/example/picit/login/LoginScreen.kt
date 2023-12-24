@@ -34,15 +34,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
-private lateinit var auth: FirebaseAuth
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(onClickGoToRegistry: () -> Unit={}, onClickGoToMainScreen: (String) -> Unit ={}, modifier: Modifier = Modifier) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    auth = Firebase.auth
     var baseContext = LocalContext.current
 
     Column(
@@ -87,28 +84,7 @@ fun LoginScreen(onClickGoToRegistry: () -> Unit={}, onClickGoToMainScreen: (Stri
             ) {
 
                 Button(onClick = {
-                    if(email.isNotEmpty() && password.isNotEmpty()) {
-                        auth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "signInWithEmail:success")
-                                    val user = auth.currentUser
-                                    if (user != null) {
-                                        onClickGoToMainScreen(user.uid)
-                                    }
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "signInWithEmail:failure", task.exception)
-                                    Toast.makeText(
-                                        baseContext,
-                                        "Authentication failed.",
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                                }
-                            }
-                    }
-
+                    loginAccount(email, password, baseContext, onClickGoToMainScreen)
                 }) {
                     Text(text = "Login", fontSize = 22.sp)
                 }
