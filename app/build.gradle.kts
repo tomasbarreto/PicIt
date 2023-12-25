@@ -87,5 +87,18 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 
     // Add the dependency for the Firebase Authentication library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
+    // When using the BoM, you don't specify versions in Firebase library
+
+    implementation(platform("androidx.compose:compose-bom:2023.06.01"))
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation("com.google.firebase:firebase-database:20.3.0")
+
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation("androidx.compose.ui:ui-tooling")
 }

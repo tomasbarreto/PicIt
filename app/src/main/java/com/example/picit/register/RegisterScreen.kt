@@ -22,6 +22,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.picit.login.LoginViewModel
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
 import com.google.firebase.Firebase
@@ -35,6 +37,8 @@ fun RegisterScreen(onClickBackButton: ()->Unit={}, onClickGoBackToLogin: () -> U
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+
+    val viewModel : RegisterViewModel = viewModel()
 
     var baseContext = LocalContext.current
 
@@ -86,7 +90,7 @@ fun RegisterScreen(onClickBackButton: ()->Unit={}, onClickGoBackToLogin: () -> U
         Spacer(modifier = Modifier.height(60.dp))
 
         Button(onClick = {
-            registerAccount(email, password, baseContext, onClickGoBackToLogin)
+            viewModel.registerAccount(email, password, baseContext, onClickGoBackToLogin)
         }) {
             Text(text = "Register", fontSize = 22.sp)
         }
