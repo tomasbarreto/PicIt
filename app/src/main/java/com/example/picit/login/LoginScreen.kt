@@ -1,6 +1,5 @@
 package com.example.picit.login
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,15 +27,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.R
+import com.example.picit.entities.User
 import com.example.picit.ui.theme.PicItTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(onClickGoToRegistry: () -> Unit={}, onClickGoToMainScreen: (String) -> Unit ={}, modifier: Modifier = Modifier) {
+fun LoginScreen(
+    onClickGoToRegistry: () -> Unit={},
+    onClickGoToMainScreen: () -> Unit ={},
+    currentUserUpdate: (User) -> Unit={},
+    viewModel: LoginViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
-    val viewModel : LoginViewModel = viewModel()
 
     var baseContext = LocalContext.current
 
@@ -82,7 +86,7 @@ fun LoginScreen(onClickGoToRegistry: () -> Unit={}, onClickGoToMainScreen: (Stri
             ) {
 
                 Button(onClick = {
-                    viewModel.loginAccount(email, password, baseContext, onClickGoToMainScreen)
+                    viewModel.loginAccount(email, password, baseContext, onClickGoToMainScreen, currentUserUpdate)
                 }) {
                     Text(text = "Login", fontSize = 22.sp)
                 }

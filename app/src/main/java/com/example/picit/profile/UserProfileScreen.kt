@@ -31,14 +31,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.picit.utils.AppBottomMenu
 import com.example.picit.R
-import com.example.picit.utils.ScreenHeader
+import com.example.picit.entities.User
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.AppBottomMenu
+import com.example.picit.utils.ScreenHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserProfileScreen(bottomNavigationsList: List<() -> Unit> = listOf({},{},{})){
+fun UserProfileScreen(
+    bottomNavigationsList: List<() -> Unit> = listOf({},{},{}),
+    currentUser: User = User("0","0", emptyList(), emptyList(), emptyList(), emptyList(), 0, 0, 0, 0)
+){
 
     Scaffold(
         bottomBar = { AppBottomMenu(selectedItem = 2,  onClickForItems =bottomNavigationsList) }
@@ -49,7 +53,7 @@ fun UserProfileScreen(bottomNavigationsList: List<() -> Unit> = listOf({},{},{})
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            var userName = "Username"
+            var userName = currentUser.name
             ScreenHeader(text = "$userName's\n\nProfile")
             Spacer(modifier = Modifier.height(52.dp))
 
@@ -87,7 +91,7 @@ fun UserProfileScreen(bottomNavigationsList: List<() -> Unit> = listOf({},{},{})
                 Box(
                     modifier = Modifier.align(Alignment.BottomStart)//diff padd
                 ){
-                    Achievement(s="Max challenge win streak", imageId = R.drawable.fire_icon, value="7")
+                    Achievement(s="Max challenge win streak", imageId = R.drawable.fire_icon, value=currentUser.maxWinStreak.toString())
                 }
                 Box(
                     modifier = Modifier

@@ -1,28 +1,39 @@
 package com.example.picit.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.picit.camera.CameraScreen
+import com.example.picit.entities.User
 import com.example.picit.friendslist.FriendsListScreen
 import com.example.picit.joinroom.PreviewRoomsToJoinScreen
-import com.example.picit.notifications.RoomInviteNotificationsScreen
-import com.example.picit.settings.SettingsScreen
-import com.example.picit.profile.UserProfileScreen
 import com.example.picit.joinroom.UserRoomsScreen
 import com.example.picit.login.LoginScreen
+import com.example.picit.login.LoginViewModel
+import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
+import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
+import com.example.picit.settings.SettingsScreen
+
+
 
 @Composable
 fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
+
+    var loginViewModel : LoginViewModel = viewModel()
+
     NavHost(
         navController = navController,
         startDestination = Screens.Login.route,
@@ -39,13 +50,22 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         val onClickCameraButton = {navController.navigate(Screens.Camera.route)}
         val onClickGoToRegistry = {navController.navigate(Screens.Register.route)}
         val onClickGoBackToLogin = {navController.navigate(Screens.Login.route)}
-        val onClickGoToMainScreen = {
-                            uid:String ->
-                        navController.navigate(Screens.Home.route
-                            .replace("{uid}",uid))
-                        }
+        val onClickGoToMainScreen = {navController.navigate(Screens.Home.route)}
+
+        var currentUser by mutableStateOf(User())
+
         composable(route= Screens.Login.route) {
-            LoginScreen(onClickGoToRegistry = onClickGoToRegistry, onClickGoToMainScreen = onClickGoToMainScreen)
+            val currentUserUpdate = {
+                newCurrentUser: User ->
+                currentUser = newCurrentUser
+            }
+
+            LoginScreen(
+                onClickGoToRegistry = onClickGoToRegistry,
+                onClickGoToMainScreen = onClickGoToMainScreen,
+                currentUserUpdate = currentUserUpdate,
+                viewModel = loginViewModel
+            )
         }
         composable(route= Screens.Register.route) {
             RegisterScreen(onClickBackButton = {onClickBackButton()}, onClickGoBackToLogin = onClickGoBackToLogin)
@@ -57,14 +77,15 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickCreateRoom = {navController.navigate(Screens.CreateRoomChooseGame.route)},
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
                 onClickSettings = {navController.navigate(Screens.Settings.route)},
-                onClickRooms = {navController.navigate(Screens.RepicRoomTakePicture.route)}
+                onClickRooms = {navController.navigate(Screens.RepicRoomTakePicture.route)},
+                currentUser = currentUser!!
             )
         }
         composable(route= Screens.Friends.route){
             FriendsListScreen(bottomNavigationsList= bottomNavigationsList)
         }
         composable(route = Screens.Profile.route){
-            UserProfileScreen(bottomNavigationsList = bottomNavigationsList)
+            UserProfileScreen(bottomNavigationsList = bottomNavigationsList, currentUser = currentUser!!)
         }
         composable(route= Screens.RoomsToJoin.route){
             PreviewRoomsToJoinScreen(

@@ -1,16 +1,18 @@
 package com.example.picit.entities
 
-data class User(
-    val id: Int,
-    val name:String,
-    val email:String,
-    val password:String,
-    val rooms: List<Int>, // id das salas
-    val friends: List<Int>, // id dos users
-    val requestsToJoin : List<JoinRoomRequest>,
-    val friendRequests: List<Int>, // id dos users
-    val maxPoints: Int,
-    val totalWins: Int,
-    val maxWinStreak: Int,
-    val nPhotosTaken: Int
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class User (
+    //val uid: String,
+    val username:String = "",
+    val name:String = "",
+    val rooms: List<Int> = emptyList(), // id das salas
+    val friends: List<Int> = emptyList(), // id dos users
+    val requestsToJoin : List<JoinRoomRequest> = emptyList(),
+    val friendRequests: List<Int> = emptyList(), // id dos users
+    val maxPoints: Int = 0,
+    val totalWins: Int = 0,
+    val maxWinStreak: Int = 0,
+    val nrPhotosTaken: Int = 0
 )
