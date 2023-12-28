@@ -3,6 +3,7 @@ package com.example.picit.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,11 +28,10 @@ import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.settings.SettingsScreen
 
-
+private val TAG = "NavHost"
 
 @Composable
 fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
-
     var loginViewModel : LoginViewModel = viewModel()
 
     NavHost(
@@ -52,12 +52,14 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         val onClickGoBackToLogin = {navController.navigate(Screens.Login.route)}
         val onClickGoToMainScreen = {navController.navigate(Screens.Home.route)}
 
-        var currentUser by mutableStateOf(User())
+        // done with id instead of the user, because updates with the user needed to be done with
+        // listeners and that would have very complex logic
+        var currentUserId by mutableStateOf("")
 
         composable(route= Screens.Login.route) {
             val currentUserUpdate = {
-                newCurrentUser: User ->
-                currentUser = newCurrentUser
+                newCurrentUserId: String ->
+                currentUserId = newCurrentUserId
             }
 
             LoginScreen(
@@ -71,6 +73,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             RegisterScreen(onClickBackButton = {onClickBackButton()}, onClickGoBackToLogin = onClickGoBackToLogin)
         }
         composable(route= Screens.Home.route){
+//            var currentUser = User()
+//            loginViewModel.findUserById(currentUserId, { user: User -> currentUser = user })
             UserRoomsScreen(
                 bottomNavigationsList= bottomNavigationsList,
                 onClickJoinRoom = { navController.navigate(Screens.RoomsToJoin.route)},
@@ -78,14 +82,26 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
                 onClickSettings = {navController.navigate(Screens.Settings.route)},
                 onClickRooms = {navController.navigate(Screens.RepicRoomTakePicture.route)},
-                currentUser = currentUser!!
+                currentUser = User()
             )
         }
         composable(route= Screens.Friends.route){
             FriendsListScreen(bottomNavigationsList= bottomNavigationsList)
         }
         composable(route = Screens.Profile.route){
-            UserProfileScreen(bottomNavigationsList = bottomNavigationsList, currentUser = currentUser!!)
+            var currentUser = remember{
+                mutableStateOf(User())
+            }
+            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user }) // tem de se esperar por isto
+
+            UserProfileScreen(
+                bottomNavigationsList = bottomNavigationsList,
+                name=currentUser.value.name,
+                maxPoints = currentUser.value.maxPoints.toString(),
+                numberOfWins = currentUser.value.totalWins.toString(),
+                maxChallengeWinStreak = currentUser.value.maxWinStreak.toString(),
+                nPhotosTaken = currentUser.value.nrPhotosTaken.toString()
+            )
         }
         composable(route= Screens.RoomsToJoin.route){
             PreviewRoomsToJoinScreen(
@@ -148,3 +164,5 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
     }
 }
+
+

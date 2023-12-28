@@ -35,7 +35,7 @@ import com.example.picit.ui.theme.PicItTheme
 fun LoginScreen(
     onClickGoToRegistry: () -> Unit={},
     onClickGoToMainScreen: () -> Unit ={},
-    currentUserUpdate: (User) -> Unit={},
+    currentUserUpdate: (String) -> Unit={},
     viewModel: LoginViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -49,7 +49,7 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Image(painter = painterResource(id = R.drawable.picit_logo), contentDescription = "PicIt logo")
+        //Image(painter = painterResource(id = R.drawable.picit_logo), contentDescription = "PicIt logo")
 
         Spacer(modifier = Modifier.height(60.dp))
 

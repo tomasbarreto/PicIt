@@ -40,8 +40,12 @@ import com.example.picit.utils.ScreenHeader
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserProfileScreen(
-    bottomNavigationsList: List<() -> Unit> = listOf({},{},{}),
-    currentUser: User = User("0","0", emptyList(), emptyList(), emptyList(), emptyList(), 0, 0, 0, 0)
+    bottomNavigationsList: List<() -> Unit> = listOf({}, {}, {}),
+    name: String = "Username",
+    maxPoints: String = "0",
+    numberOfWins: String = "0",
+    maxChallengeWinStreak: String = "0",
+    nPhotosTaken: String ="0"
 ){
 
     Scaffold(
@@ -53,8 +57,7 @@ fun UserProfileScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            var userName = currentUser.name
-            ScreenHeader(text = "$userName's\n\nProfile")
+            ScreenHeader(text = "$name's\n\nProfile")
             Spacer(modifier = Modifier.height(52.dp))
 
             Icon(Icons.Outlined.AccountCircle, contentDescription = null, modifier = Modifier.size(200.dp))
@@ -79,26 +82,26 @@ fun UserProfileScreen(
                         .align(Alignment.TopStart)
                         .padding(top = 80.dp)
                 ){
-                    Achievement("Max points", icon=Icons.Outlined.Add, value = "21")
+                    Achievement("Max points", icon=Icons.Outlined.Add, value = maxPoints)
                 }
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(top = 80.dp)
                 ){
-                    Achievement("Number of wins", icon= Icons.Outlined.Star, value="8")
+                    Achievement("Number of wins", icon= Icons.Outlined.Star, value=numberOfWins)
                 }
                 Box(
                     modifier = Modifier.align(Alignment.BottomStart)//diff padd
                 ){
-                    Achievement(s="Max challenge win streak", imageId = R.drawable.fire_icon, value=currentUser.maxWinStreak.toString())
+                    Achievement(s="Max challenge win streak", imageId = R.drawable.fire_icon, value=maxChallengeWinStreak)
                 }
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(bottom = 20.dp)
                 ){
-                    Achievement(s="Photos taken", imageId = R.drawable.camera_icon, value="67")
+                    Achievement(s="Photos taken", imageId = R.drawable.camera_icon, value=nPhotosTaken)
                 }
 
             }

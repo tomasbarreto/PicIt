@@ -19,7 +19,7 @@ class LoginViewModel: ViewModel() {
     private lateinit var db : FirebaseDatabase
     private val TAG: String = "LoginViewModel"
 
-    fun loginAccount(email: String, password: String, context: Context, onClickGoToMainScreen: () -> Unit, currentUserUpdate: (User) -> Unit={}) {
+    fun loginAccount(email: String, password: String, context: Context, onClickGoToMainScreen: () -> Unit, currentUserIdUpdate: (String) -> Unit={}) {
             auth = Firebase.auth
             db = Firebase.database
 
@@ -31,21 +31,9 @@ class LoginViewModel: ViewModel() {
                             Log.d(ContentValues.TAG, "signInWithEmail:success")
                             val currentUser = auth.currentUser
                             if (currentUser != null) {
-                                val usersRef = db.getReference("users")
-                                usersRef.child(currentUser.uid).get().addOnSuccessListener {
-                                    val savedUser = it.getValue<User>()
-                                    Log.d("firebase", "Got value ${savedUser}")
-
-                                    if (savedUser != null) {
-                                        currentUserUpdate(savedUser)
-                                        onClickGoToMainScreen()
-                                    }
-                                }.addOnFailureListener{
-                                    Log.e("firebase", "Error getting data", it)
-                                }
+                                currentUserIdUpdate(currentUser.uid)
+                                onClickGoToMainScreen()
                             }
-
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(ContentValues.TAG, "signInWithEmail:failure", task.exception)
@@ -57,6 +45,20 @@ class LoginViewModel: ViewModel() {
                         }
                     }
             }
+    }
+
+    fun findUserById(currentUserId: String, onUserFound: (User) -> Unit) {
+        val usersRef = db.getReference("users")
+        usersRef.child(currentUserId).get().addOnSuccessListener {
+            val savedUser = it.getValue<User>()
+            Log.d("firebase", "Got value ${savedUser}")
+
+            if (savedUser != null) {
+                onUserFound(savedUser)
+            }
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
     }
 
 }
