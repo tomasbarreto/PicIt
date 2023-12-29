@@ -103,10 +103,10 @@ fun RoomTimeSettingsRepicScreen(
 
         Button(onClick = {
             viewModel.registerRepicRoom(roomName, roomCapacity, numChallenges,
-                hoursPictureRelease.value, minutesPictureRelease.value,
-                hoursPictureSubmissionStart.value, minutesPictureSubmissionEnd.value,
-                hoursPictureSubmissionEnd.value, minutesPictureSubmissionEnd.value,
-                hoursWinner.value, minutesWinner.value, onClickGoHomeScreen, currentUser, currentUserId)
+                hoursPictureRelease.value + ":" + minutesPictureRelease.value,
+                hoursPictureSubmissionStart.value + ":" + minutesPictureSubmissionEnd.value,
+                hoursPictureSubmissionEnd.value + ":" + minutesPictureSubmissionEnd.value,
+                hoursWinner.value + ":" + minutesWinner.value, onClickGoHomeScreen, currentUser, currentUserId)
 
         }) {
             Text(text = "Next", fontSize = 22.sp)

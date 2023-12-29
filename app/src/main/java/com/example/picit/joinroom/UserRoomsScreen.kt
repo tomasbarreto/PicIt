@@ -1,5 +1,6 @@
 package com.example.picit.joinroom
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.User
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.AppBottomMenu
@@ -41,6 +44,12 @@ fun UserRoomsScreen(
     onClickRooms: () -> Unit = {},
     currentUser: User = User()
 ) {
+    val viewModel : UserRoomsViewModel = viewModel()
+    val userCurrentRooms = remember { mutableStateOf(emptyList<RePicRoom>()) }
+//    viewModel.getRoomsList(currentUser, userCurrentRooms)
+
+    Log.w("asdsfjkdhjfhls", userCurrentRooms.value.size.toString())
+
     Column (
         modifier = Modifier
             .fillMaxSize(),
@@ -73,17 +82,29 @@ fun UserRoomsScreen(
         }
 
         // Rooms of the user, get from databse
-        var nRooms = 2;
-        for (i in 1..nRooms){
-            var roomName = "Room Name"
-            var roomMaxSize = 10
-            var usersInRoom = 9
+        userCurrentRooms.value.forEach { room ->
+            var roomName = room.name
+            var roomMaxSize = room.maxCapacity
+            var usersInRoom = room.currentCapacity
             var gameType = "RePic" //
-            var maxDailyChallenges = 30
-            var challengesDone = 13
+            var maxDailyChallenges = room.maxNumOfChallenges
+            var challengesDone = room.currentNumOfChallengesDone
             Spacer(modifier = Modifier.height(16.dp))
             RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
         }
+
+
+//        var nRooms = userCurrentRooms.value.size;
+//        for (i in 1..nRooms){
+//            var roomName = userCurrentRooms.value.get(i).name
+//            var roomMaxSize = userCurrentRooms.value.get(i).maxCapacity
+//            var usersInRoom = userCurrentRooms.value.get(i).currentCapacity
+//            var gameType = "RePic" //
+//            var maxDailyChallenges = userCurrentRooms.value.get(i).maxNumOfChallenges
+//            var challengesDone = userCurrentRooms.value.get(i).currentNumOfChallengesDone
+//            Spacer(modifier = Modifier.height(16.dp))
+//            RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
+//        }
 
         Spacer(modifier = Modifier.weight(1f))
 

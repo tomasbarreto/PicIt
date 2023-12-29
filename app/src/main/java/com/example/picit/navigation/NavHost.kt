@@ -37,8 +37,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
     NavHost(
         navController = navController,
         startDestination = Screens.Login.route,
-//        startDestination = Screens.PromptRoomTakePicture.route, //para testar camera
-//        startDestination = Screens.RepicRoomTakePicture.route, //para testar camera
         modifier = modifier
     ) {
         val bottomNavigationsList = listOf(

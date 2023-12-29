@@ -1,7 +1,6 @@
 package com.example.picit.entities
 
 import kotlinx.serialization.Serializable
-import java.util.Calendar
 
 @Serializable
 data class RePicRoom(
@@ -12,10 +11,10 @@ data class RePicRoom(
     val currentCapacity: Int = 0,
     val maxNumOfChallenges: Int = 0,
     val currentNumOfChallengesDone: Int = 0,
-    val winnerAnnouncementTime: Calendar? = null,
-    val photoSubmissionOpeningTime: Calendar? = null,
-    val photoSubmissionClosingTime: Calendar? = null,
+    val winnerAnnouncementTime: String? = null,
+    val photoSubmissionOpeningTime: String? = null,
+    val photoSubmissionClosingTime: String? = null,
     val leaderboard: List<UserInLeaderboard> = emptyList(),
     val picturesSubmitted: List<RePicPhoto> = emptyList(),
-    val pictureReleaseTime: Calendar? = null,
+    val pictureReleaseTime: String? = null,
 )
