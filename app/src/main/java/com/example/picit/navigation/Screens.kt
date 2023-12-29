@@ -10,7 +10,7 @@ sealed class Screens(val route:String){
     object CreateRoomChooseGame: Screens("create_room_choose_game")
     object DefineRoomSettings: Screens("define_room_settings/{game_type}")
     object PicDescTimeSettings: Screens("picdesc_time_settings")
-    object RePicTimeSettings: Screens("repic_time_settings")
+    object RePicTimeSettings: Screens("repic_time_settings/{roomName}/{capacity}/{numChallenges}")
     object InvitesNotifications: Screens("invite_notifications")
     object Settings: Screens("settings")
     object Camera: Screens("camera")

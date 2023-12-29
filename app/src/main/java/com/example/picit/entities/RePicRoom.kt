@@ -1,20 +1,19 @@
 package com.example.picit.entities
 
-import java.util.Date
+import java.util.Calendar
 
 data class RePicRoom(
-    val id: Int,
-    val name:String,
-    val gameType: GameType,
-    val maxCapacity: Int,
-    val currentCapacity: Int,
-    val maxNumOfChallenges: Int,
-    val currentNumOfChallengesDone: Int,
-    val winnerAnnouncementTime: Date,
-    val photoSubmissionOpeningTime: Date,
-    val photoSubmissionClosingTime: Date,
-    val leaderboard: List<UserInLeaderboard>,
-
-    val picturesSubmitted: List<RePicPhoto>,
-    val pictureReleaseTime: Date,
+//    val id: Int,
+    val name:String = "",
+    val gameType: GameType = GameType.REPIC,
+    val maxCapacity: Int = 0,
+    val currentCapacity: Int = 0,
+    val maxNumOfChallenges: Int = 0,
+    val currentNumOfChallengesDone: Int = 0,
+    val winnerAnnouncementTime: Calendar? = null,
+    val photoSubmissionOpeningTime: Calendar? = null,
+    val photoSubmissionClosingTime: Calendar? = null,
+    val leaderboard: List<UserInLeaderboard> = emptyList(),
+    val picturesSubmitted: List<RePicPhoto> = emptyList(),
+    val pictureReleaseTime: Calendar? = null,
 )

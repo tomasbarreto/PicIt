@@ -118,24 +118,42 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
             )
         }
-        composable(route = Screens.DefineRoomSettings.route){backStackEntry->
+        composable(route = Screens.DefineRoomSettings.route){ backStackEntry->
             val gameType = backStackEntry.arguments?.getString("game_type")
             val route = if( gameType.equals("0")) Screens.PicDescTimeSettings.route
                         else Screens.RePicTimeSettings.route
+
             RoomSettingsScreen(
                 onClickBackButton = { onClickBackButton() },
-                onClickNextButton = {navController.navigate( route ) }
+                onClickNextButton = {
+                        name, capacity, numChallenges ->
+                    navController.navigate(
+                        route
+                            .replace("{roomName}", name)
+                            .replace("{capacity}", capacity)
+                            .replace("{numChallenges}", numChallenges)
+                    )
+                }
             )
         }
-        composable(route = Screens.PicDescTimeSettings.route){
+        composable(route = Screens.PicDescTimeSettings.route) {
             RoomTimeSettingsPicDescScreen(
                 onClickBackButton = { onClickBackButton() }
             )
         }
-        composable(route = Screens.RePicTimeSettings.route){
-            RoomTimeSettingsRepicScreen(
-                onClickBackButton = { onClickBackButton() }
-            )
+        composable(route = Screens.RePicTimeSettings.route){ backStackEntry->
+            val roomName = backStackEntry.arguments?.getString("roomName")
+            val roomCapacity = backStackEntry.arguments?.getString("capacity")
+            val numChallenges = backStackEntry.arguments?.getString("numChallenges")
+
+            if (roomName != null && roomCapacity != null && numChallenges != null) {
+                RoomTimeSettingsRepicScreen(
+                    onClickBackButton = { onClickBackButton() },
+                    roomName = roomName,
+                    roomCapacity = roomCapacity,
+                    numChallenges = numChallenges
+                )
+            }
         }
         composable(route = Screens.InvitesNotifications.route){
             RoomInviteNotificationsScreen(

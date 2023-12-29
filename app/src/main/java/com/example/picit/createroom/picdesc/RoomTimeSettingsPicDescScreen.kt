@@ -19,9 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.picit.utils.ScreenHeader
-import com.example.picit.createroom.InsertTime
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.ScreenHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,11 +55,11 @@ fun RoomTimeSettingsPicDescScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            InsertTime()
+//            InsertTime()
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = " to ", fontSize = 20.sp)
             Spacer(modifier = Modifier.height(10.dp))
-            InsertTime()
+//            InsertTime()
         }
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -74,11 +73,11 @@ fun RoomTimeSettingsPicDescScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            InsertTime()
+//            InsertTime()
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = " to ", fontSize = 20.sp)
             Spacer(modifier = Modifier.height(10.dp))
-            InsertTime()
+//            InsertTime()
         }
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -87,7 +86,7 @@ fun RoomTimeSettingsPicDescScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        InsertTime()
+//        InsertTime()
 
         Spacer(modifier = Modifier.height(50.dp))
 
