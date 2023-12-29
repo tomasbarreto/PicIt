@@ -34,7 +34,7 @@ fun RoomTimeSettingsRepicScreen(
     numChallenges: String,
     onClickGoHomeScreen: ()->Unit = {},
     currentUserId: String,
-    currentUser: User
+    currentUserRooms: List<String>
 
 ) {
     val viewModel : RepicRoomTimeSettingsViewModel = viewModel()
@@ -106,7 +106,7 @@ fun RoomTimeSettingsRepicScreen(
                 hoursPictureRelease.value + ":" + minutesPictureRelease.value,
                 hoursPictureSubmissionStart.value + ":" + minutesPictureSubmissionEnd.value,
                 hoursPictureSubmissionEnd.value + ":" + minutesPictureSubmissionEnd.value,
-                hoursWinner.value + ":" + minutesWinner.value, onClickGoHomeScreen, currentUser, currentUserId)
+                hoursWinner.value + ":" + minutesWinner.value, onClickGoHomeScreen, currentUserRooms, currentUserId)
 
         }) {
             Text(text = "Next", fontSize = 22.sp)

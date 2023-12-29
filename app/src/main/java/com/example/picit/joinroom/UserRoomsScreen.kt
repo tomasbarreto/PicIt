@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
@@ -28,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.entities.RePicRoom
-import com.example.picit.entities.User
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.AppBottomMenu
 import com.example.picit.utils.RoomPreview
@@ -42,13 +43,13 @@ fun UserRoomsScreen(
     onClickInvitesButton: ()-> Unit = {},
     onClickSettings: ()-> Unit = {},
     onClickRooms: () -> Unit = {},
-    currentUser: User
+    currentUserRoomsIds: List<String>
 ) {
     val viewModel : UserRoomsViewModel = viewModel()
     val userCurrentRooms = remember { mutableStateOf(emptyList<RePicRoom>()) }
 
-    LaunchedEffect(currentUser) {
-        viewModel.getRoomsList(currentUser, userCurrentRooms)
+    LaunchedEffect(currentUserRoomsIds) {
+        viewModel.getRoomsList(currentUserRoomsIds, userCurrentRooms)
     }
 
     Column (
@@ -81,18 +82,25 @@ fun UserRoomsScreen(
                 Icon(Icons.Filled.Email, contentDescription = null)
             }
         }
-
-        // Rooms of the user, get from databse
-        userCurrentRooms.value.forEach { room ->
-            var roomName = room.name
-            var roomMaxSize = room.maxCapacity
-            var usersInRoom = room.currentCapacity
-            var gameType = "RePic" //
-            var maxDailyChallenges = room.maxNumOfChallenges
-            var challengesDone = room.currentNumOfChallengesDone
-            Spacer(modifier = Modifier.height(16.dp))
-            RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .weight(5f)
+        ) {
+            // Rooms of the user, get from databse
+            userCurrentRooms.value.forEach { room ->
+                var roomName = room.name
+                var roomMaxSize = room.maxCapacity
+                var usersInRoom = room.currentCapacity
+                var gameType = "RePic" //
+                var maxDailyChallenges = room.maxNumOfChallenges
+                var challengesDone = room.currentNumOfChallengesDone
+                Spacer(modifier = Modifier.height(16.dp))
+                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
+            }
         }
+
+
 
         Spacer(modifier = Modifier.weight(1f))
 

@@ -83,7 +83,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
                 onClickSettings = {navController.navigate(Screens.Settings.route)},
                 onClickRooms = {navController.navigate(Screens.RepicRoomTakePicture.route)},
-                currentUser = currentUser.value
+                currentUserRoomsIds = currentUser.value.rooms
             )
         }
         composable(route= Screens.Friends.route){
@@ -160,7 +160,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     numChallenges = numChallenges,
                     onClickGoHomeScreen = onClickGoToMainScreen,
                     currentUserId = currentUserId,
-                    currentUser = currentUser.value
+                    currentUserRooms = currentUser.value.rooms
                 )
             }
         }

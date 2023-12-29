@@ -4,15 +4,13 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.RePicRoom
-import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 
 class UserRoomsViewModel: ViewModel() {
 
-    fun getRoomsList(currentUser: User, currentRooms: MutableState<List<RePicRoom>>) {
-        val currentUserRoomsIds = currentUser.rooms
+    fun getRoomsList(currentUserRoomsIds: List<String>, currentRooms: MutableState<List<RePicRoom>>) {
         currentUserRoomsIds.forEach { roomId ->
             findRoomById(roomId,
                 { room: RePicRoom -> currentRooms.value = currentRooms.value + room }

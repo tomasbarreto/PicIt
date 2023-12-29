@@ -3,7 +3,6 @@ package com.example.picit.createroom.repic
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.RePicRoom
-import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 
@@ -18,7 +17,7 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
         timePictureSubmissionEnd:String,
         timeWinner:String,
         onClickGoHomeScreen: ()->Unit = {},
-        currentUser: User,
+        currentUserRooms: List<String>,
         currentUserId: String
     ) {
 
@@ -30,14 +29,14 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
         val repicRoomRef = database.getReference("repicRooms").push()
         repicRoomRef.setValue(newRepicRoom)
 
-        updateUserRooms(currentUser, currentUserId, repicRoomRef.key.toString())
+        updateUserRooms(currentUserRooms, currentUserId, repicRoomRef.key.toString())
         onClickGoHomeScreen()
     }
 
-    private fun updateUserRooms(currentUser: User, currentUserId: String, roomId: String) {
+    private fun updateUserRooms(currentUserRooms: List<String>, currentUserId: String, roomId: String) {
         val database = Firebase.database
 
-        var userCurrentRooms = mutableStateOf(currentUser.rooms)
+        var userCurrentRooms = mutableStateOf(currentUserRooms)
         userCurrentRooms.value = userCurrentRooms.value + roomId
 
         val roomsRef = database.getReference("users/" + currentUserId + "/rooms")
