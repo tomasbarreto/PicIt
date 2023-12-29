@@ -72,7 +72,7 @@ class RegisterViewModel: ViewModel() {
         totalWinsRef.setValue(0)
         maxWinStreakRef.setValue(0)
         nrPhotosTakenRef.setValue(0)
-        roomsRef.setValue(emptyList<Int>())
+        roomsRef.setValue(emptyList<String>())
         friendsRef.setValue(emptyList<Int>())
         requestsToJoinRef.setValue(emptyList<JoinRoomRequest>())
         friendRequestsRef.setValue(emptyList<Int>())

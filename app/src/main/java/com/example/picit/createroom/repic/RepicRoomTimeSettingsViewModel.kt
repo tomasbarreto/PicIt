@@ -1,7 +1,9 @@
 package com.example.picit.createroom.repic
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.RePicRoom
+import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import java.util.Calendar
@@ -20,7 +22,9 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
         minutesPictureSubmissionEnd:String,
         hoursWinner:String,
         minutesWinner:String,
-        onClickGoHomeScreen: ()->Unit = {}
+        onClickGoHomeScreen: ()->Unit = {},
+        currentUser: User,
+        currentUserId: String
     ) {
 
         var timePictureRealease = Calendar.getInstance()
@@ -44,9 +48,21 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
             photoSubmissionClosingTime = timePictureSubmissionEnd, pictureReleaseTime = timePictureRealease)
 
         val database = Firebase.database
-        database.getReference("repicRooms").push().setValue(newRepicRoom)
+        val repicRoomRef = database.getReference("repicRooms").push()
+        repicRoomRef.setValue(newRepicRoom)
 
+        updateUserRooms(currentUser, currentUserId, repicRoomRef.key.toString())
         onClickGoHomeScreen()
+    }
+
+    private fun updateUserRooms(currentUser: User, currentUserId: String, roomId: String) {
+        val database = Firebase.database
+
+        var userCurrentRooms = mutableStateOf(currentUser.rooms)
+        userCurrentRooms.value = userCurrentRooms.value + roomId
+
+        val roomsRef = database.getReference("users/" + currentUserId + "/rooms")
+        roomsRef.setValue(userCurrentRooms.value)
     }
 
 }

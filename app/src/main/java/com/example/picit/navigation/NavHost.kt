@@ -77,8 +77,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 mutableStateOf(User())
             }
             loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user })
-//            var currentUser = User()
-//            loginViewModel.findUserById(currentUserId, { user: User -> currentUser = user })
+
             UserRoomsScreen(
                 bottomNavigationsList= bottomNavigationsList,
                 onClickJoinRoom = { navController.navigate(Screens.RoomsToJoin.route)},
@@ -150,13 +149,20 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val roomCapacity = backStackEntry.arguments?.getString("capacity")
             val numChallenges = backStackEntry.arguments?.getString("numChallenges")
 
+            var currentUser = remember{
+                mutableStateOf(User())
+            }
+            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user })
+
             if (roomName != null && roomCapacity != null && numChallenges != null) {
                 RoomTimeSettingsRepicScreen(
                     onClickBackButton = { onClickBackButton() },
                     roomName = roomName,
                     roomCapacity = roomCapacity,
                     numChallenges = numChallenges,
-                    onClickGoHomeScreen = onClickGoToMainScreen
+                    onClickGoHomeScreen = onClickGoToMainScreen,
+                    currentUserId = currentUserId,
+                    currentUser = currentUser.value
                 )
             }
         }

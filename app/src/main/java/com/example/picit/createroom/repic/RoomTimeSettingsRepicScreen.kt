@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.createroom.InsertTime
 import com.example.picit.createroom.repic.RepicRoomTimeSettingsViewModel
+import com.example.picit.entities.User
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
@@ -31,7 +32,9 @@ fun RoomTimeSettingsRepicScreen(
     roomName: String,
     roomCapacity: String,
     numChallenges: String,
-    onClickGoHomeScreen: ()->Unit = {}
+    onClickGoHomeScreen: ()->Unit = {},
+    currentUserId: String,
+    currentUser: User
 
 ) {
     val viewModel : RepicRoomTimeSettingsViewModel = viewModel()
@@ -103,7 +106,7 @@ fun RoomTimeSettingsRepicScreen(
                 hoursPictureRelease.value, minutesPictureRelease.value,
                 hoursPictureSubmissionStart.value, minutesPictureSubmissionEnd.value,
                 hoursPictureSubmissionEnd.value, minutesPictureSubmissionEnd.value,
-                hoursWinner.value, minutesWinner.value, onClickGoHomeScreen)
+                hoursWinner.value, minutesWinner.value, onClickGoHomeScreen, currentUser, currentUserId)
 
         }) {
             Text(text = "Next", fontSize = 22.sp)
