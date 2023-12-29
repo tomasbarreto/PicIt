@@ -26,7 +26,9 @@ import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun JoinRepicRoomScreen(modifier: Modifier = Modifier) {
+fun JoinRepicRoomScreen(
+    modifier: Modifier = Modifier
+) {
     var roomName = "Room Name"
     var roomMaxSize = 10
     var usersInRoom = 9

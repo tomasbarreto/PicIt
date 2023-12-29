@@ -28,7 +28,8 @@ import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun PreviewRoomsToJoinScreen(
-    onClickBackButton: ()->Unit={}
+    onClickBackButton: ()->Unit={},
+    roomsAvailable: List<PreviewRoom>
 ){
     Column (
         modifier = Modifier
