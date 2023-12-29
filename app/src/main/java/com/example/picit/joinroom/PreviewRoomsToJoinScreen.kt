@@ -22,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
+import com.example.picit.entities.GameType
+import com.example.picit.entities.RePicRoom
 import com.example.picit.utils.RoomPreview
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
@@ -29,7 +31,9 @@ import com.example.picit.ui.theme.PicItTheme
 @Composable
 fun PreviewRoomsToJoinScreen(
     onClickBackButton: ()->Unit={},
-    roomsAvailable: List<PreviewRoom>
+    repicRoomsAvailable: List<RePicRoom> = listOf(
+        RePicRoom("","name")
+    )
 ){
     Column (
         modifier = Modifier
@@ -62,16 +66,11 @@ fun PreviewRoomsToJoinScreen(
         }
 
         // Public rooms in the system, get from databse
-        var nRooms = 2;
-        for (i in 1..nRooms){
-            var roomName = "Room Name"
-            var roomMaxSize = 10
-            var usersInRoom = 9
-            var gameType = "RePic" //
-            var maxDailyChallenges = 30
-            var challengesDone = 13
+        for (room in repicRoomsAvailable){
             Spacer(modifier = Modifier.height(16.dp))
-            RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone)
+            var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
+            RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
+                room.maxNumOfChallenges,room.currentNumOfChallengesDone)
         }
 
         Spacer(modifier = Modifier.weight(1f))

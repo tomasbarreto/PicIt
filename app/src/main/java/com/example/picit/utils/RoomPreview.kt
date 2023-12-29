@@ -21,7 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun RoomPreview(roomName: String, roomMaxSize: Int, usersInRoom: Int, gameType: String, maxDailyChallenges: Int, challengesDone: Int, onClickRooms: () -> Unit = {}) {
+fun RoomPreview(roomName: String,
+                roomMaxSize: Int,
+                usersInRoom: Int,
+                gameType: String,
+                maxDailyChallenges: Int,
+                challengesDone: Int,
+                onClickRooms: () -> Unit = {}) {
     Column(
         verticalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
@@ -32,7 +38,7 @@ fun RoomPreview(roomName: String, roomMaxSize: Int, usersInRoom: Int, gameType: 
                 color = Color.Black,
                 shape = RoundedCornerShape(30.dp)
             )
-            .clickable(onClick = onClickRooms) // TODO: vai ser preciso um room id para direcionar para a salar certa?
+            .clickable(onClick = onClickRooms)
             .padding(12.dp)
     ) {
         Text(text = roomName, fontSize = 20.sp)

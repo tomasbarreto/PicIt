@@ -1,7 +1,9 @@
 package com.example.picit.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -11,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.picit.camera.CameraScreen
+import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.User
 import com.example.picit.friendslist.FriendsListScreen
 import com.example.picit.joinroom.PreviewRoomsToJoinScreen
@@ -27,6 +30,9 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.settings.SettingsScreen
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 
 private val TAG = "NavHost"
 
@@ -104,7 +110,24 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route= Screens.RoomsToJoin.route){
+            var currentUser = remember{
+                mutableStateOf(User())
+            }
+            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user }) // tem de se esperar por isto
+
+            // TODO : TOU AQUI --------------------
+            var allRepicRooms = remember{
+                mutableStateListOf<RePicRoom>()
+            }
+
+            //TODO: isto nao ta bem
+            getAllRooms(retrieveRepicRooms = { rePicRooms ->
+                for (room in rePicRooms){
+                    allRepicRooms.add(room)
+                }
+            })
             PreviewRoomsToJoinScreen(
+                repicRoomsAvailable = allRepicRooms,
                 onClickBackButton = {onClickBackButton()}
             )
         }
@@ -162,6 +185,39 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickCameraButton = onClickCameraButton
             )
         }
+    }
+
+}
+
+// TODO: funcoes do firebase numa classe aparte? incluindo o findUserById
+fun getAllRooms(
+//    retrievePicdescRooms: (List<PicDescPhoto>) -> Unit,
+    retrieveRepicRooms: (List<RePicRoom>) -> Unit
+) {
+    val db = Firebase.database
+    val repicRoomsRef = db.getReference("repicRooms")
+//        val picdescRoomsRef = db.getReference("picdescRooms")
+    repicRoomsRef.get().addOnSuccessListener { repicRoomsListSnapshot ->
+        var repicRooms = mutableListOf<RePicRoom>()
+        for(roomSnapshtop in repicRoomsListSnapshot.children){
+            val incompleteRoom = roomSnapshtop.getValue<RePicRoom>() // doesnt have the id
+            val roomId = roomSnapshtop.key.toString()
+
+            if(incompleteRoom != null){
+                val repicRoom = RePicRoom(roomId, incompleteRoom.name,incompleteRoom.gameType,
+                    incompleteRoom.maxCapacity,incompleteRoom.currentCapacity,incompleteRoom.maxNumOfChallenges,
+                    incompleteRoom.currentNumOfChallengesDone, incompleteRoom.winnerAnnouncementTime,
+                    incompleteRoom.photoSubmissionOpeningTime,incompleteRoom.photoSubmissionClosingTime,
+                    incompleteRoom.leaderboard, incompleteRoom.picturesSubmitted,incompleteRoom.pictureReleaseTime)
+                repicRooms.add(repicRoom)
+            }
+
+        }
+        Log.d("firebase", "ALL ROOMS: $repicRooms")
+        retrieveRepicRooms(repicRooms)
+
+    }.addOnFailureListener{
+        Log.e("firebase", "Error getting data", it)
     }
 }
 
