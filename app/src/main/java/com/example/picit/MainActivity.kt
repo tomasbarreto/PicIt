@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.example.picit.joinroom.UserRoomsScreen
 import com.example.picit.navigation.PicItNavHost
 import com.example.picit.ui.theme.PicItTheme
 
@@ -49,6 +48,6 @@ fun PicItApp() {
 @Composable
 fun GreetingPreview() {
     PicItTheme {
-        UserRoomsScreen()
+//        UserRoomsScreen()
     }
 }

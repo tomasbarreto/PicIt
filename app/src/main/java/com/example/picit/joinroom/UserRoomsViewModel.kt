@@ -20,6 +20,7 @@ class UserRoomsViewModel: ViewModel() {
         }
     }
 
+
     private fun findRoomById(roomId: String, onRoomFound: (RePicRoom) -> Unit) {
         var db = Firebase.database
         val roomsRef = db.getReference("repicRooms")

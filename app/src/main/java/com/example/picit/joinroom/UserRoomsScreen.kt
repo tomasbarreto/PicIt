@@ -1,6 +1,5 @@
 package com.example.picit.joinroom
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,13 +42,14 @@ fun UserRoomsScreen(
     onClickInvitesButton: ()-> Unit = {},
     onClickSettings: ()-> Unit = {},
     onClickRooms: () -> Unit = {},
-    currentUser: User = User()
+    currentUser: User
 ) {
     val viewModel : UserRoomsViewModel = viewModel()
     val userCurrentRooms = remember { mutableStateOf(emptyList<RePicRoom>()) }
-//    viewModel.getRoomsList(currentUser, userCurrentRooms)
 
-    Log.w("asdsfjkdhjfhls", userCurrentRooms.value.size.toString())
+    LaunchedEffect(currentUser) {
+        viewModel.getRoomsList(currentUser, userCurrentRooms)
+    }
 
     Column (
         modifier = Modifier
@@ -93,19 +94,6 @@ fun UserRoomsScreen(
             RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
         }
 
-
-//        var nRooms = userCurrentRooms.value.size;
-//        for (i in 1..nRooms){
-//            var roomName = userCurrentRooms.value.get(i).name
-//            var roomMaxSize = userCurrentRooms.value.get(i).maxCapacity
-//            var usersInRoom = userCurrentRooms.value.get(i).currentCapacity
-//            var gameType = "RePic" //
-//            var maxDailyChallenges = userCurrentRooms.value.get(i).maxNumOfChallenges
-//            var challengesDone = userCurrentRooms.value.get(i).currentNumOfChallengesDone
-//            Spacer(modifier = Modifier.height(16.dp))
-//            RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
-//        }
-
         Spacer(modifier = Modifier.weight(1f))
 
         Row (
@@ -144,6 +132,6 @@ fun SearchBar() {
 @Composable
 fun UserRoomsScreenPreview() {
     PicItTheme {
-        UserRoomsScreen()
+//        UserRoomsScreen()
     }
 }
