@@ -31,12 +31,10 @@ fun RoomTimeSettingsRepicScreen(
     roomName: String,
     roomCapacity: String,
     numChallenges: String,
+    onClickGoHomeScreen: ()->Unit = {}
 
 ) {
     val viewModel : RepicRoomTimeSettingsViewModel = viewModel()
-//    var hoursDescRelease by remember { mutableStateOf("") }
-//    var minutesDescRelease by remember { mutableStateOf("") }
-
 
     var hoursPictureRelease = remember { mutableStateOf("") }
     var minutesPictureRelease = remember { mutableStateOf("") }
@@ -105,7 +103,7 @@ fun RoomTimeSettingsRepicScreen(
                 hoursPictureRelease.value, minutesPictureRelease.value,
                 hoursPictureSubmissionStart.value, minutesPictureSubmissionEnd.value,
                 hoursPictureSubmissionEnd.value, minutesPictureSubmissionEnd.value,
-                hoursWinner.value, minutesWinner.value)
+                hoursWinner.value, minutesWinner.value, onClickGoHomeScreen)
 
         }) {
             Text(text = "Next", fontSize = 22.sp)

@@ -19,7 +19,8 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
         hoursPictureSubmissionEnd:String,
         minutesPictureSubmissionEnd:String,
         hoursWinner:String,
-        minutesWinner:String
+        minutesWinner:String,
+        onClickGoHomeScreen: ()->Unit = {}
     ) {
 
         var timePictureRealease = Calendar.getInstance()
@@ -44,6 +45,8 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
 
         val database = Firebase.database
         database.getReference("repicRooms").push().setValue(newRepicRoom)
+
+        onClickGoHomeScreen()
     }
 
 }

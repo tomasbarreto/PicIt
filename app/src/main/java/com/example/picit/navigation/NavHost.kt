@@ -72,7 +72,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route= Screens.Register.route) {
             RegisterScreen(onClickBackButton = {onClickBackButton()}, onClickGoBackToLogin = onClickGoBackToLogin)
         }
-        composable(route= Screens.Home.route){
+        composable(route= Screens.Home.route) {
+            var currentUser = remember{
+                mutableStateOf(User())
+            }
+            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user })
 //            var currentUser = User()
 //            loginViewModel.findUserById(currentUserId, { user: User -> currentUser = user })
             UserRoomsScreen(
@@ -82,7 +86,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
                 onClickSettings = {navController.navigate(Screens.Settings.route)},
                 onClickRooms = {navController.navigate(Screens.RepicRoomTakePicture.route)},
-                currentUser = User()
+                currentUser = currentUser.value
             )
         }
         composable(route= Screens.Friends.route){
@@ -151,7 +155,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     onClickBackButton = { onClickBackButton() },
                     roomName = roomName,
                     roomCapacity = roomCapacity,
-                    numChallenges = numChallenges
+                    numChallenges = numChallenges,
+                    onClickGoHomeScreen = onClickGoToMainScreen
                 )
             }
         }

@@ -39,7 +39,7 @@ fun UserRoomsScreen(
     onClickInvitesButton: ()-> Unit = {},
     onClickSettings: ()-> Unit = {},
     onClickRooms: () -> Unit = {},
-    currentUser: User = User("0", "0", emptyList(), emptyList(), emptyList(), emptyList(), 0, 0, 0, 0)
+    currentUser: User = User()
 ) {
     Column (
         modifier = Modifier
