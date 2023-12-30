@@ -9,7 +9,10 @@ import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 
@@ -19,7 +22,7 @@ class LoginViewModel: ViewModel() {
     private lateinit var db : FirebaseDatabase
     private val TAG: String = "LoginViewModel"
 
-    fun loginAccount(email: String, password: String, context: Context, onClickGoToMainScreen: () -> Unit, currentUserIdUpdate: (String) -> Unit={}) {
+    fun loginAccount(email: String, password: String, context: Context, onClickGoToMainScreen: () -> Unit, currentUserUpdate: (User) -> Unit={}) {
             auth = Firebase.auth
             db = Firebase.database
 
@@ -31,7 +34,7 @@ class LoginViewModel: ViewModel() {
                             Log.d(ContentValues.TAG, "signInWithEmail:success")
                             val currentUser = auth.currentUser
                             if (currentUser != null) {
-                                currentUserIdUpdate(currentUser.uid)
+                                setCurrentUserListener(currentUser.uid, currentUserUpdate)
                                 onClickGoToMainScreen()
                             }
                         } else {
@@ -45,6 +48,28 @@ class LoginViewModel: ViewModel() {
                         }
                     }
             }
+    }
+
+    private fun setCurrentUserListener(uid: String, currentUserUpdate: (User) -> Unit) {
+        val userRef = db.getReference("users/$uid")
+
+        userRef.addValueEventListener(object: ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user = snapshot.getValue<User>()
+
+                if(user != null){
+                    currentUserUpdate(user)
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w(TAG, "Failed to read value.", error.toException())
+            }
+
+        })
+
     }
 
     fun findUserById(currentUserId: String, onUserFound: (User) -> Unit) {

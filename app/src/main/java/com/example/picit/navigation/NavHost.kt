@@ -61,18 +61,16 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         // done with id instead of the user, because updates with the user needed to be done with
         // listeners and that would have very complex logic
         var currentUserId by mutableStateOf("")
+        var currentUser by mutableStateOf(User())
 
         composable(route= Screens.Login.route) {
-            val currentUserUpdate = {
-                newCurrentUserId: String ->
-                currentUserId = newCurrentUserId
-            }
+            val currentUserUpdate = { user: User -> currentUser = user }
 
             LoginScreen(
                 onClickGoToRegistry = onClickGoToRegistry,
                 onClickGoToMainScreen = onClickGoToMainScreen,
                 currentUserUpdate = currentUserUpdate,
-                viewModel = loginViewModel
+                viewModel = loginViewModel,
             )
         }
         composable(route= Screens.Register.route) {
@@ -95,25 +93,17 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             FriendsListScreen(bottomNavigationsList= bottomNavigationsList)
         }
         composable(route = Screens.Profile.route){
-            var currentUser = remember{
-                mutableStateOf(User())
-            }
-            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user }) // tem de se esperar por isto
 
             UserProfileScreen(
                 bottomNavigationsList = bottomNavigationsList,
-                name=currentUser.value.name,
-                maxPoints = currentUser.value.maxPoints.toString(),
-                numberOfWins = currentUser.value.totalWins.toString(),
-                maxChallengeWinStreak = currentUser.value.maxWinStreak.toString(),
-                nPhotosTaken = currentUser.value.nrPhotosTaken.toString()
+                name=currentUser.name,
+                maxPoints = currentUser.maxPoints.toString(),
+                numberOfWins = currentUser.totalWins.toString(),
+                maxChallengeWinStreak = currentUser.maxWinStreak.toString(),
+                nPhotosTaken = currentUser.nrPhotosTaken.toString()
             )
         }
         composable(route= Screens.RoomsToJoin.route){
-            var currentUser = remember{
-                mutableStateOf(User())
-            }
-            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user }) // tem de se esperar por isto
 
             // TODO : TOU AQUI --------------------
             var allRepicRooms = remember{

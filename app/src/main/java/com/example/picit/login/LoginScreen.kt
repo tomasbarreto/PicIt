@@ -35,7 +35,7 @@ import com.example.picit.ui.theme.PicItTheme
 fun LoginScreen(
     onClickGoToRegistry: () -> Unit={},
     onClickGoToMainScreen: () -> Unit ={},
-    currentUserUpdate: (String) -> Unit={},
+    currentUserUpdate: (User) -> Unit={},
     viewModel: LoginViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
