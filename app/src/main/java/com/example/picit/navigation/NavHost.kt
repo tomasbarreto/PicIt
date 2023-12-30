@@ -117,17 +117,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             // TODO : TOU AQUI --------------------
             var allRepicRooms = remember{
-                mutableStateListOf<RePicRoom>()
+                mutableStateOf(emptyList<RePicRoom>())
             }
 
             //TODO: isto nao ta bem
-            getAllRooms(retrieveRepicRooms = { rePicRooms ->
-                for (room in rePicRooms){
-                    allRepicRooms.add(room)
-                }
-            })
+            getAllRooms(retrieveRepicRooms = { rePicRooms -> allRepicRooms.value = rePicRooms })
             PreviewRoomsToJoinScreen(
-                repicRoomsAvailable = allRepicRooms,
+                repicRoomsAvailable = allRepicRooms.value,
                 onClickBackButton = {onClickBackButton()}
             )
         }
