@@ -1,15 +1,18 @@
 package com.example.picit.joinroom
 
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -66,19 +69,22 @@ fun PreviewRoomsToJoinScreen(
                 )
             }
         }
+        LazyColumn(
+            modifier = Modifier.fillMaxHeight(0.8f)
+        ){
+            items(repicRoomsAvailable){ room ->
+                Spacer(modifier = Modifier.height(16.dp))
+                var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
+                RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
+                    room.maxNumOfChallenges,room.currentNumOfChallengesDone)
+            }
 
-        // Public rooms in the system, get from databse
-        for (room in repicRoomsAvailable){
-            Spacer(modifier = Modifier.height(16.dp))
-            var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
-            RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
-                room.maxNumOfChallenges,room.currentNumOfChallengesDone)
-        }
-        for (room in picdescRoomsAvailable){
-            Spacer(modifier = Modifier.height(16.dp))
-            var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
-            RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
-                room.maxNumOfChallenges,room.currentNumOfChallengesDone)
+            items(picdescRoomsAvailable){ room ->
+                Spacer(modifier = Modifier.height(16.dp))
+                var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
+                RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
+                    room.maxNumOfChallenges,room.currentNumOfChallengesDone)
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
