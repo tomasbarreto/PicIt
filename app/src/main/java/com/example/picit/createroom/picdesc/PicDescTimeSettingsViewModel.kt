@@ -1,18 +1,19 @@
-package com.example.picit.createroom.repic
+package com.example.picit.createroom.picdesc
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.picit.entities.RePicRoom
+import com.example.picit.entities.PicDescRoom
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 
-class RepicRoomTimeSettingsViewModel: ViewModel() {
+class PicDescTimeSettingsViewModel: ViewModel() {
 
-    fun registerRepicRoom(
+    fun registerPicDescRoom(
         roomName: String,
         roomCapacity: String,
         roomNumChallenges: String,
-        timePictureRelease: String,
+        timeDescSubmissionStart: String,
+        timeDescSubmissionEnd: String,
         timePictureSubmissionStart:String,
         timePictureSubmissionEnd:String,
         timeWinner:String,
@@ -21,13 +22,14 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
         currentUserId: String
     ) {
 
-        val newRepicRoom = RePicRoom(name = roomName, maxCapacity = roomCapacity.toInt(), maxNumOfChallenges = roomNumChallenges.toInt(),
+        val newPicDescRoom = PicDescRoom(name = roomName, maxCapacity = roomCapacity.toInt(), maxNumOfChallenges = roomNumChallenges.toInt(),
             winnerAnnouncementTime = timeWinner, photoSubmissionOpeningTime = timePictureSubmissionStart,
-            photoSubmissionClosingTime = timePictureSubmissionEnd, pictureReleaseTime = timePictureRelease)
+            photoSubmissionClosingTime = timePictureSubmissionEnd, descriptionSubmissionOpeningTime = timeDescSubmissionStart,
+            descriptionSubmissionClosingTime = timeDescSubmissionEnd, currentLeader = currentUserId)
 
         val database = Firebase.database
         val roomRef = database.getReference("rooms").push()
-        roomRef.setValue(newRepicRoom)
+        roomRef.setValue(newPicDescRoom)
 
         updateUserRooms(currentUserRooms, currentUserId, roomRef.key.toString())
         onClickGoHomeScreen()

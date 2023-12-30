@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -20,11 +19,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.createroom.InsertTime
 import com.example.picit.createroom.repic.RepicRoomTimeSettingsViewModel
-import com.example.picit.entities.User
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomTimeSettingsRepicScreen(
     modifier: Modifier = Modifier,
@@ -104,8 +101,8 @@ fun RoomTimeSettingsRepicScreen(
         Button(onClick = {
             viewModel.registerRepicRoom(roomName, roomCapacity, numChallenges,
                 hoursPictureRelease.value + ":" + minutesPictureRelease.value,
-                hoursPictureSubmissionStart.value + ":" + minutesPictureSubmissionEnd.value,
-                hoursPictureSubmissionEnd.value + ":" + minutesPictureSubmissionEnd.value,
+                hoursPictureSubmissionStart.value + ":" + minutesPictureSubmissionStart.value,
+                hoursPictureSubmissionEnd.value + ":" + minutesPictureSubmissionStart.value,
                 hoursWinner.value + ":" + minutesWinner.value, onClickGoHomeScreen, currentUserRooms, currentUserId)
 
         }) {

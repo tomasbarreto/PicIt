@@ -19,8 +19,6 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsertTime(modifier: Modifier = Modifier, hours: MutableState<String>, minutes: MutableState<String>) {
-//    var hours by remember { mutableStateOf("") }
-//    var minutes by remember { mutableStateOf("") }
 
     var maxHours = 23
     var maxMinutes = 59

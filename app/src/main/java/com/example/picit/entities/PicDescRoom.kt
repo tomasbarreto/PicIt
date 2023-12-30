@@ -1,22 +1,20 @@
 package com.example.picit.entities
 
-import java.util.Date
-
 data class PicDescRoom(
-    val id: Int,
-    val name:String,
-    val gameType: GameType,
-    val maxCapacity: Int,
-    val currentCapacity: Int,
-    val maxNumOfChallenges: Int,
-    val currentNumOfChallengesDone: Int,
-    val winnerAnnouncementTime: Date,
-    val photoSubmissionOpeningTime: Date,
-    val photoSubmissionClosingTime: Date,
-    val leaderboard: List<UserInLeaderboard>,
+//    val id: Int,
+    val name:String = "",
+    val gameType: GameType = GameType.PICDESC,
+    val maxCapacity: Int = 0,
+    val currentCapacity: Int = 0,
+    val maxNumOfChallenges: Int = 0,
+    val currentNumOfChallengesDone: Int = 0,
+    val winnerAnnouncementTime: String = "",
+    val photoSubmissionOpeningTime: String = "",
+    val photoSubmissionClosingTime: String = "",
+    val leaderboard: List<UserInLeaderboard> = emptyList(),
 
-    val photosSubmitted: List<PicDescPhoto>,
-    val descriptionSubmissionOpeningTime : Date,
-    val descriptionSubmissionClosingTime: Date,
-    val currentLeader: Int // user id
+    val photosSubmitted: List<PicDescPhoto> = emptyList(),
+    val descriptionSubmissionOpeningTime : String = "",
+    val descriptionSubmissionClosingTime: String = "",
+    val currentLeader: String // user id
 )

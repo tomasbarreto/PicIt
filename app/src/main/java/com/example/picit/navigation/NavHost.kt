@@ -137,10 +137,27 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
             )
         }
-        composable(route = Screens.PicDescTimeSettings.route) {
-            RoomTimeSettingsPicDescScreen(
-                onClickBackButton = { onClickBackButton() }
-            )
+        composable(route = Screens.PicDescTimeSettings.route) { backStackEntry->
+            val roomName = backStackEntry.arguments?.getString("roomName")
+            val roomCapacity = backStackEntry.arguments?.getString("capacity")
+            val numChallenges = backStackEntry.arguments?.getString("numChallenges")
+
+            var currentUser = remember{
+                mutableStateOf(User())
+            }
+            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user })
+
+            if (roomName != null && roomCapacity != null && numChallenges != null) {
+                RoomTimeSettingsPicDescScreen(
+                    onClickBackButton = { onClickBackButton() },
+                    roomName = roomName,
+                    roomCapacity = roomCapacity,
+                    numChallenges = numChallenges,
+                    onClickGoHomeScreen = onClickGoToMainScreen,
+                    currentUserId = currentUserId,
+                    currentUserRooms = currentUser.value.rooms
+                )
+            }
         }
         composable(route = Screens.RePicTimeSettings.route){ backStackEntry->
             val roomName = backStackEntry.arguments?.getString("roomName")
