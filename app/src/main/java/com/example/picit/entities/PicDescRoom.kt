@@ -16,5 +16,5 @@ data class PicDescRoom(
     val photosSubmitted: List<PicDescPhoto> = emptyList(),
     val descriptionSubmissionOpeningTime : String = "",
     val descriptionSubmissionClosingTime: String = "",
-    val currentLeader: String // user id
+    val currentLeader: String = "" // user id
 )

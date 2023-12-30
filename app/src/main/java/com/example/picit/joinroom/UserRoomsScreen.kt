@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicRoom
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.AppBottomMenu
@@ -43,13 +44,16 @@ fun UserRoomsScreen(
     onClickInvitesButton: ()-> Unit = {},
     onClickSettings: ()-> Unit = {},
     onClickRooms: () -> Unit = {},
-    currentUserRoomsIds: List<String>
+    currentUserRepicRoomsIds: List<String>,
+    currentUserPicDescRoomsIds: List<String>
 ) {
     val viewModel : UserRoomsViewModel = viewModel()
-    val userCurrentRooms = remember { mutableStateOf(emptyList<RePicRoom>()) }
+    val userCurrentRepicRooms = remember { mutableStateOf(emptyList<RePicRoom>()) }
+    val userCurrentPicDescRooms = remember { mutableStateOf(emptyList<PicDescRoom>()) }
 
-    LaunchedEffect(currentUserRoomsIds) {
-        viewModel.getRoomsList(currentUserRoomsIds, userCurrentRooms)
+    LaunchedEffect(currentUserRepicRoomsIds, currentUserPicDescRoomsIds) {
+        viewModel.getRoomsLists(currentUserRepicRoomsIds, userCurrentRepicRooms,
+            currentUserPicDescRoomsIds, userCurrentPicDescRooms)
     }
 
     Column (
@@ -88,11 +92,22 @@ fun UserRoomsScreen(
                 .weight(5f)
         ) {
             // Rooms of the user, get from databse
-            userCurrentRooms.value.forEach { room ->
+            userCurrentRepicRooms.value.forEach { room ->
                 var roomName = room.name
                 var roomMaxSize = room.maxCapacity
                 var usersInRoom = room.currentCapacity
                 var gameType = "RePic" //
+                var maxDailyChallenges = room.maxNumOfChallenges
+                var challengesDone = room.currentNumOfChallengesDone
+                Spacer(modifier = Modifier.height(16.dp))
+                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
+            }
+
+            userCurrentPicDescRooms.value.forEach { room ->
+                var roomName = room.name
+                var roomMaxSize = room.maxCapacity
+                var usersInRoom = room.currentCapacity
+                var gameType = "PicDesc" //
                 var maxDailyChallenges = room.maxNumOfChallenges
                 var challengesDone = room.currentNumOfChallengesDone
                 Spacer(modifier = Modifier.height(16.dp))
@@ -135,6 +150,7 @@ fun SearchBar() {
         modifier = Modifier.fillMaxWidth(0.8f)
     )
 }
+
 
 @Preview(showBackground = true)
 @Composable
