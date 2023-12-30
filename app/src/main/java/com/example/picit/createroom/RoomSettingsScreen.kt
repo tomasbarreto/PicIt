@@ -30,7 +30,7 @@ import com.example.picit.utils.ScreenHeader
 @Composable
 fun RoomSettingsScreen(
     onClickBackButton: ()->Unit = {},
-    onClickNextButton: (String, String, String) -> Unit
+    onClickNextButton: (String, String, String, String) -> Unit
 ) {
 
     var roomName by remember { mutableStateOf("") }
@@ -172,7 +172,7 @@ fun RoomSettingsScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Button(onClick = { onClickNextButton(roomName, roomCapacity, maxDailyChallenges)}) {
+            Button(onClick = { onClickNextButton(roomName, roomCapacity, maxDailyChallenges, isPrivate.toString() + ":" + code)}) {
                 Text(text = "Next", fontSize = 22.sp)
             }
         }

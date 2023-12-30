@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RePicRoom(
-    val id: String = "",
+    val id: String? = null,
     val name:String = "",
     val gameType: GameType = GameType.REPIC,
     val maxCapacity: Int = 0,
@@ -17,4 +17,6 @@ data class RePicRoom(
     val leaderboard: List<UserInLeaderboard> = emptyList(),
     val picturesSubmitted: List<RePicPhoto> = emptyList(),
     val pictureReleaseTime: String = "",
+    val privacy: Boolean = false,
+    val privacyCode: String = ""
 )

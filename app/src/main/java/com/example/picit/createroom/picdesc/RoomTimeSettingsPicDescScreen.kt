@@ -31,6 +31,8 @@ fun RoomTimeSettingsPicDescScreen(
     roomName: String,
     roomCapacity: String,
     numChallenges: String,
+    privacy: Boolean,
+    privacyCode: String,
     onClickGoHomeScreen: ()->Unit = {},
     currentUserId: String,
     currentUserRooms: List<String>
@@ -112,7 +114,7 @@ fun RoomTimeSettingsPicDescScreen(
         Spacer(modifier = Modifier.height(50.dp))
 
         Button(onClick = {
-            viewModel.registerPicDescRoom(roomName, roomCapacity, numChallenges,
+            viewModel.registerPicDescRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
                 hoursDescReleaseStart.value + ":" + minutesDescReleaseStart.value,
                 hoursDescReleaseEnd.value + ":" + minutesDescReleaseEnd.value,
                 hoursPictureSubmissionStart.value + ":" + minutesPictureSubmissionStart.value,

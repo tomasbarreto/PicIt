@@ -1,7 +1,7 @@
 package com.example.picit.entities
 
 data class PicDescRoom(
-    val id: String = "",
+    val id: String? = null,
     val name:String = "",
     val gameType: GameType = GameType.PICDESC,
     val maxCapacity: Int = 0,
@@ -16,5 +16,8 @@ data class PicDescRoom(
     val photosSubmitted: List<PicDescPhoto> = emptyList(),
     val descriptionSubmissionOpeningTime : String = "",
     val descriptionSubmissionClosingTime: String = "",
-    val currentLeader: String = "" // user id
+    val currentLeader: String = "", // user id
+
+    val privacy: Boolean = false,
+    val privacyCode: String = ""
 )

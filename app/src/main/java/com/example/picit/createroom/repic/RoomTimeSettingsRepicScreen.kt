@@ -29,6 +29,8 @@ fun RoomTimeSettingsRepicScreen(
     roomName: String,
     roomCapacity: String,
     numChallenges: String,
+    privacy: Boolean,
+    privacyCode: String,
     onClickGoHomeScreen: ()->Unit = {},
     currentUserId: String,
     currentUserRooms: List<String>
@@ -99,7 +101,7 @@ fun RoomTimeSettingsRepicScreen(
         Spacer(modifier = Modifier.height(50.dp))
 
         Button(onClick = {
-            viewModel.registerRepicRoom(roomName, roomCapacity, numChallenges,
+            viewModel.registerRepicRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
                 hoursPictureRelease.value + ":" + minutesPictureRelease.value,
                 hoursPictureSubmissionStart.value + ":" + minutesPictureSubmissionStart.value,
                 hoursPictureSubmissionEnd.value + ":" + minutesPictureSubmissionStart.value,
