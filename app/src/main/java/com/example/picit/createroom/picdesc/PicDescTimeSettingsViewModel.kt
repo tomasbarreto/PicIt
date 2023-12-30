@@ -28,7 +28,7 @@ class PicDescTimeSettingsViewModel: ViewModel() {
             descriptionSubmissionClosingTime = timeDescSubmissionEnd, currentLeader = currentUserId)
 
         val database = Firebase.database
-        val roomRef = database.getReference("rooms").push()
+        val roomRef = database.getReference("picDescRooms").push()
         roomRef.setValue(newPicDescRoom)
 
         updateUserRooms(currentUserRooms, currentUserId, roomRef.key.toString())
@@ -41,7 +41,7 @@ class PicDescTimeSettingsViewModel: ViewModel() {
         var userCurrentRooms = mutableStateOf(currentUserRooms)
         userCurrentRooms.value = userCurrentRooms.value + roomId
 
-        val roomsRef = database.getReference("users/" + currentUserId + "/rooms")
+        val roomsRef = database.getReference("users/" + currentUserId + "/picDescRooms")
         roomsRef.setValue(userCurrentRooms.value)
     }
 

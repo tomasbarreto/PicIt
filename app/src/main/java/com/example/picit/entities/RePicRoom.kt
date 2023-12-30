@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RePicRoom(
-//    val id: Int,
+    val id: String = "",
     val name:String = "",
     val gameType: GameType = GameType.REPIC,
     val maxCapacity: Int = 0,

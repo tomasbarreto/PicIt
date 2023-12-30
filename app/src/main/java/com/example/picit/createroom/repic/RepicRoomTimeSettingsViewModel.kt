@@ -26,7 +26,7 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
             photoSubmissionClosingTime = timePictureSubmissionEnd, pictureReleaseTime = timePictureRelease)
 
         val database = Firebase.database
-        val roomRef = database.getReference("rooms").push()
+        val roomRef = database.getReference("repicRooms").push()
         roomRef.setValue(newRepicRoom)
 
         updateUserRooms(currentUserRooms, currentUserId, roomRef.key.toString())
@@ -39,7 +39,7 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
         var userCurrentRooms = mutableStateOf(currentUserRooms)
         userCurrentRooms.value = userCurrentRooms.value + roomId
 
-        val roomsRef = database.getReference("users/" + currentUserId + "/rooms")
+        val roomsRef = database.getReference("users/" + currentUserId + "/repicRooms")
         roomsRef.setValue(userCurrentRooms.value)
     }
 

@@ -1,7 +1,7 @@
 package com.example.picit.entities
 
 data class PicDescRoom(
-//    val id: Int,
+    val id: String = "",
     val name:String = "",
     val gameType: GameType = GameType.PICDESC,
     val maxCapacity: Int = 0,
