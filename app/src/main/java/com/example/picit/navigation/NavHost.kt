@@ -3,7 +3,6 @@ package com.example.picit.navigation
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -13,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.picit.camera.CameraScreen
+import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.User
 import com.example.picit.friendslist.FriendsListScreen
@@ -119,10 +119,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             var allRepicRooms = remember{
                 mutableStateOf(emptyList<RePicRoom>())
             }
+            var allPicdescRooms = remember{
+                mutableStateOf(emptyList<PicDescRoom>())
+            }
 
-            //TODO: isto nao ta bem
-            getAllRooms(retrieveRepicRooms = { rePicRooms -> allRepicRooms.value = rePicRooms })
+            getAllRooms(
+                retrieveRepicRooms = { rePicRooms -> allRepicRooms.value = rePicRooms },
+                retrievePicdescRooms = {picdescRooms -> allPicdescRooms.value = picdescRooms}
+            )
+            // TODO: filter to only display available rooms
+            // TODO: filter to only display rooms that the user is not in
             PreviewRoomsToJoinScreen(
+                picdescRoomsAvailable = allPicdescRooms.value,
                 repicRoomsAvailable = allRepicRooms.value,
                 onClickBackButton = {onClickBackButton()}
             )
@@ -187,12 +195,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
 // TODO: funcoes do firebase numa classe aparte? incluindo o findUserById
 fun getAllRooms(
-//    retrievePicdescRooms: (List<PicDescPhoto>) -> Unit,
-    retrieveRepicRooms: (List<RePicRoom>) -> Unit
+    retrievePicdescRooms: (List<PicDescRoom>) -> Unit,
+    retrieveRepicRooms: (List<RePicRoom>) -> Unit,
+//    retrievePicDescRooms: Any
 ) {
     val db = Firebase.database
     val repicRoomsRef = db.getReference("repicRooms")
-//        val picdescRoomsRef = db.getReference("picdescRooms")
+    val picdescRoomsRef = db.getReference("picDescRooms")
     repicRoomsRef.get().addOnSuccessListener { repicRoomsListSnapshot ->
         var repicRooms = mutableListOf<RePicRoom>()
         for(roomSnapshtop in repicRoomsListSnapshot.children){
@@ -209,8 +218,33 @@ fun getAllRooms(
             }
 
         }
-        Log.d("firebase", "ALL ROOMS: $repicRooms")
+        Log.d("firebase", "ALL REPIC ROOMS: $repicRooms")
         retrieveRepicRooms(repicRooms)
+
+    }.addOnFailureListener{
+        Log.e("firebase", "Error getting data", it)
+    }
+
+    picdescRoomsRef.get().addOnSuccessListener { picdescRoomsListSnapshot ->
+        var picDescRooms = mutableListOf<PicDescRoom>()
+        for(roomSnapshtop in picdescRoomsListSnapshot.children){
+            val incompleteRoom = roomSnapshtop.getValue<PicDescRoom>() // doesnt have the id
+            val roomId = roomSnapshtop.key.toString()
+
+            if(incompleteRoom != null){
+                val picdescRoom = PicDescRoom(roomId, incompleteRoom.name,incompleteRoom.gameType,
+                    incompleteRoom.maxCapacity,incompleteRoom.currentCapacity,incompleteRoom.maxNumOfChallenges,
+                    incompleteRoom.currentNumOfChallengesDone, incompleteRoom.winnerAnnouncementTime,
+                    incompleteRoom.photoSubmissionOpeningTime,incompleteRoom.photoSubmissionClosingTime,
+                    incompleteRoom.leaderboard, incompleteRoom.photosSubmitted,
+                    incompleteRoom.descriptionSubmissionOpeningTime,
+                    incompleteRoom.descriptionSubmissionClosingTime,incompleteRoom.currentLeader)
+                picDescRooms.add(picdescRoom)
+            }
+
+        }
+        Log.d("firebase", "ALL PICDESC ROOMS: $picDescRooms")
+        retrievePicdescRooms(picDescRooms)
 
     }.addOnFailureListener{
         Log.e("firebase", "Error getting data", it)

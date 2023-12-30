@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
 import com.example.picit.entities.GameType
+import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicRoom
 import com.example.picit.utils.RoomPreview
 import com.example.picit.utils.ScreenHeader
@@ -31,8 +32,9 @@ import com.example.picit.ui.theme.PicItTheme
 @Composable
 fun PreviewRoomsToJoinScreen(
     onClickBackButton: ()->Unit={},
+    picdescRoomsAvailable: List<PicDescRoom> = listOf(PicDescRoom("","room1")),
     repicRoomsAvailable: List<RePicRoom> = listOf(
-        RePicRoom("","name")
+        RePicRoom("","room2")
     )
 ){
     Column (
@@ -67,6 +69,12 @@ fun PreviewRoomsToJoinScreen(
 
         // Public rooms in the system, get from databse
         for (room in repicRoomsAvailable){
+            Spacer(modifier = Modifier.height(16.dp))
+            var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
+            RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
+                room.maxNumOfChallenges,room.currentNumOfChallengesDone)
+        }
+        for (room in picdescRoomsAvailable){
             Spacer(modifier = Modifier.height(16.dp))
             var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
             RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
