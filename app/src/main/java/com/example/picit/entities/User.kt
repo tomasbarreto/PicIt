@@ -7,7 +7,8 @@ data class User (
     //val uid: String,
     val username:String = "",
     val name:String = "",
-    val rooms: List<Int> = emptyList(), // id das salas
+    val picDescRooms: List<String> = emptyList(), // id das salas picdesc
+    val repicRooms: List<String> = emptyList(), // id das salas repic
     val friends: List<Int> = emptyList(), // id dos users
     val requestsToJoin : List<JoinRoomRequest> = emptyList(),
     val friendRequests: List<Int> = emptyList(), // id dos users

@@ -112,14 +112,25 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 mutableStateOf(emptyList<PicDescRoom>())
             }
 
-            // TODO: filter to only display available rooms
             // TODO: filter to only display rooms that the user is not in
             getAllRooms(
                 retrieveRepicRooms = { rePicRooms ->
-                    allRepicRooms.value = rePicRooms.filterNot{ it.privacy }
+                    val openRooms = rePicRooms.filterNot{ it.privacy }
+                    val roomsUserIsIn = currentUser.repicRooms
+                    // rooms are available to join if they're public and the user isnt currently in them
+
+                    val availableRooms = openRooms.filterNot { roomsUserIsIn.contains(it.id) }
+                    allRepicRooms.value =availableRooms
                                      },
                 retrievePicdescRooms = {picdescRooms ->
-                    allPicdescRooms.value = picdescRooms.filterNot{ it.privacy }
+                    val openRooms = picdescRooms.filterNot{ it.privacy }
+                    val roomsUserIsIn = currentUser.picDescRooms
+
+                    Log.d(TAG, "openRooms: $openRooms")
+                    Log.d(TAG, "roomsUserIsIn: $roomsUserIsIn")
+                    // rooms are available to join if they're public and the user isnt currently in them
+                    val availableRooms = openRooms.filterNot { roomsUserIsIn.contains(it.id) }
+                    allPicdescRooms.value =availableRooms
                 }
             )
 
