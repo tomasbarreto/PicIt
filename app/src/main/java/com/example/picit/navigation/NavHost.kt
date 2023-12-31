@@ -60,7 +60,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
         // done with id instead of the user, because updates with the user needed to be done with
         // listeners and that would have very complex logic
-        var currentUserId by mutableStateOf("")
         var currentUser by mutableStateOf(User())
 
         composable(route= Screens.Login.route) {
@@ -113,12 +112,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 mutableStateOf(emptyList<PicDescRoom>())
             }
 
+            // TODO: filter to only display available rooms
+            // TODO: filter to only display rooms that the user is not in
             getAllRooms(
                 retrieveRepicRooms = { rePicRooms -> allRepicRooms.value = rePicRooms },
                 retrievePicdescRooms = {picdescRooms -> allPicdescRooms.value = picdescRooms}
             )
-            // TODO: filter to only display available rooms
-            // TODO: filter to only display rooms that the user is not in
+
             PreviewRoomsToJoinScreen(
                 picdescRoomsAvailable = allPicdescRooms.value,
                 repicRoomsAvailable = allRepicRooms.value,

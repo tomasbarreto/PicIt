@@ -16,4 +16,7 @@ data class RePicRoom(
     val leaderboard: List<UserInLeaderboard> = emptyList(),
     val picturesSubmitted: List<RePicPhoto> = emptyList(),
     val pictureReleaseTime: String = "",
+
+    val privacy: Boolean = false,
+    val privacyCode: String = ""
 )
