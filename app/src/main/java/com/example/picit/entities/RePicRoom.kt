@@ -3,7 +3,7 @@ package com.example.picit.entities
 import java.util.Date
 
 data class RePicRoom(
-    val id: String = "",
+    var id: String? = null,
     val name:String = "",
     val gameType: GameType = GameType.REPIC,
     val maxCapacity: Int = 0,

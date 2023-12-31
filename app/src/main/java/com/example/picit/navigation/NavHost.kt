@@ -115,8 +115,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             // TODO: filter to only display available rooms
             // TODO: filter to only display rooms that the user is not in
             getAllRooms(
-                retrieveRepicRooms = { rePicRooms -> allRepicRooms.value = rePicRooms },
-                retrievePicdescRooms = {picdescRooms -> allPicdescRooms.value = picdescRooms}
+                retrieveRepicRooms = { rePicRooms ->
+                    allRepicRooms.value = rePicRooms.filterNot{ it.privacy }
+                                     },
+                retrievePicdescRooms = {picdescRooms ->
+                    allPicdescRooms.value = picdescRooms.filterNot{ it.privacy }
+                }
             )
 
             PreviewRoomsToJoinScreen(
@@ -195,15 +199,11 @@ fun getAllRooms(
     repicRoomsRef.get().addOnSuccessListener { repicRoomsListSnapshot ->
         var repicRooms = mutableListOf<RePicRoom>()
         for(roomSnapshtop in repicRoomsListSnapshot.children){
-            val incompleteRoom = roomSnapshtop.getValue<RePicRoom>() // doesnt have the id
-            val roomId = roomSnapshtop.key.toString()
+            val repicRoom = roomSnapshtop.getValue<RePicRoom>() // doesnt have the id
 
-            if(incompleteRoom != null){
-                val repicRoom = RePicRoom(roomId, incompleteRoom.name,incompleteRoom.gameType,
-                    incompleteRoom.maxCapacity,incompleteRoom.currentCapacity,incompleteRoom.maxNumOfChallenges,
-                    incompleteRoom.currentNumOfChallengesDone, incompleteRoom.winnerAnnouncementTime,
-                    incompleteRoom.photoSubmissionOpeningTime,incompleteRoom.photoSubmissionClosingTime,
-                    incompleteRoom.leaderboard, incompleteRoom.picturesSubmitted,incompleteRoom.pictureReleaseTime)
+            if(repicRoom != null){
+                val roomId = roomSnapshtop.key.toString()
+                repicRoom.id = roomId
                 repicRooms.add(repicRoom)
             }
 
@@ -218,17 +218,11 @@ fun getAllRooms(
     picdescRoomsRef.get().addOnSuccessListener { picdescRoomsListSnapshot ->
         var picDescRooms = mutableListOf<PicDescRoom>()
         for(roomSnapshtop in picdescRoomsListSnapshot.children){
-            val incompleteRoom = roomSnapshtop.getValue<PicDescRoom>() // doesnt have the id
-            val roomId = roomSnapshtop.key.toString()
+            val picdescRoom = roomSnapshtop.getValue<PicDescRoom>() // doesnt have the id
 
-            if(incompleteRoom != null){
-                val picdescRoom = PicDescRoom(roomId, incompleteRoom.name,incompleteRoom.gameType,
-                    incompleteRoom.maxCapacity,incompleteRoom.currentCapacity,incompleteRoom.maxNumOfChallenges,
-                    incompleteRoom.currentNumOfChallengesDone, incompleteRoom.winnerAnnouncementTime,
-                    incompleteRoom.photoSubmissionOpeningTime,incompleteRoom.photoSubmissionClosingTime,
-                    incompleteRoom.leaderboard, incompleteRoom.photosSubmitted,
-                    incompleteRoom.descriptionSubmissionOpeningTime,
-                    incompleteRoom.descriptionSubmissionClosingTime,incompleteRoom.currentLeader)
+            if(picdescRoom != null){
+                val roomId = roomSnapshtop.key.toString()
+                picdescRoom.id=roomId
                 picDescRooms.add(picdescRoom)
             }
 
