@@ -59,6 +59,7 @@ class LoginViewModel: ViewModel() {
                 val user = snapshot.getValue<User>()
 
                 if(user != null){
+                    user.id = uid;
                     currentUserUpdate(user)
                 }
 

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User (
-    //val uid: String,
+    var id: String = "",
     val username:String = "",
     val name:String = "",
     val picDescRooms: List<String> = emptyList(), // id das salas picdesc

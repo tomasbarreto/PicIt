@@ -74,10 +74,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             RegisterScreen(onClickBackButton = {onClickBackButton()}, onClickGoBackToLogin = onClickGoBackToLogin)
         }
         composable(route= Screens.Home.route) {
-            var currentUser = remember{
-                mutableStateOf(User())
-            }
-            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user })
 
             UserRoomsScreen(
                 bottomNavigationsList= bottomNavigationsList,
@@ -86,8 +82,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
                 onClickSettings = {navController.navigate(Screens.Settings.route)},
                 onClickRooms = {navController.navigate(Screens.RepicRoomTakePicture.route)},
-                currentUserRepicRoomsIds = currentUser.value.repicRooms,
-                currentUserPicDescRoomsIds = currentUser.value.picDescRooms
+                currentUserRepicRoomsIds = currentUser.repicRooms,
+                currentUserPicDescRoomsIds = currentUser.picDescRooms
             )
         }
         composable(route= Screens.Friends.route){
@@ -179,10 +175,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val privacy = privacyTokens?.get(0).toBoolean()
             val privacyCode = privacyTokens?.get(1)
 
-            var currentUser = remember{
-                mutableStateOf(User())
-            }
-            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user })
 
             if (roomName != null && roomCapacity != null && numChallenges != null && privacyCode != null) {
                 RoomTimeSettingsPicDescScreen(
@@ -193,8 +185,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     privacy = privacy,
                     privacyCode = privacyCode,
                     onClickGoHomeScreen = onClickGoToMainScreen,
-                    currentUserId = currentUserId,
-                    currentUserRooms = currentUser.value.picDescRooms
+                    currentUserId = currentUser.id,
+                    currentUserRooms = currentUser.picDescRooms
                 )
             }
         }
@@ -206,11 +198,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val privacy = privacyTokens?.get(0).toBoolean()
             val privacyCode = privacyTokens?.get(1)
 
-            var currentUser = remember{
-                mutableStateOf(User())
-            }
-            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user })
-
             if (roomName != null && roomCapacity != null && numChallenges != null && privacyCode != null) {
                 RoomTimeSettingsRepicScreen(
                     onClickBackButton = { onClickBackButton() },
@@ -220,8 +207,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     privacy = privacy,
                     privacyCode = privacyCode,
                     onClickGoHomeScreen = onClickGoToMainScreen,
-                    currentUserId = currentUserId,
-                    currentUserRooms = currentUser.value.repicRooms
+                    currentUserId = currentUser.id,
+                    currentUserRooms = currentUser.repicRooms
                 )
             }
         }
