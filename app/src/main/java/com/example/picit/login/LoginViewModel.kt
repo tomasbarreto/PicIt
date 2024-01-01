@@ -31,7 +31,7 @@ class LoginViewModel: ViewModel() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(ContentValues.TAG, "signInWithEmail:success")
+                            Log.d(TAG, "signInWithEmail:success")
                             val currentUser = auth.currentUser
                             if (currentUser != null) {
                                 setCurrentUserListener(currentUser.uid, currentUserUpdate)
@@ -39,7 +39,7 @@ class LoginViewModel: ViewModel() {
                             }
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(ContentValues.TAG, "signInWithEmail:failure", task.exception)
+                            Log.w(TAG, "signInWithEmail:failure", task.exception)
                             Toast.makeText(
                                 context,
                                 "Authentication failed.",

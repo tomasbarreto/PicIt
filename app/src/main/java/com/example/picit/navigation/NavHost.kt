@@ -17,6 +17,7 @@ import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.User
 import com.example.picit.friendslist.FriendsListScreen
 import com.example.picit.joinroom.PreviewRoomsToJoinScreen
+import com.example.picit.joinroom.PreviewRoomsToJoinViewModel
 import com.example.picit.joinroom.UserRoomsScreen
 import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
@@ -38,8 +39,6 @@ private val TAG = "NavHost"
 
 @Composable
 fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
-    var loginViewModel : LoginViewModel = viewModel()
-
     NavHost(
         navController = navController,
         startDestination = Screens.Login.route,
@@ -61,6 +60,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         var currentUser by mutableStateOf(User())
 
         composable(route= Screens.Login.route) {
+            var loginViewModel : LoginViewModel = viewModel()
             val currentUserUpdate = { user: User -> currentUser = user }
 
             LoginScreen(
@@ -103,38 +103,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route= Screens.RoomsToJoin.route){
 
             // TODO : TOU AQUI --------------------
-            var allRepicRooms = remember{
-                mutableStateOf(emptyList<RePicRoom>())
-            }
-            var allPicdescRooms = remember{
-                mutableStateOf(emptyList<PicDescRoom>())
-            }
-
-            // TODO: filter to only display rooms that the user is not in
-            getAllRooms(
-                retrieveRepicRooms = { rePicRooms ->
-                    val openRooms = rePicRooms.filterNot{ it.privacy }
-                    val roomsUserIsIn = currentUser.repicRooms
-                    // rooms are available to join if they're public and the user isnt currently in them
-
-                    val availableRooms = openRooms.filterNot { roomsUserIsIn.contains(it.id) }
-                    allRepicRooms.value =availableRooms
-                                     },
-                retrievePicdescRooms = {picdescRooms ->
-                    val openRooms = picdescRooms.filterNot{ it.privacy }
-                    val roomsUserIsIn = currentUser.picDescRooms
-
-                    Log.d(TAG, "openRooms: $openRooms")
-                    Log.d(TAG, "roomsUserIsIn: $roomsUserIsIn")
-                    // rooms are available to join if they're public and the user isnt currently in them
-                    val availableRooms = openRooms.filterNot { roomsUserIsIn.contains(it.id) }
-                    allPicdescRooms.value =availableRooms
-                }
-            )
+            val previewRoomsToJoinViewModel: PreviewRoomsToJoinViewModel = viewModel()
+            previewRoomsToJoinViewModel.filterRoomsUserIsIn(currentUser.repicRooms,currentUser.picDescRooms)
 
             PreviewRoomsToJoinScreen(
-                picdescRoomsAvailable = allPicdescRooms.value,
-                repicRoomsAvailable = allRepicRooms.value,
+                repicRoomsAvailable = previewRoomsToJoinViewModel.repicRooms,
+                picdescRoomsAvailable = previewRoomsToJoinViewModel.picdescRooms,
                 onClickBackButton = {onClickBackButton()}
             )
         }
@@ -241,52 +215,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
 }
 
-// TODO: funcoes do firebase numa classe aparte? incluindo o findUserById
-fun getAllRooms(
-    retrievePicdescRooms: (List<PicDescRoom>) -> Unit,
-    retrieveRepicRooms: (List<RePicRoom>) -> Unit,
-//    retrievePicDescRooms: Any
-) {
-    val db = Firebase.database
-    val repicRoomsRef = db.getReference("repicRooms")
-    val picdescRoomsRef = db.getReference("picDescRooms")
-    repicRoomsRef.get().addOnSuccessListener { repicRoomsListSnapshot ->
-        var repicRooms = mutableListOf<RePicRoom>()
-        for(roomSnapshtop in repicRoomsListSnapshot.children){
-            val repicRoom = roomSnapshtop.getValue<RePicRoom>() // doesnt have the id
 
-            if(repicRoom != null){
-                val roomId = roomSnapshtop.key.toString()
-                repicRoom.id = roomId
-                repicRooms.add(repicRoom)
-            }
-
-        }
-        Log.d("firebase", "ALL REPIC ROOMS: $repicRooms")
-        retrieveRepicRooms(repicRooms)
-
-    }.addOnFailureListener{
-        Log.e("firebase", "Error getting data", it)
-    }
-
-    picdescRoomsRef.get().addOnSuccessListener { picdescRoomsListSnapshot ->
-        var picDescRooms = mutableListOf<PicDescRoom>()
-        for(roomSnapshtop in picdescRoomsListSnapshot.children){
-            val picdescRoom = roomSnapshtop.getValue<PicDescRoom>() // doesnt have the id
-
-            if(picdescRoom != null){
-                val roomId = roomSnapshtop.key.toString()
-                picdescRoom.id=roomId
-                picDescRooms.add(picdescRoom)
-            }
-
-        }
-        Log.d("firebase", "ALL PICDESC ROOMS: $picDescRooms")
-        retrievePicdescRooms(picDescRooms)
-
-    }.addOnFailureListener{
-        Log.e("firebase", "Error getting data", it)
-    }
-}
 
 
