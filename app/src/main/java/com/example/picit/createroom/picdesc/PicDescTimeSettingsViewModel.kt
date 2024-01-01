@@ -24,7 +24,7 @@ class PicDescTimeSettingsViewModel: ViewModel() {
         currentUserId: String
     ) {
 
-        val newPicDescRoom = PicDescRoom(name = roomName, maxCapacity = roomCapacity.toInt(), maxNumOfChallenges = roomNumChallenges.toInt(),
+        val newPicDescRoom = PicDescRoom(name = roomName, currentCapacity = 1, maxCapacity = roomCapacity.toInt(), maxNumOfChallenges = roomNumChallenges.toInt(),
             winnerAnnouncementTime = timeWinner, photoSubmissionOpeningTime = timePictureSubmissionStart,
             photoSubmissionClosingTime = timePictureSubmissionEnd, descriptionSubmissionOpeningTime = timeDescSubmissionStart,
             descriptionSubmissionClosingTime = timeDescSubmissionEnd, currentLeader = currentUserId, privacy = privacy, privacyCode = privacyCode)

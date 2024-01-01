@@ -23,7 +23,7 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
         currentUserId: String
     ) {
 
-        val newRepicRoom = RePicRoom(name = roomName, maxCapacity = roomCapacity.toInt(), maxNumOfChallenges = roomNumChallenges.toInt(),
+        val newRepicRoom = RePicRoom(name = roomName, currentCapacity = 1, maxCapacity = roomCapacity.toInt(), maxNumOfChallenges = roomNumChallenges.toInt(),
             winnerAnnouncementTime = timeWinner, photoSubmissionOpeningTime = timePictureSubmissionStart,
             photoSubmissionClosingTime = timePictureSubmissionEnd, pictureReleaseTime = timePictureRelease, privacy = privacy, privacyCode = privacyCode)
 
