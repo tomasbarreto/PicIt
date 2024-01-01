@@ -43,8 +43,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
     NavHost(
         navController = navController,
         startDestination = Screens.Login.route,
-//        startDestination = Screens.PromptRoomTakePicture.route, //para testar camera
-//        startDestination = Screens.RepicRoomTakePicture.route, //para testar camera
         modifier = modifier
     ) {
         val bottomNavigationsList = listOf(
@@ -75,9 +73,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route= Screens.Register.route) {
             RegisterScreen(onClickBackButton = {onClickBackButton()}, onClickGoBackToLogin = onClickGoBackToLogin)
         }
-        composable(route= Screens.Home.route){
-//            var currentUser = User()
-//            loginViewModel.findUserById(currentUserId, { user: User -> currentUser = user })
+        composable(route= Screens.Home.route) {
+            var currentUser = remember{
+                mutableStateOf(User())
+            }
+            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user })
+
             UserRoomsScreen(
                 bottomNavigationsList= bottomNavigationsList,
                 onClickJoinRoom = { navController.navigate(Screens.RoomsToJoin.route)},
@@ -85,7 +86,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
                 onClickSettings = {navController.navigate(Screens.Settings.route)},
                 onClickRooms = {navController.navigate(Screens.RepicRoomTakePicture.route)},
-                currentUser = User()
+                currentUserRepicRoomsIds = currentUser.value.repicRooms,
+                currentUserPicDescRoomsIds = currentUser.value.picDescRooms
             )
         }
         composable(route= Screens.Friends.route){
@@ -150,24 +152,78 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
             )
         }
-        composable(route = Screens.DefineRoomSettings.route){backStackEntry->
+        composable(route = Screens.DefineRoomSettings.route){ backStackEntry->
             val gameType = backStackEntry.arguments?.getString("game_type")
             val route = if( gameType.equals("0")) Screens.PicDescTimeSettings.route
                         else Screens.RePicTimeSettings.route
+
             RoomSettingsScreen(
                 onClickBackButton = { onClickBackButton() },
-                onClickNextButton = {navController.navigate( route ) }
+                onClickNextButton = {
+                        name, capacity, numChallenges, privacy ->
+                    navController.navigate(
+                        route
+                            .replace("{roomName}", name)
+                            .replace("{capacity}", capacity)
+                            .replace("{numChallenges}", numChallenges)
+                            .replace("{privacy}", privacy)
+                    )
+                }
             )
         }
-        composable(route = Screens.PicDescTimeSettings.route){
-            RoomTimeSettingsPicDescScreen(
-                onClickBackButton = { onClickBackButton() }
-            )
+        composable(route = Screens.PicDescTimeSettings.route) { backStackEntry->
+            val roomName = backStackEntry.arguments?.getString("roomName")
+            val roomCapacity = backStackEntry.arguments?.getString("capacity")
+            val numChallenges = backStackEntry.arguments?.getString("numChallenges")
+            val privacyTokens = backStackEntry.arguments?.getString("privacy")?.split(":")
+            val privacy = privacyTokens?.get(0).toBoolean()
+            val privacyCode = privacyTokens?.get(1)
+
+            var currentUser = remember{
+                mutableStateOf(User())
+            }
+            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user })
+
+            if (roomName != null && roomCapacity != null && numChallenges != null && privacyCode != null) {
+                RoomTimeSettingsPicDescScreen(
+                    onClickBackButton = { onClickBackButton() },
+                    roomName = roomName,
+                    roomCapacity = roomCapacity,
+                    numChallenges = numChallenges,
+                    privacy = privacy,
+                    privacyCode = privacyCode,
+                    onClickGoHomeScreen = onClickGoToMainScreen,
+                    currentUserId = currentUserId,
+                    currentUserRooms = currentUser.value.picDescRooms
+                )
+            }
         }
-        composable(route = Screens.RePicTimeSettings.route){
-            RoomTimeSettingsRepicScreen(
-                onClickBackButton = { onClickBackButton() }
-            )
+        composable(route = Screens.RePicTimeSettings.route){ backStackEntry->
+            val roomName = backStackEntry.arguments?.getString("roomName")
+            val roomCapacity = backStackEntry.arguments?.getString("capacity")
+            val numChallenges = backStackEntry.arguments?.getString("numChallenges")
+            val privacyTokens = backStackEntry.arguments?.getString("privacy")?.split(":")
+            val privacy = privacyTokens?.get(0).toBoolean()
+            val privacyCode = privacyTokens?.get(1)
+
+            var currentUser = remember{
+                mutableStateOf(User())
+            }
+            loginViewModel.findUserById(currentUserId, { user: User -> currentUser.value = user })
+
+            if (roomName != null && roomCapacity != null && numChallenges != null && privacyCode != null) {
+                RoomTimeSettingsRepicScreen(
+                    onClickBackButton = { onClickBackButton() },
+                    roomName = roomName,
+                    roomCapacity = roomCapacity,
+                    numChallenges = numChallenges,
+                    privacy = privacy,
+                    privacyCode = privacyCode,
+                    onClickGoHomeScreen = onClickGoToMainScreen,
+                    currentUserId = currentUserId,
+                    currentUserRooms = currentUser.value.repicRooms
+                )
+            }
         }
         composable(route = Screens.InvitesNotifications.route){
             RoomInviteNotificationsScreen(

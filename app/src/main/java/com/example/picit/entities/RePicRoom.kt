@@ -1,7 +1,8 @@
 package com.example.picit.entities
 
-import java.util.Date
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class RePicRoom(
     var id: String? = null,
     val name:String = "",

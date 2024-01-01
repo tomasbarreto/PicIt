@@ -10,27 +10,49 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.picit.utils.ScreenHeader
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.createroom.InsertTime
+import com.example.picit.createroom.picdesc.PicDescTimeSettingsViewModel
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.ScreenHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomTimeSettingsPicDescScreen(
     modifier: Modifier = Modifier,
-    onClickBackButton: ()->Unit = {}
+    onClickBackButton: ()->Unit = {},
+    roomName: String,
+    roomCapacity: String,
+    numChallenges: String,
+    privacy: Boolean,
+    privacyCode: String,
+    onClickGoHomeScreen: ()->Unit = {},
+    currentUserId: String,
+    currentUserRooms: List<String>
 ) {
-    var hoursDescRelease by remember { mutableStateOf("") }
-    var minutesDescRelease by remember { mutableStateOf("") }
+    val viewModel : PicDescTimeSettingsViewModel = viewModel()
+
+    var hoursDescReleaseStart = remember { mutableStateOf("") }
+    var minutesDescReleaseStart = remember { mutableStateOf("") }
+
+    var hoursDescReleaseEnd = remember { mutableStateOf("") }
+    var minutesDescReleaseEnd = remember { mutableStateOf("") }
+
+    var hoursPictureSubmissionStart = remember { mutableStateOf("") }
+    var minutesPictureSubmissionStart = remember { mutableStateOf("") }
+
+    var hoursPictureSubmissionEnd = remember { mutableStateOf("") }
+    var minutesPictureSubmissionEnd = remember { mutableStateOf("") }
+
+    var hoursWinner = remember { mutableStateOf("") }
+    var minutesWinner = remember { mutableStateOf("") }
 
     var maxHours = 23
     var maxMinutes = 59
@@ -56,11 +78,11 @@ fun RoomTimeSettingsPicDescScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            InsertTime()
+            InsertTime(hours = hoursDescReleaseStart, minutes = minutesDescReleaseStart)
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = " to ", fontSize = 20.sp)
             Spacer(modifier = Modifier.height(10.dp))
-            InsertTime()
+            InsertTime(hours = hoursDescReleaseEnd, minutes = minutesDescReleaseEnd)
         }
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -74,11 +96,11 @@ fun RoomTimeSettingsPicDescScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            InsertTime()
+            InsertTime(hours = hoursPictureSubmissionStart, minutes = minutesPictureSubmissionStart)
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = " to ", fontSize = 20.sp)
             Spacer(modifier = Modifier.height(10.dp))
-            InsertTime()
+            InsertTime(hours = hoursPictureSubmissionEnd, minutes = minutesPictureSubmissionEnd)
         }
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -87,11 +109,18 @@ fun RoomTimeSettingsPicDescScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        InsertTime()
+        InsertTime(hours = hoursWinner, minutes = minutesWinner)
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        Button(onClick = {  }) {
+        Button(onClick = {
+            viewModel.registerPicDescRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
+                hoursDescReleaseStart.value + ":" + minutesDescReleaseStart.value,
+                hoursDescReleaseEnd.value + ":" + minutesDescReleaseEnd.value,
+                hoursPictureSubmissionStart.value + ":" + minutesPictureSubmissionStart.value,
+                hoursPictureSubmissionEnd.value + ":" + minutesPictureSubmissionEnd.value,
+                hoursWinner.value + ":" + minutesWinner.value, onClickGoHomeScreen, currentUserRooms, currentUserId)
+        }) {
             Text(text = "Next", fontSize = 22.sp)
         }
     }
@@ -101,6 +130,6 @@ fun RoomTimeSettingsPicDescScreen(
 @Composable
 fun RoomTimeSettingsPicDescPreview() {
     PicItTheme {
-        RoomTimeSettingsPicDescScreen()
+//        RoomTimeSettingsPicDescScreen()
     }
 }

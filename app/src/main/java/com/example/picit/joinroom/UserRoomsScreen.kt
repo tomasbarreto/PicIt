@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
@@ -16,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,7 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.picit.entities.User
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.RePicRoom
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.AppBottomMenu
 import com.example.picit.utils.RoomPreview
@@ -39,8 +44,18 @@ fun UserRoomsScreen(
     onClickInvitesButton: ()-> Unit = {},
     onClickSettings: ()-> Unit = {},
     onClickRooms: () -> Unit = {},
-    currentUser: User = User()
+    currentUserRepicRoomsIds: List<String>,
+    currentUserPicDescRoomsIds: List<String>
 ) {
+    val viewModel : UserRoomsViewModel = viewModel()
+    val userCurrentRepicRooms = remember { mutableStateOf(emptyList<RePicRoom>()) }
+    val userCurrentPicDescRooms = remember { mutableStateOf(emptyList<PicDescRoom>()) }
+
+    LaunchedEffect(currentUserRepicRoomsIds, currentUserPicDescRoomsIds) {
+        viewModel.getRoomsLists(currentUserRepicRoomsIds, userCurrentRepicRooms,
+            currentUserPicDescRoomsIds, userCurrentPicDescRooms)
+    }
+
     Column (
         modifier = Modifier
             .fillMaxSize(),
@@ -71,19 +86,36 @@ fun UserRoomsScreen(
                 Icon(Icons.Filled.Email, contentDescription = null)
             }
         }
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .weight(5f)
+        ) {
+            // Rooms of the user, get from databse
+            userCurrentRepicRooms.value.forEach { room ->
+                var roomName = room.name
+                var roomMaxSize = room.maxCapacity
+                var usersInRoom = room.currentCapacity
+                var gameType = "RePic" //
+                var maxDailyChallenges = room.maxNumOfChallenges
+                var challengesDone = room.currentNumOfChallengesDone
+                Spacer(modifier = Modifier.height(16.dp))
+                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
+            }
 
-        // Rooms of the user, get from databse
-        var nRooms = 2;
-        for (i in 1..nRooms){
-            var roomName = "Room Name"
-            var roomMaxSize = 10
-            var usersInRoom = 9
-            var gameType = "RePic" //
-            var maxDailyChallenges = 30
-            var challengesDone = 13
-            Spacer(modifier = Modifier.height(16.dp))
-            RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
+            userCurrentPicDescRooms.value.forEach { room ->
+                var roomName = room.name
+                var roomMaxSize = room.maxCapacity
+                var usersInRoom = room.currentCapacity
+                var gameType = "PicDesc" //
+                var maxDailyChallenges = room.maxNumOfChallenges
+                var challengesDone = room.currentNumOfChallengesDone
+                Spacer(modifier = Modifier.height(16.dp))
+                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
+            }
         }
+
+
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -119,10 +151,11 @@ fun SearchBar() {
     )
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun UserRoomsScreenPreview() {
     PicItTheme {
-        UserRoomsScreen()
+//        UserRoomsScreen()
     }
 }
