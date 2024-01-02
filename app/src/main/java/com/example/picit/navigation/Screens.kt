@@ -7,6 +7,7 @@ sealed class Screens(val route:String){
     object Friends: Screens("friends")
     object Profile: Screens("profile")
     object RoomsToJoin: Screens("rooms_to_join")
+    object JoinRepicRoom : Screens("join_repic_room/{room_id}")
     object CreateRoomChooseGame: Screens("create_room_choose_game")
     object DefineRoomSettings: Screens("define_room_settings/{game_type}")
     object PicDescTimeSettings: Screens("picdesc_time_settings/{roomName}/{capacity}/{numChallenges}/{privacy}")

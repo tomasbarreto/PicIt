@@ -34,11 +34,12 @@ import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun PreviewRoomsToJoinScreen(
-    onClickBackButton: ()->Unit={},
-    picdescRoomsAvailable: List<PicDescRoom> = listOf(PicDescRoom("","room1")),
+    onClickBackButton: () -> Unit = {},
+    picdescRoomsAvailable: List<PicDescRoom> = listOf(PicDescRoom("", "room1")),
     repicRoomsAvailable: List<RePicRoom> = listOf(
-        RePicRoom("","room2")
-    )
+        RePicRoom("", "room2")
+    ),
+    clickRoomToJoin: (String) -> Unit = {}
 ){
     Column (
         modifier = Modifier
@@ -76,14 +77,14 @@ fun PreviewRoomsToJoinScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
                 RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
-                    room.maxNumOfChallenges,room.currentNumOfChallengesDone)
+                    room.maxNumOfChallenges,room.currentNumOfChallengesDone, {clickRoomToJoin(room.id!!)})
             }
 
             items(picdescRoomsAvailable){ room ->
                 Spacer(modifier = Modifier.height(16.dp))
                 var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
                 RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
-                    room.maxNumOfChallenges,room.currentNumOfChallengesDone)
+                    room.maxNumOfChallenges,room.currentNumOfChallengesDone, {clickRoomToJoin(room.id!!)})
             }
         }
 
@@ -109,6 +110,6 @@ fun PreviewRoomsToJoinScreen(
 @Composable
 fun PreviewRoomsToJoinScreenPreview() {
     PicItTheme {
-        PreviewRoomsToJoinScreen()
+            PreviewRoomsToJoinScreenPreview()
     }
 }

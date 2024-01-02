@@ -27,17 +27,20 @@ import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun JoinRepicRoomScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    roomName :String= "Room Name",
+    roomMaxSize:Int = 10,
+    usersInRoom :Int= 9,
+    gameType:String = "RePic",
+    maxDailyChallenges :Int = 30,
+    challengesDone:Int = 13,
+    pictureReleaseTime :String= "17:00",
+    photoSubmissionOpeningTime :String= "17:00",
+    photoSubmissionClosingTime :String= "21:00",
+    limitToPicWinnerTime :String= "14:00",
+    onClickJoinRoom: () -> Unit = {}
 ) {
-    var roomName = "Room Name"
-    var roomMaxSize = 10
-    var usersInRoom = 9
-    var gameType = "RePic"
-    var maxDailyChallenges = 30
-    var challengesDone = 13
-    var pictureRelease = "17:00"
-    var photoSubmission = "17:00 - 20:00"
-    var limitToPicWinner = "14:00"
+
 
     var parametersTextSize = 22.sp
 
@@ -140,7 +143,7 @@ fun JoinRepicRoomScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = pictureRelease, fontSize = parametersTextSize)
+            Text(text = pictureReleaseTime, fontSize = parametersTextSize)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -155,7 +158,7 @@ fun JoinRepicRoomScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = photoSubmission, fontSize = parametersTextSize)
+            Text(text = "$photoSubmissionOpeningTime - $photoSubmissionClosingTime", fontSize = parametersTextSize)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -170,7 +173,7 @@ fun JoinRepicRoomScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = limitToPicWinner, fontSize = parametersTextSize)
+            Text(text = limitToPicWinnerTime, fontSize = parametersTextSize)
         }
 
         // JOIN BUTTON
@@ -183,7 +186,7 @@ fun JoinRepicRoomScreen(
         ) {
             LeaderboardButton()
 
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {onClickJoinRoom()}) {
                 Text(text = "Join room", fontSize = 22.sp)
             }
         }

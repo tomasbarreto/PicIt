@@ -27,7 +27,7 @@ fun RoomPreview(roomName: String,
                 gameType: String,
                 maxDailyChallenges: Int,
                 challengesDone: Int,
-                onClickRooms: () -> Unit = {}) {
+                onClickRoom: () -> Unit = {}) {
     Column(
         verticalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
@@ -38,7 +38,7 @@ fun RoomPreview(roomName: String,
                 color = Color.Black,
                 shape = RoundedCornerShape(30.dp)
             )
-            .clickable(onClick = onClickRooms)
+            .clickable(onClick = {onClickRoom()})
             .padding(12.dp)
     ) {
         Text(text = roomName, fontSize = 20.sp)
