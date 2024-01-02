@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.picit.camera.CameraScreen
+import com.example.picit.entities.GameType
 import com.example.picit.entities.User
 import com.example.picit.friendslist.FriendsListScreen
 import com.example.picit.joinroom.JoinRepicRoomScreen
@@ -96,16 +97,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route= Screens.RoomsToJoin.route){
-
             // TODO : TOU AQUI --------------------
             val previewRoomsToJoinViewModel: PreviewRoomsToJoinViewModel = viewModel()
             previewRoomsToJoinViewModel.filterRoomsUserIsIn(currentUser.repicRooms,currentUser.picDescRooms)
-
-            PreviewRoomsToJoinScreen(
-                repicRoomsAvailable = previewRoomsToJoinViewModel.repicRooms,
-                picdescRoomsAvailable = previewRoomsToJoinViewModel.picdescRooms,
-                onClickBackButton = {onClickBackButton()}
-            ) { roomId: String ->
+            val clickJoinRepicRoom = { roomId: String ->
                 navController.navigate(
                     Screens.JoinRepicRoom.route.replace(
                         "{room_id}",
@@ -113,14 +108,34 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     )
                 )
             }
+            val clickJoinPicdescRoom = {roomId: String ->
+
+            }
+
+            PreviewRoomsToJoinScreen(
+                repicRoomsAvailable = previewRoomsToJoinViewModel.repicRooms,
+                picdescRoomsAvailable = previewRoomsToJoinViewModel.picdescRooms,
+                onClickBackButton = {onClickBackButton()},
+                clickJoinRepicRoom = clickJoinRepicRoom,
+                clickJoinPicdescRoom = clickJoinPicdescRoom
+            )
         }
         composable(
             route = Screens.JoinRepicRoom.route,
         ){ backStackEntry->
-            val roomId = backStackEntry.arguments?.getString("room_id")
+            val roomId = backStackEntry.arguments?.getString("room_id")!!
             val joinRepicRoomViewModel: JoinRepicRoomViewModel = viewModel()
-            joinRepicRoomViewModel.getRepicRoom(roomId)
-            JoinRepicRoomScreen()
+            joinRepicRoomViewModel.loadRepicRoom(roomId)
+            val room = joinRepicRoomViewModel.repicRoom
+
+            val onClickJoinRoom = {
+                joinRepicRoomViewModel.updateUserRepicRooms(currentUser.repicRooms,currentUser.id,room.id!!)
+                navController.navigate(Screens.Home.route)
+            }
+            JoinRepicRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
+                if( room.gameType == GameType.REPIC) "RePic" else "PicDesc", room.maxNumOfChallenges,
+                room.currentNumOfChallengesDone, room.pictureReleaseTime, room.photoSubmissionOpeningTime,
+                room.photoSubmissionClosingTime, room.winnerAnnouncementTime, onClickJoinRoom)
 
         }
         composable(route= Screens.CreateRoomChooseGame.route){

@@ -27,7 +27,6 @@ import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun JoinRepicRoomScreen(
-    modifier: Modifier = Modifier,
     roomName :String= "Room Name",
     roomMaxSize:Int = 10,
     usersInRoom :Int= 9,

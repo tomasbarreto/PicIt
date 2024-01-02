@@ -39,7 +39,8 @@ fun PreviewRoomsToJoinScreen(
     repicRoomsAvailable: List<RePicRoom> = listOf(
         RePicRoom("", "room2")
     ),
-    clickRoomToJoin: (String) -> Unit = {}
+    clickJoinRepicRoom: (String) -> Unit = {},
+    clickJoinPicdescRoom: (String) -> Unit
 ){
     Column (
         modifier = Modifier
@@ -77,14 +78,14 @@ fun PreviewRoomsToJoinScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
                 RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
-                    room.maxNumOfChallenges,room.currentNumOfChallengesDone, {clickRoomToJoin(room.id!!)})
+                    room.maxNumOfChallenges,room.currentNumOfChallengesDone, {clickJoinRepicRoom(room.id!!)})
             }
 
             items(picdescRoomsAvailable){ room ->
                 Spacer(modifier = Modifier.height(16.dp))
                 var gameType = if (room.gameType == GameType.REPIC )"RePic" else "PicDesc"
                 RoomPreview(room.name, room.maxCapacity,room.currentCapacity,gameType,
-                    room.maxNumOfChallenges,room.currentNumOfChallengesDone, {clickRoomToJoin(room.id!!)})
+                    room.maxNumOfChallenges,room.currentNumOfChallengesDone, {clickJoinPicdescRoom(room.id!!)})
             }
         }
 
