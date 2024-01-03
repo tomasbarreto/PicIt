@@ -44,17 +44,10 @@ fun UserRoomsScreen(
     onClickInvitesButton: ()-> Unit = {},
     onClickSettings: ()-> Unit = {},
     onClickRooms: () -> Unit = {},
-    currentUserRepicRoomsIds: List<String>,
-    currentUserPicDescRoomsIds: List<String>
+    userCurrentRepicRooms: List<RePicRoom> = emptyList(),
+    userCurrentPicDescRooms: List<PicDescRoom> = emptyList()
 ) {
-    val viewModel : UserRoomsViewModel = viewModel()
-    val userCurrentRepicRooms = remember { mutableStateOf(emptyList<RePicRoom>()) }
-    val userCurrentPicDescRooms = remember { mutableStateOf(emptyList<PicDescRoom>()) }
 
-    LaunchedEffect(currentUserRepicRoomsIds, currentUserPicDescRoomsIds) {
-        viewModel.getRoomsLists(currentUserRepicRoomsIds, userCurrentRepicRooms,
-            currentUserPicDescRoomsIds, userCurrentPicDescRooms)
-    }
 
     Column (
         modifier = Modifier
@@ -92,7 +85,7 @@ fun UserRoomsScreen(
                 .weight(5f)
         ) {
             // Rooms of the user, get from databse
-            userCurrentRepicRooms.value.forEach { room ->
+            userCurrentRepicRooms.forEach { room ->
                 var roomName = room.name
                 var roomMaxSize = room.maxCapacity
                 var usersInRoom = room.currentCapacity
@@ -103,7 +96,7 @@ fun UserRoomsScreen(
                 RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
             }
 
-            userCurrentPicDescRooms.value.forEach { room ->
+            userCurrentPicDescRooms.forEach { room ->
                 var roomName = room.name
                 var roomMaxSize = room.maxCapacity
                 var usersInRoom = room.currentCapacity

@@ -18,6 +18,7 @@ import com.example.picit.joinroom.JoinRepicRoomViewModel
 import com.example.picit.joinroom.PreviewRoomsToJoinScreen
 import com.example.picit.joinroom.PreviewRoomsToJoinViewModel
 import com.example.picit.joinroom.UserRoomsScreen
+import com.example.picit.joinroom.UserRoomsViewModel
 import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
@@ -70,6 +71,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             RegisterScreen(onClickBackButton = {onClickBackButton()}, onClickGoBackToLogin = onClickGoBackToLogin)
         }
         composable(route= Screens.Home.route) {
+            val viewModel : UserRoomsViewModel = viewModel()
+            viewModel.filterRoomsUserIsNotIn(currentUser.repicRooms, currentUser.picDescRooms)
 
             UserRoomsScreen(
                 bottomNavigationsList= bottomNavigationsList,
@@ -78,8 +81,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
                 onClickSettings = {navController.navigate(Screens.Settings.route)},
                 onClickRooms = {navController.navigate(Screens.RepicRoomTakePicture.route)},
-                currentUserRepicRoomsIds = currentUser.repicRooms,
-                currentUserPicDescRoomsIds = currentUser.picDescRooms
+                userCurrentRepicRooms = viewModel.userRepicRooms,
+                userCurrentPicDescRooms = viewModel.userPicdescRooms
+
             )
         }
         composable(route= Screens.Friends.route){
