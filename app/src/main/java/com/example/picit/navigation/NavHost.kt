@@ -137,9 +137,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 navController.navigate(Screens.Home.route)
             }
             JoinRepicRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
-                if( room.gameType == GameType.REPIC) "RePic" else "PicDesc", room.maxNumOfChallenges,
-                room.currentNumOfChallengesDone, room.pictureReleaseTime, room.photoSubmissionOpeningTime,
-                room.photoSubmissionClosingTime, room.winnerAnnouncementTime, onClickJoinRoom)
+                room.maxNumOfChallenges, room.currentNumOfChallengesDone, room.pictureReleaseTime,
+                room.photoSubmissionOpeningTime, room.photoSubmissionClosingTime,
+                room.winnerAnnouncementTime, onClickJoinRoom)
 
         }
         composable(route= Screens.CreateRoomChooseGame.route){

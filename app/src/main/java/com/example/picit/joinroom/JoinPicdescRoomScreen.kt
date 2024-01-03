@@ -26,13 +26,14 @@ import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun JoinRepicRoomScreen(
+fun JoinPicDescRoomScreen(
     roomName :String= "Room Name",
     roomMaxSize:Int = 10,
     usersInRoom :Int= 9,
     maxDailyChallenges :Int = 30,
     challengesDone:Int = 13,
-    pictureReleaseTime :String= "17:00",
+    descriptionSubmissionOpeningTime :String= "16:00",
+    descriptionSubmissionClosingTime :String= "17:00",
     photoSubmissionOpeningTime :String= "17:00",
     photoSubmissionClosingTime :String= "21:00",
     limitToPicWinnerTime :String= "14:00",
@@ -93,7 +94,7 @@ fun JoinRepicRoomScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = "RePic", fontSize = parametersTextSize)
+            Text(text = "PicDesc", fontSize = parametersTextSize)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -135,13 +136,14 @@ fun JoinRepicRoomScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = "Picture Release", fontSize = parametersTextSize, fontWeight = FontWeight.Bold)
+            Text(text = "Description Submission", fontSize = parametersTextSize, fontWeight = FontWeight.Bold)
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = pictureReleaseTime, fontSize = parametersTextSize)
+            Text(text = "$descriptionSubmissionOpeningTime - $descriptionSubmissionClosingTime",
+                fontSize = parametersTextSize)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -193,8 +195,8 @@ fun JoinRepicRoomScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun ScreenPreview() {
+fun JoinPicDescRoomScreenPreview() {
     PicItTheme {
-        JoinRepicRoomScreen()
+        JoinPicDescRoomScreen()
     }
 }
