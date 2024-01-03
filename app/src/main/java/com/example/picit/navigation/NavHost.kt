@@ -13,6 +13,8 @@ import com.example.picit.camera.CameraScreen
 import com.example.picit.entities.GameType
 import com.example.picit.entities.User
 import com.example.picit.friendslist.FriendsListScreen
+import com.example.picit.joinroom.JoinPicDescRoomScreen
+import com.example.picit.joinroom.JoinPicDescRoomViewModel
 import com.example.picit.joinroom.JoinRepicRoomScreen
 import com.example.picit.joinroom.JoinRepicRoomViewModel
 import com.example.picit.joinroom.PreviewRoomsToJoinScreen
@@ -113,7 +115,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 )
             }
             val clickJoinPicdescRoom = {roomId: String ->
-
+                navController.navigate(
+                    Screens.JoinPicDescRoom.route.replace(
+                        "{room_id}",
+                        roomId
+                    )
+                )
             }
 
             PreviewRoomsToJoinScreen(
@@ -141,6 +148,23 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 room.photoSubmissionOpeningTime, room.photoSubmissionClosingTime,
                 room.winnerAnnouncementTime, onClickJoinRoom)
 
+        }
+        composable(
+            route = Screens.JoinPicDescRoom.route,
+        ){ backStackEntry->
+            val roomId = backStackEntry.arguments?.getString("room_id")!!
+            val joinPicDescRoomViewModel: JoinPicDescRoomViewModel = viewModel()
+            joinPicDescRoomViewModel.loadPicDescRoom(roomId)
+            val room = joinPicDescRoomViewModel.picDescRoom
+
+            val onClickJoinRoom = {
+                joinPicDescRoomViewModel.updateUserPicDescRooms(currentUser.picDescRooms,currentUser.id,room.id!!)
+                navController.navigate(Screens.Home.route)
+            }
+            JoinPicDescRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
+                room.maxNumOfChallenges, room.currentNumOfChallengesDone, room.descriptionSubmissionOpeningTime,
+                room.descriptionSubmissionClosingTime, room.photoSubmissionOpeningTime, room.photoSubmissionClosingTime,
+                room.winnerAnnouncementTime, onClickJoinRoom)
         }
         composable(route= Screens.CreateRoomChooseGame.route){
             ChooseGameScreen(
