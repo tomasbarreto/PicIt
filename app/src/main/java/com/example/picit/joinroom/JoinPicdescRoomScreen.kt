@@ -37,7 +37,8 @@ fun JoinPicDescRoomScreen(
     photoSubmissionOpeningTime :String= "17:00",
     photoSubmissionClosingTime :String= "21:00",
     limitToPicWinnerTime :String= "14:00",
-    onClickJoinRoom: () -> Unit = {}
+    onClickJoinRoom: () -> Unit = {},
+    onClickBackButton: () -> Unit = {},
 ) {
 
 
@@ -53,7 +54,7 @@ fun JoinPicDescRoomScreen(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { onClickBackButton() },
                 modifier = Modifier.padding(start = 15.dp)
             ) {
                 Image(

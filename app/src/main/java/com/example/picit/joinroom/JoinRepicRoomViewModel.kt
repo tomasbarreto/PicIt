@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.RePicRoom
+import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
@@ -36,20 +37,26 @@ class JoinRepicRoomViewModel : ViewModel() {
         }
     }
 
-    // TODO: esta funcao eh repetida !! nos createRoomViewModels
-    fun updateUserRepicRooms(currentUserRooms: List<String>, currentUserId: String) {
+    fun updateUserRepicRooms(user : User) {
         val database = Firebase.database
 
-        val userCurrentRooms = currentUserRooms + repicRoom.id
+        val updatedRepicRooms = user.repicRooms.toMutableList()
+        updatedRepicRooms.add(repicRoom.id!!)
 
-        val roomsRef = database.getReference("users/$currentUserId/repicRooms")
-        roomsRef.setValue(userCurrentRooms)
+        val updatedUser = user.copy(repicRooms = updatedRepicRooms)
+
+        val userRef = database.getReference("users/${user.id}")
+        userRef.setValue(updatedUser)
     }
 
     fun incrementCurrentCapacityOfRoom() {
         val database = Firebase.database
-        val roomCapacityRef = database.getReference("repicRooms/${repicRoom.id}/currentCapacity")
-        roomCapacityRef.setValue(repicRoom.currentCapacity+1)
+
+        val updatedCapacity = repicRoom.currentCapacity +1
+        val updatedRoom = repicRoom.copy(currentCapacity = updatedCapacity)
+
+        val roomRef = database.getReference("repicRooms/${repicRoom.id}")
+        roomRef.setValue(updatedRoom)
     }
 }
 

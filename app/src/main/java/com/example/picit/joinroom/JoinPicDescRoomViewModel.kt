@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
@@ -36,20 +37,26 @@ class JoinPicDescRoomViewModel : ViewModel() {
         }
     }
 
-    // TODO: esta funcao eh repetida !! nos createRoomViewModels
-    fun updateUserPicDescRooms(currentUserRooms: List<String>, currentUserId: String) {
+    fun updateUserPicDescRooms(user: User) {
         val database = Firebase.database
 
-        val userCurrentRooms = currentUserRooms + picDescRoom.id
+        val updatedPicDescRooms = user.picDescRooms.toMutableList()
+        updatedPicDescRooms.add(picDescRoom.id!!)
 
-        val roomsRef = database.getReference("users/$currentUserId/picDescRooms")
-        roomsRef.setValue(userCurrentRooms)
+        val updatedUser = user.copy(picDescRooms = updatedPicDescRooms)
+
+        val userRef = database.getReference("users/${user.id}")
+        userRef.setValue(updatedUser)
     }
 
     fun incrementCurrentCapacityOfRoom() {
         val database = Firebase.database
-        val roomCapacityRef = database.getReference("picDescRooms/${picDescRoom.id}/currentCapacity")
-        roomCapacityRef.setValue(picDescRoom.currentCapacity+1)
+
+        val updatedCapacity = picDescRoom.currentCapacity +1
+        val updatedRoom = picDescRoom.copy(currentCapacity = updatedCapacity)
+
+        val roomRef = database.getReference("picDescRooms/${picDescRoom.id}")
+        roomRef.setValue(updatedRoom)
     }
 }
 

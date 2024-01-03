@@ -141,13 +141,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             val onClickJoinRoom = {
                 joinRepicRoomViewModel.incrementCurrentCapacityOfRoom()
-                joinRepicRoomViewModel.updateUserRepicRooms(currentUser.repicRooms,currentUser.id)
+                joinRepicRoomViewModel.updateUserRepicRooms(currentUser)
                 navController.navigate(Screens.Home.route)
             }
             JoinRepicRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
                 room.maxNumOfChallenges, room.currentNumOfChallengesDone, room.pictureReleaseTime,
                 room.photoSubmissionOpeningTime, room.photoSubmissionClosingTime,
-                room.winnerAnnouncementTime, onClickJoinRoom)
+                room.winnerAnnouncementTime, onClickJoinRoom, onClickBackButton = { onClickBackButton() })
 
         }
         composable(
@@ -159,14 +159,14 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val room = joinPicDescRoomViewModel.picDescRoom
 
             val onClickJoinRoom = {
-                joinPicDescRoomViewModel.updateUserPicDescRooms(currentUser.picDescRooms,currentUser.id)
+                joinPicDescRoomViewModel.updateUserPicDescRooms(currentUser)
                 joinPicDescRoomViewModel.incrementCurrentCapacityOfRoom()
                 navController.navigate(Screens.Home.route)
             }
             JoinPicDescRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
                 room.maxNumOfChallenges, room.currentNumOfChallengesDone, room.descriptionSubmissionOpeningTime,
                 room.descriptionSubmissionClosingTime, room.photoSubmissionOpeningTime, room.photoSubmissionClosingTime,
-                room.winnerAnnouncementTime, onClickJoinRoom)
+                room.winnerAnnouncementTime, onClickJoinRoom, onClickBackButton = { onClickBackButton() })
         }
         composable(route= Screens.CreateRoomChooseGame.route){
             ChooseGameScreen(
