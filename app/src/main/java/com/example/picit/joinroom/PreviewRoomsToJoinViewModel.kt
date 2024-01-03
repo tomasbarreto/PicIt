@@ -21,12 +21,12 @@ class PreviewRoomsToJoinViewModel: ViewModel() {
     init{
         getAllRooms(
             retrieveRepicRooms = { allRepicRooms ->
-                val openRooms = allRepicRooms.filterNot{ it.privacy && it.currentCapacity >= it.maxCapacity }
+                val openRooms = allRepicRooms.filterNot{ it.privacy || it.currentCapacity >= it.maxCapacity }
 
                 repicRooms =openRooms
             },
             retrievePicdescRooms = {allPicdescRooms ->
-                val openRooms = allPicdescRooms.filterNot{ it.privacy && it.currentCapacity >= it.maxCapacity}
+                val openRooms = allPicdescRooms.filterNot{ it.privacy || it.currentCapacity >= it.maxCapacity}
                 picdescRooms =openRooms
 
             }

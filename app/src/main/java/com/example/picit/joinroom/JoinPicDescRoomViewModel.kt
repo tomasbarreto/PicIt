@@ -37,13 +37,19 @@ class JoinPicDescRoomViewModel : ViewModel() {
     }
 
     // TODO: esta funcao eh repetida !! nos createRoomViewModels
-    fun updateUserPicDescRooms(currentUserRooms: List<String>, currentUserId: String, roomId: String) {
+    fun updateUserPicDescRooms(currentUserRooms: List<String>, currentUserId: String) {
         val database = Firebase.database
 
-        val userCurrentRooms = currentUserRooms + roomId
+        val userCurrentRooms = currentUserRooms + picDescRoom.id
 
         val roomsRef = database.getReference("users/$currentUserId/picDescRooms")
         roomsRef.setValue(userCurrentRooms)
+    }
+
+    fun incrementCurrentCapacityOfRoom() {
+        val database = Firebase.database
+        val roomCapacityRef = database.getReference("picDescRooms/${picDescRoom.id}/currentCapacity")
+        roomCapacityRef.setValue(picDescRoom.currentCapacity+1)
     }
 }
 
