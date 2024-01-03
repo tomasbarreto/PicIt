@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,8 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.picit.entities.PicDescRoom
-import com.example.picit.entities.RePicRoom
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.AppBottomMenu
 import com.example.picit.utils.RoomPreview
@@ -48,12 +47,12 @@ fun UserRoomsScreen(
     currentUserPicDescRoomsIds: List<String>
 ) {
     val viewModel : UserRoomsViewModel = viewModel()
-    val userCurrentRepicRooms = remember { mutableStateOf(emptyList<RePicRoom>()) }
-    val userCurrentPicDescRooms = remember { mutableStateOf(emptyList<PicDescRoom>()) }
+    val viewModelState by viewModel.uiState.collectAsState()
+//    val userCurrentRepicRooms = remember { mutableStateOf(emptyList<RePicRoom>()) }
+//    val userCurrentPicDescRooms = remember { mutableStateOf(emptyList<PicDescRoom>()) }
 
     LaunchedEffect(currentUserRepicRoomsIds, currentUserPicDescRoomsIds) {
-        viewModel.getRoomsLists(currentUserRepicRoomsIds, userCurrentRepicRooms,
-            currentUserPicDescRoomsIds, userCurrentPicDescRooms)
+        viewModel.getRoomsLists(currentUserRepicRoomsIds, currentUserPicDescRoomsIds)
     }
 
     Column (
@@ -92,7 +91,7 @@ fun UserRoomsScreen(
                 .weight(5f)
         ) {
             // Rooms of the user, get from databse
-            userCurrentRepicRooms.value.forEach { room ->
+            viewModelState.first.forEach { room ->
                 var roomName = room.name
                 var roomMaxSize = room.maxCapacity
                 var usersInRoom = room.currentCapacity
@@ -103,7 +102,7 @@ fun UserRoomsScreen(
                 RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
             }
 
-            userCurrentPicDescRooms.value.forEach { room ->
+            viewModelState.second.forEach { room ->
                 var roomName = room.name
                 var roomMaxSize = room.maxCapacity
                 var usersInRoom = room.currentCapacity
