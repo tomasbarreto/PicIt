@@ -160,7 +160,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             val onClickJoinRoom = {
                 joinPicDescRoomViewModel.updateUserPicDescRooms(currentUser)
-                joinPicDescRoomViewModel.incrementCurrentCapacityOfRoom()
+                joinPicDescRoomViewModel.userJoinRoom(currentUser.id)
                 navController.navigate(Screens.Home.route)
             }
             JoinPicDescRoomScreen(room.name, room.maxCapacity, room.currentCapacity,

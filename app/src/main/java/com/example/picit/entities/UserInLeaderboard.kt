@@ -1,6 +1,6 @@
 package com.example.picit.entities
 
 data class UserInLeaderboard(
-    val userId: Int,
-    val points:Int
+    val userId: String = "",
+    val points:Int = 0
 )

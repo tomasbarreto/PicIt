@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.User
+import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
@@ -49,11 +50,14 @@ class JoinPicDescRoomViewModel : ViewModel() {
         userRef.setValue(updatedUser)
     }
 
-    fun incrementCurrentCapacityOfRoom() {
+    fun userJoinRoom(userId : String) {
         val database = Firebase.database
 
         val updatedCapacity = picDescRoom.currentCapacity +1
-        val updatedRoom = picDescRoom.copy(currentCapacity = updatedCapacity)
+        val updatedLeaderboard = picDescRoom.leaderboard.toMutableList()
+        updatedLeaderboard.add(UserInLeaderboard(userId,0))
+        val updatedRoom = picDescRoom.copy(currentCapacity = updatedCapacity,
+            leaderboard = updatedLeaderboard)
 
         val roomRef = database.getReference("picDescRooms/${picDescRoom.id}")
         roomRef.setValue(updatedRoom)
