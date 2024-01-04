@@ -140,7 +140,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val room = joinRepicRoomViewModel.repicRoom
 
             val onClickJoinRoom = {
-                joinRepicRoomViewModel.incrementCurrentCapacityOfRoom()
+                joinRepicRoomViewModel.userJoinRoom(currentUser.id)
                 joinRepicRoomViewModel.updateUserRepicRooms(currentUser)
                 navController.navigate(Screens.Home.route)
             }

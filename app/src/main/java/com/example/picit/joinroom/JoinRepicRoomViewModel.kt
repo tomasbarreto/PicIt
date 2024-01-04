@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.User
+import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
@@ -37,6 +38,9 @@ class JoinRepicRoomViewModel : ViewModel() {
         }
     }
 
+    /**
+     * @requires loadRepicRoom(roomId)
+     */
     fun updateUserRepicRooms(user : User) {
         val database = Firebase.database
 
@@ -49,11 +53,18 @@ class JoinRepicRoomViewModel : ViewModel() {
         userRef.setValue(updatedUser)
     }
 
-    fun incrementCurrentCapacityOfRoom() {
+    /**
+     * @requires loadRepicRoom(roomId)
+     */
+    fun userJoinRoom(userId : String) {
         val database = Firebase.database
 
         val updatedCapacity = repicRoom.currentCapacity +1
-        val updatedRoom = repicRoom.copy(currentCapacity = updatedCapacity)
+        val updatedLeaderboard = repicRoom.leaderboard.toMutableList()
+        updatedLeaderboard.add(UserInLeaderboard(userId,0))
+
+        val updatedRoom = repicRoom.copy(currentCapacity = updatedCapacity,
+            leaderboard = updatedLeaderboard)
 
         val roomRef = database.getReference("repicRooms/${repicRoom.id}")
         roomRef.setValue(updatedRoom)

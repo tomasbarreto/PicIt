@@ -38,6 +38,9 @@ class JoinPicDescRoomViewModel : ViewModel() {
         }
     }
 
+    /**
+     * @requires loadPicDescRoom(roomId)
+     */
     fun updateUserPicDescRooms(user: User) {
         val database = Firebase.database
 
@@ -50,6 +53,9 @@ class JoinPicDescRoomViewModel : ViewModel() {
         userRef.setValue(updatedUser)
     }
 
+    /**
+     * @requires loadPicDescRoom(roomId)
+     */
     fun userJoinRoom(userId : String) {
         val database = Firebase.database
 
