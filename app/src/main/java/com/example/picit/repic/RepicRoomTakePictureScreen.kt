@@ -19,16 +19,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
+import com.example.picit.entities.RePicRoom
+import com.example.picit.leaderboard.LeaderboardButton
+import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.utils.TakePhotoButton
 import com.example.picit.utils.TimeLeftDisplay
-import com.example.picit.leaderboard.LeaderboardButton
-import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun RepicRoomTakePicture(
     onClickBackButton: ()->Unit = {},
-    onClickCameraButton: ()->Unit = {}
+    onClickCameraButton: ()->Unit = {},
+    room: RePicRoom
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -36,7 +38,7 @@ fun RepicRoomTakePicture(
     ){
         ScreenHeader(
             withBackButton = true,
-            text = "Room name",
+            text = room.name,
             onClickBackButton = onClickBackButton
         )
 
@@ -90,6 +92,6 @@ fun RepicRoomTakePicture(
 @Composable
 fun RepicRoomTakePicturePreview() {
     PicItTheme {
-        RepicRoomTakePicture()
+//        RepicRoomTakePicture()
     }
 }

@@ -11,6 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.picit.camera.CameraScreen
 import com.example.picit.entities.GameType
+import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.User
 import com.example.picit.friendslist.FriendsListScreen
 import com.example.picit.joinroom.JoinPicDescRoomScreen
@@ -33,6 +35,7 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.settings.SettingsScreen
+import com.example.picit.utils.DBUtils
 
 private val TAG = "NavHost"
 
@@ -57,6 +60,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         // done with id instead of the user, because updates with the user needed to be done with
         // listeners and that would have very complex logic
         var currentUser by mutableStateOf(User())
+        var currentRepicRoom by mutableStateOf(RePicRoom())
+        var currentPicDescRoom by mutableStateOf(PicDescRoom())
+        var dbutils = DBUtils()
 
         composable(route= Screens.Login.route) {
             var loginViewModel : LoginViewModel = viewModel()
@@ -82,7 +88,16 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickCreateRoom = {navController.navigate(Screens.CreateRoomChooseGame.route)},
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
                 onClickSettings = {navController.navigate(Screens.Settings.route)},
-                onClickRooms = {navController.navigate(Screens.RepicRoomTakePicture.route)},
+                onClickRooms = {roomId, gameType ->
+                    val route = if (gameType == GameType.REPIC) {
+                        Screens.RepicRoomTakePicture.route
+                    } else {
+                        Screens.PromptRoomTakePicture.route
+                    }
+                    if(roomId != null) {
+                        navController.navigate(route.replace("{room_id}", roomId))
+                    }
+                },
                 userCurrentRepicRooms = viewModel.userRepicRooms,
                 userCurrentPicDescRooms = viewModel.userPicdescRooms
 
@@ -255,17 +270,30 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route= Screens.Camera.route){
             CameraScreen(onClickBackButton = {onClickBackButton()})
         }
-        composable(route = Screens.PromptRoomTakePicture.route){
-            PromptRoomTakePicture(
-                onClickBackButton = {onClickBackButton()},
-                onClickCameraButton = onClickCameraButton
-            )
+        composable(route = Screens.PromptRoomTakePicture.route){ backStackEntry->
+            val roomId = backStackEntry.arguments?.getString("room_id")
+            if (roomId != null) {
+                dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
+
+                PromptRoomTakePicture(
+                    onClickBackButton = {onClickBackButton()},
+                    onClickCameraButton = onClickCameraButton,
+                    currentPicDescRoom
+                )
+            }
         }
-        composable(route = Screens.RepicRoomTakePicture.route){
-            RepicRoomTakePicture(
-                onClickBackButton = {onClickBackButton()},
-                onClickCameraButton = onClickCameraButton
-            )
+        composable(route = Screens.RepicRoomTakePicture.route){ backStackEntry ->
+            val roomId = backStackEntry.arguments?.getString("room_id")
+            if (roomId != null) {
+                dbutils.findRepicRoomById(roomId, {room -> currentRepicRoom = room})
+
+                RepicRoomTakePicture(
+                    onClickBackButton = {onClickBackButton()},
+                    onClickCameraButton = onClickCameraButton,
+                    currentRepicRoom
+                )
+            }
+
         }
     }
 

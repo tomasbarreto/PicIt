@@ -18,16 +18,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.entities.PicDescRoom
+import com.example.picit.leaderboard.LeaderboardButton
+import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.utils.TakePhotoButton
 import com.example.picit.utils.TimeLeftDisplay
-import com.example.picit.leaderboard.LeaderboardButton
-import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun PromptRoomTakePicture(
     onClickBackButton: ()->Unit = {},
-    onClickCameraButton: ()->Unit = {}
+    onClickCameraButton: ()->Unit = {},
+    room: PicDescRoom
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -35,7 +37,7 @@ fun PromptRoomTakePicture(
     ){
         ScreenHeader(
             withBackButton = true,
-            text = "Room name",
+            text = room.name,
             onClickBackButton = onClickBackButton
         )
 
@@ -83,6 +85,6 @@ fun PromptRoomTakePicture(
 @Composable
 fun PromptRoomTakePicturePreview() {
     PicItTheme {
-        PromptRoomTakePicture()
+//        PromptRoomTakePicture()
     }
 }

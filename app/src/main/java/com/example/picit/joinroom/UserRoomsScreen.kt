@@ -18,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.picit.entities.GameType
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicRoom
 import com.example.picit.ui.theme.PicItTheme
@@ -43,7 +42,7 @@ fun UserRoomsScreen(
     onClickCreateRoom: () -> Unit = {},
     onClickInvitesButton: ()-> Unit = {},
     onClickSettings: ()-> Unit = {},
-    onClickRooms: () -> Unit = {},
+    onClickRooms: (String?, GameType) -> Unit,
     userCurrentRepicRooms: List<RePicRoom> = emptyList(),
     userCurrentPicDescRooms: List<PicDescRoom> = emptyList()
 ) {
@@ -93,7 +92,7 @@ fun UserRoomsScreen(
                 var maxDailyChallenges = room.maxNumOfChallenges
                 var challengesDone = room.currentNumOfChallengesDone
                 Spacer(modifier = Modifier.height(16.dp))
-                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
+                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,{onClickRooms(room.id, room.gameType)})
             }
 
             userCurrentPicDescRooms.forEach { room ->
@@ -104,7 +103,7 @@ fun UserRoomsScreen(
                 var maxDailyChallenges = room.maxNumOfChallenges
                 var challengesDone = room.currentNumOfChallengesDone
                 Spacer(modifier = Modifier.height(16.dp))
-                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,onClickRooms)
+                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,{onClickRooms(room.id, room.gameType)})
             }
         }
 
