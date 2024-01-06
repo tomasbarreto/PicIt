@@ -3,6 +3,7 @@ package com.example.picit.createroom.repic
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.RePicRoom
+import com.example.picit.entities.Time
 import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
@@ -15,10 +16,10 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
         roomNumChallenges: String,
         privacy: Boolean,
         privacyCode: String,
-        timePictureRelease: String,
-        timePictureSubmissionStart:String,
-        timePictureSubmissionEnd:String,
-        timeWinner:String,
+        timePictureRelease: Time,
+        timePictureSubmissionStart:Time,
+        timePictureSubmissionEnd:Time,
+        timeWinner:Time,
         onClickGoHomeScreen: ()->Unit = {},
         currentUserRooms: List<String>,
         currentUserId: String

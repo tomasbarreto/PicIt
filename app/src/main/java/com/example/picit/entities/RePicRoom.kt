@@ -11,12 +11,12 @@ data class RePicRoom(
     val currentCapacity: Int = 0,
     val maxNumOfChallenges: Int = 0,
     val currentNumOfChallengesDone: Int = 0,
-    val winnerAnnouncementTime: String = "",
-    val photoSubmissionOpeningTime: String = "",
-    val photoSubmissionClosingTime: String = "",
+    val winnerAnnouncementTime: Time = Time(),
+    val photoSubmissionOpeningTime: Time = Time(),
+    val photoSubmissionClosingTime: Time = Time(),
     val leaderboard: List<UserInLeaderboard> = emptyList(),
     val picturesSubmitted: List<RePicPhoto> = emptyList(),
-    val pictureReleaseTime: String = "",
+    val pictureReleaseTime: Time = Time(),
 
     val privacy: Boolean = false,
     val privacyCode: String = ""

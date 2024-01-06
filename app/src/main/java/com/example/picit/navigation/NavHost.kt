@@ -166,9 +166,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 navController.navigate(Screens.Home.route)
             }
             JoinRepicRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
-                room.maxNumOfChallenges, room.currentNumOfChallengesDone, room.pictureReleaseTime,
-                room.photoSubmissionOpeningTime, room.photoSubmissionClosingTime,
-                room.winnerAnnouncementTime, onClickJoinRoom, onClickBackButton = { onClickBackButton() })
+                room.maxNumOfChallenges, room.currentNumOfChallengesDone,
+                String.format("%02d", room.pictureReleaseTime.hours) + ":" + String.format("%02d", room.pictureReleaseTime.minutes),
+                String.format("%02d", room.photoSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.photoSubmissionOpeningTime.minutes),
+                String.format("%02d", room.photoSubmissionClosingTime.hours) + ":" + String.format("%02d", room.photoSubmissionClosingTime.minutes),
+                String.format("%02d", room.winnerAnnouncementTime.hours) + ":" + String.format("%02d", room.winnerAnnouncementTime.minutes),
+                onClickJoinRoom, onClickBackButton = { onClickBackButton() })
 
         }
         composable(
@@ -185,9 +188,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 navController.navigate(Screens.Home.route)
             }
             JoinPicDescRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
-                room.maxNumOfChallenges, room.currentNumOfChallengesDone, room.descriptionSubmissionOpeningTime,
-                room.descriptionSubmissionClosingTime, room.photoSubmissionOpeningTime, room.photoSubmissionClosingTime,
-                room.winnerAnnouncementTime, onClickJoinRoom, onClickBackButton = { onClickBackButton() })
+                room.maxNumOfChallenges, room.currentNumOfChallengesDone,
+                String.format("%02d", room.descriptionSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.descriptionSubmissionOpeningTime.minutes),
+                String.format("%02d", room.descriptionSubmissionClosingTime.hours) + ":" + String.format("%02d", room.descriptionSubmissionClosingTime.minutes),
+                String.format("%02d", room.photoSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.photoSubmissionOpeningTime.minutes),
+                String.format("%02d", room.photoSubmissionClosingTime.hours) + ":" + String.format("%02d", room.photoSubmissionClosingTime.minutes),
+                String.format("%02d", room.winnerAnnouncementTime.hours) + ":" + String.format("%02d", room.winnerAnnouncementTime.minutes),
+                onClickJoinRoom, onClickBackButton = { onClickBackButton() })
         }
         composable(route= Screens.CreateRoomChooseGame.route){
             ChooseGameScreen(

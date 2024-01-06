@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.createroom.InsertTime
 import com.example.picit.createroom.picdesc.PicDescTimeSettingsViewModel
+import com.example.picit.entities.Time
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
@@ -115,11 +116,13 @@ fun RoomTimeSettingsPicDescScreen(
 
         Button(onClick = {
             viewModel.registerPicDescRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
-                hoursDescReleaseStart.value + ":" + minutesDescReleaseStart.value,
-                hoursDescReleaseEnd.value + ":" + minutesDescReleaseEnd.value,
-                hoursPictureSubmissionStart.value + ":" + minutesPictureSubmissionStart.value,
-                hoursPictureSubmissionEnd.value + ":" + minutesPictureSubmissionEnd.value,
-                hoursWinner.value + ":" + minutesWinner.value, onClickGoHomeScreen, currentUserRooms, currentUserId)
+                Time(hoursDescReleaseStart.value.toInt(), minutesDescReleaseStart.value.toInt()),
+                Time(hoursDescReleaseEnd.value.toInt(), minutesDescReleaseEnd.value.toInt()),
+                Time(hoursPictureSubmissionStart.value.toInt(), minutesPictureSubmissionStart.value.toInt()),
+                Time(hoursPictureSubmissionEnd.value.toInt(), minutesPictureSubmissionEnd.value.toInt()),
+                Time(hoursWinner.value.toInt(), minutesWinner.value.toInt()),
+                onClickGoHomeScreen, currentUserRooms, currentUserId
+            )
         }) {
             Text(text = "Next", fontSize = 22.sp)
         }

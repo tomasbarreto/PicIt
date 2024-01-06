@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.createroom.InsertTime
 import com.example.picit.createroom.repic.RepicRoomTimeSettingsViewModel
+import com.example.picit.entities.Time
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
@@ -102,10 +103,11 @@ fun RoomTimeSettingsRepicScreen(
 
         Button(onClick = {
             viewModel.registerRepicRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
-                hoursPictureRelease.value + ":" + minutesPictureRelease.value,
-                hoursPictureSubmissionStart.value + ":" + minutesPictureSubmissionStart.value,
-                hoursPictureSubmissionEnd.value + ":" + minutesPictureSubmissionStart.value,
-                hoursWinner.value + ":" + minutesWinner.value, onClickGoHomeScreen, currentUserRooms, currentUserId)
+                Time(hoursPictureRelease.value.toInt(), minutesPictureRelease.value.toInt()),
+                Time(hoursPictureSubmissionStart.value.toInt(), minutesPictureSubmissionStart.value.toInt()),
+                Time(hoursPictureSubmissionEnd.value.toInt(), minutesPictureSubmissionStart.value.toInt()),
+                Time(hoursWinner.value.toInt(), minutesWinner.value.toInt()),
+                onClickGoHomeScreen, currentUserRooms, currentUserId)
 
         }) {
             Text(text = "Next", fontSize = 22.sp)

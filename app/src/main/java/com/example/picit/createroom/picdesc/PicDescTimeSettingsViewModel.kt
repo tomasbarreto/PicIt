@@ -3,6 +3,7 @@ package com.example.picit.createroom.picdesc
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.Time
 import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
@@ -15,11 +16,11 @@ class PicDescTimeSettingsViewModel: ViewModel() {
         roomNumChallenges: String,
         privacy: Boolean,
         privacyCode: String,
-        timeDescSubmissionStart: String,
-        timeDescSubmissionEnd: String,
-        timePictureSubmissionStart:String,
-        timePictureSubmissionEnd:String,
-        timeWinner:String,
+        timeDescSubmissionStart: Time,
+        timeDescSubmissionEnd: Time,
+        timePictureSubmissionStart:Time,
+        timePictureSubmissionEnd: Time,
+        timeWinner:Time,
         onClickGoHomeScreen: ()->Unit = {},
         currentUserRooms: List<String>,
         currentUserId: String
