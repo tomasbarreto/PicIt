@@ -36,6 +36,7 @@ import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
 import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
+import com.example.picit.repic.RepicRoomPictureReleasedScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.utils.DBUtils
@@ -318,11 +319,15 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val winnerTime = currentRepicRoom.winnerAnnouncementTime
 
                 if (checkInterval(currentTime, picReleaseTime, submissionPicStartTime)) {
-                    // TODO - WAIT FOR PHOTO SUBMISSION START
                     Log.w("TIMEEEEE", "WAIT FOR PHOTO SUBMISSION START")
+                    RepicRoomPictureReleasedScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
                 } else if(checkInterval(currentTime, submissionPicStartTime, submissionPicEndTime)) {
                     Log.w("TIMEEEEE", "SUBMIT PHOTO")
-                    // TODO - SUBMIT PHOTO
+                    RepicRoomTakePicture(
+                        onClickBackButton = { onClickBackButton() },
+                        onClickCameraButton = onClickCameraButton,
+                        currentRepicRoom
+                    )
                 } else if(checkInterval(currentTime, submissionPicEndTime, winnerTime)) {
                     Log.w("TIMEEEEE", "WAITING FOR WINNER ANNOUNCEMENT")
                     // TODO - WAITING FOR WINNER ANNOUNCEMENT
@@ -330,12 +335,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     Log.w("TIMEEEEE", "WINNER ANNOUNCED")
                     // TODO - WINNER ANNOUNCED
                 }
-                
-                RepicRoomTakePicture(
-                    onClickBackButton = {onClickBackButton()},
-                    onClickCameraButton = onClickCameraButton,
-                    currentRepicRoom
-                )
+//
+
+
             }
 
         }
