@@ -38,6 +38,7 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomPictureReleasedScreen
 import com.example.picit.repic.RepicRoomTakePicture
+import com.example.picit.repic.RepicRoomWaitingWinnerScreen
 import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.utils.DBUtils
@@ -331,16 +332,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     )
                 } else if(checkInterval(currentTime, submissionPicEndTime, winnerTime)) {
                     Log.w("TIMEEEEE", "WAITING FOR WINNER ANNOUNCEMENT")
-                    // TODO - WAITING FOR WINNER ANNOUNCEMENT
+                    RepicRoomWaitingWinnerScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
                 } else {
                     Log.w("TIMEEEEE", "WINNER ANNOUNCED")
                     RepicRoomWinnerScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
                 }
-//
-
-
             }
-
         }
 
         composable(route = Screens.PromptRoomVoteLeader.route) { backStackEntry->
