@@ -38,6 +38,7 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomPictureReleasedScreen
 import com.example.picit.repic.RepicRoomTakePicture
+import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.utils.DBUtils
 import java.util.Calendar
@@ -333,7 +334,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     // TODO - WAITING FOR WINNER ANNOUNCEMENT
                 } else {
                     Log.w("TIMEEEEE", "WINNER ANNOUNCED")
-                    // TODO - WINNER ANNOUNCED
+                    RepicRoomWinnerScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
                 }
 //
 
