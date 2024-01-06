@@ -27,6 +27,7 @@ import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
+import com.example.picit.picdesc.PromptRoomVoteLeader
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
@@ -88,11 +89,16 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickCreateRoom = {navController.navigate(Screens.CreateRoomChooseGame.route)},
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
                 onClickSettings = {navController.navigate(Screens.Settings.route)},
-                onClickRooms = {roomId, gameType ->
+                onClickRooms = { roomId, gameType, roomCurrentLeader ->
                     val route = if (gameType == GameType.REPIC) {
                         Screens.RepicRoomTakePicture.route
                     } else {
-                        Screens.PromptRoomTakePicture.route
+                        print(currentUser.id + " " + roomCurrentLeader)
+                        if (currentUser.id != roomCurrentLeader) {
+                            Screens.PromptRoomTakePicture.route
+                        } else {
+                            Screens.PromptRoomVoteLeader.route
+                        }
                     }
                     if(roomId != null) {
                         navController.navigate(route.replace("{room_id}", roomId))
@@ -294,6 +300,17 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 )
             }
 
+        }
+
+        composable(route = Screens.PromptRoomVoteLeader.route) { backStackEntry->
+            val roomId = backStackEntry.arguments?.getString("room_id")
+            if (roomId != null) {
+                dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
+
+                PromptRoomVoteLeader(
+                    onClickBackButton = {onClickBackButton()}
+                )
+            }
         }
     }
 

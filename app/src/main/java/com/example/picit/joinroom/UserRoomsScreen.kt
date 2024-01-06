@@ -42,7 +42,7 @@ fun UserRoomsScreen(
     onClickCreateRoom: () -> Unit = {},
     onClickInvitesButton: ()-> Unit = {},
     onClickSettings: ()-> Unit = {},
-    onClickRooms: (String?, GameType) -> Unit,
+    onClickRooms: (String?, GameType, String) -> Unit,
     userCurrentRepicRooms: List<RePicRoom> = emptyList(),
     userCurrentPicDescRooms: List<PicDescRoom> = emptyList()
 ) {
@@ -92,7 +92,7 @@ fun UserRoomsScreen(
                 var maxDailyChallenges = room.maxNumOfChallenges
                 var challengesDone = room.currentNumOfChallengesDone
                 Spacer(modifier = Modifier.height(16.dp))
-                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,{onClickRooms(room.id, room.gameType)})
+                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,{onClickRooms(room.id, room.gameType, "")})
             }
 
             userCurrentPicDescRooms.forEach { room ->
@@ -103,7 +103,7 @@ fun UserRoomsScreen(
                 var maxDailyChallenges = room.maxNumOfChallenges
                 var challengesDone = room.currentNumOfChallengesDone
                 Spacer(modifier = Modifier.height(16.dp))
-                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,{onClickRooms(room.id, room.gameType)})
+                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,{onClickRooms(room.id, room.gameType, room.currentLeader)})
             }
         }
 

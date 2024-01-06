@@ -22,16 +22,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.picit.utils.InvalidButton
 import com.example.picit.R
+import com.example.picit.leaderboard.LeaderboardButton
+import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.InvalidButton
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.utils.TimeLeftDisplay
 import com.example.picit.utils.ValidButton
-import com.example.picit.leaderboard.LeaderboardButton
-import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun PromptRoomVoteLeaderScreen(
+fun PromptRoomVoteLeader(
     onClickBackButton: ()->Unit = {}
 ){
     Column (
@@ -122,6 +122,6 @@ fun PromptRoomVoteLeaderScreen(
 @Composable
 fun PromptRoomVotePreview() {
     PicItTheme {
-        PromptRoomVoteLeaderScreen()
+        PromptRoomVoteLeader()
     }
 }
