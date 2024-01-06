@@ -1,5 +1,6 @@
 package com.example.picit.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,6 +14,7 @@ import com.example.picit.camera.CameraScreen
 import com.example.picit.entities.GameType
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicRoom
+import com.example.picit.entities.Time
 import com.example.picit.entities.User
 import com.example.picit.friendslist.FriendsListScreen
 import com.example.picit.joinroom.JoinPicDescRoomScreen
@@ -37,6 +39,7 @@ import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.utils.DBUtils
+import java.util.Calendar
 
 private val TAG = "NavHost"
 
@@ -64,6 +67,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         var currentRepicRoom by mutableStateOf(RePicRoom())
         var currentPicDescRoom by mutableStateOf(PicDescRoom())
         var dbutils = DBUtils()
+
+        fun checkInterval(currentTime: Time, startTime: Time, endTime: Time): Boolean {
+            return (currentTime.hours > startTime.hours || (currentTime.hours == startTime.hours && currentTime.minutes > startTime.minutes)) &&
+                    (currentTime.hours < endTime.hours || currentTime.minutes < endTime.minutes )
+        }
 
         composable(route= Screens.Login.route) {
             var loginViewModel : LoginViewModel = viewModel()
@@ -297,9 +305,32 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.RepicRoomTakePicture.route){ backStackEntry ->
             val roomId = backStackEntry.arguments?.getString("room_id")
+
+            val currentCalendar = Calendar.getInstance()
+            val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
+
             if (roomId != null) {
                 dbutils.findRepicRoomById(roomId, {room -> currentRepicRoom = room})
 
+                val picReleaseTime = currentRepicRoom.pictureReleaseTime
+                val submissionPicStartTime = currentRepicRoom.photoSubmissionOpeningTime
+                val submissionPicEndTime = currentRepicRoom.photoSubmissionClosingTime
+                val winnerTime = currentRepicRoom.winnerAnnouncementTime
+
+                if (checkInterval(currentTime, picReleaseTime, submissionPicStartTime)) {
+                    // TODO - WAIT FOR PHOTO SUBMISSION START
+                    Log.w("TIMEEEEE", "WAIT FOR PHOTO SUBMISSION START")
+                } else if(checkInterval(currentTime, submissionPicStartTime, submissionPicEndTime)) {
+                    Log.w("TIMEEEEE", "SUBMIT PHOTO")
+                    // TODO - SUBMIT PHOTO
+                } else if(checkInterval(currentTime, submissionPicEndTime, winnerTime)) {
+                    Log.w("TIMEEEEE", "WAITING FOR WINNER ANNOUNCEMENT")
+                    // TODO - WAITING FOR WINNER ANNOUNCEMENT
+                } else {
+                    Log.w("TIMEEEEE", "WINNER ANNOUNCED")
+                    // TODO - WINNER ANNOUNCED
+                }
+                
                 RepicRoomTakePicture(
                     onClickBackButton = {onClickBackButton()},
                     onClickCameraButton = onClickCameraButton,
