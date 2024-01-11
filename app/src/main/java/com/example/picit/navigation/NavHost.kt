@@ -306,12 +306,16 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
                 if(currentUserIsLeader){
                     SubmitPhotoDescriptionScreen(
-                        onClickBackButton = { onClickBackButton() }
+                        onClickBackButton = { onClickBackButton() },
                     )
                 }
                 else{
                     WaitingPhotoDescriptionScreen(
-                        onClickBackButton = { onClickBackButton() }
+                        onClickBackButton = { onClickBackButton() },
+                        onClickLeaderboardButton = {/*TODO*/},
+                        roomName = currentPicDescRoom.name,
+                        descriptionReleaseTime =
+                        "${currentPicDescRoom.photoSubmissionOpeningTime.hours}:${currentPicDescRoom.photoSubmissionOpeningTime.minutes}"
                     )
                 }
             }
