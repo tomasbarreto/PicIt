@@ -110,7 +110,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         if (currentUser.id != roomCurrentLeader) {
                             Screens.PromptRoomTakePicture.route
                         } else {
-                            Screens.PromptRoomVoteLeader.route
+                            Screens.SubmitPhotoDescription.route
                         }
                     }
                     if(roomId != null) {

@@ -40,7 +40,7 @@ fun SubmitPhotoDescription(
     picDescRoom: PicDescRoom
 ) {
     var context = LocalContext.current
-    var photoDesciption by remember { mutableStateOf("") } // TODO: check if its this
+    var photoDescription by remember { mutableStateOf(picDescRoom.photoDescription) } // TODO: check if its this
 
     Column(
         modifier = Modifier
@@ -73,8 +73,8 @@ fun SubmitPhotoDescription(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 TextField(
-                    value = photoDesciption,
-                    onValueChange = { photoDesciption = it },
+                    value = photoDescription,
+                    onValueChange = { photoDescription = it },
                     label = { Text("Photo Description") },
                     modifier = Modifier.fillMaxWidth(0.8f)
                 )
@@ -102,8 +102,8 @@ fun SubmitPhotoDescription(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 32.dp)){
                 Button(onClick = {
-                    if (photoDesciption.isNotEmpty()) {
-                        viewModel.submitPhotoDescription(photoDesciption, picDescRoom)
+                    if (photoDescription.isNotEmpty()) {
+                        viewModel.submitPhotoDescription(photoDescription, picDescRoom)
                     }
                     else {
                         Toast.makeText(
