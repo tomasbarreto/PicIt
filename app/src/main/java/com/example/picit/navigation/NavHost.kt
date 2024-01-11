@@ -30,6 +30,8 @@ import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
+import com.example.picit.picdesc.SubmitPhotoDescriptionScreen
+import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
@@ -296,19 +298,30 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             val currentCalendar = Calendar.getInstance() // TODO:  o tempo vai andando
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
+            val currentUserIsLeader = currentUser.id == currentPicDescRoom.currentLeader
 
             val descriptionSubmissionOpeningTime = currentPicDescRoom.descriptionSubmissionOpeningTime
             val descriptionSubmissionClosingTime = currentPicDescRoom.descriptionSubmissionClosingTime
             val photoSubmissionOpeningOpeningTime = currentPicDescRoom.photoSubmissionOpeningTime
             val photoSubmissionOpeningClosingTime = currentPicDescRoom.photoSubmissionClosingTime
-            val winnerAnouncemntTime = currentPicDescRoom.winnerAnnouncementTime
+            val winnerAnnouncementTime = currentPicDescRoom.winnerAnnouncementTime
+
+            if (checkInterval(currentTime,descriptionSubmissionOpeningTime,descriptionSubmissionClosingTime)){
+                if(currentUserIsLeader){
+                    SubmitPhotoDescriptionScreen(
+                        onClickBackButton = { onClickBackButton() }
+                    )
+                }
+                else{
+                    WaitingPhotoDescriptionScreen(
+                        onClickBackButton = { onClickBackButton() }
+                    )
+                }
+            }
 
 
-            PromptRoomTakePicture(
-                onClickBackButton = {onClickBackButton()},
-                onClickCameraButton = onClickCameraButton,
-                currentPicDescRoom
-            )
+
+
         }
         composable(route = Screens.RepicRoomScreen.route){ backStackEntry ->
             val roomId = backStackEntry.arguments?.getString("room_id")
