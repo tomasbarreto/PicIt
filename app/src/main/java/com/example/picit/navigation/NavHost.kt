@@ -177,7 +177,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             JoinRepicRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
                 room.maxNumOfChallenges, room.currentNumOfChallengesDone,
                 String.format("%02d", room.pictureReleaseTime.hours) + ":" + String.format("%02d", room.pictureReleaseTime.minutes),
-                String.format("%02d", room.photoSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.photoSubmissionOpeningTime.minutes),
                 String.format("%02d", room.winnerAnnouncementTime.hours) + ":" + String.format("%02d", room.winnerAnnouncementTime.minutes),
                 onClickJoinRoom, onClickBackButton = { onClickBackButton() })
 
@@ -358,13 +357,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 dbutils.findRepicRoomById(roomId, {room -> currentRepicRoom = room})
 
                 val picReleaseTime = currentRepicRoom.pictureReleaseTime
-                val submissionPicStartTime = currentRepicRoom.photoSubmissionOpeningTime
                 val winnerTime = currentRepicRoom.winnerAnnouncementTime
 
-                if (checkInterval(currentTime, picReleaseTime, submissionPicStartTime)) {
-                    Log.w("TIME", "WAIT FOR PHOTO SUBMISSION START")
-                    RepicRoomPictureReleasedScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
-                } else if(checkInterval(currentTime, submissionPicStartTime, winnerTime)) {
+                if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
                     Log.w("TIME", "SUBMIT PHOTO")
                     RepicRoomTakePicture(
                         onClickBackButton = { onClickBackButton() },
