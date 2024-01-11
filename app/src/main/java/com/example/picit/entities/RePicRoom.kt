@@ -7,6 +7,7 @@ data class RePicRoom(
     var id: String? = null,
     val name:String = "",
     val gameType: GameType = GameType.REPIC,
+    val image: String = "", // TODO: mudar para representar imagem
     val maxCapacity: Int = 0,
     val currentCapacity: Int = 0,
     val maxNumOfChallenges: Int = 0,

@@ -4,6 +4,7 @@ data class PicDescRoom(
     var id: String? = null,
     val name:String = "",
     val gameType: GameType = GameType.PICDESC,
+    val photoDescription: String = "",
     val maxCapacity: Int = 0,
     val currentCapacity: Int = 0,
     val maxNumOfChallenges: Int = 0,
