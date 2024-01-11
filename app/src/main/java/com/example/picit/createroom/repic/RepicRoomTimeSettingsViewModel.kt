@@ -17,8 +17,6 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
         privacy: Boolean,
         privacyCode: String,
         timePictureRelease: Time,
-        timePictureSubmissionStart:Time,
-        timePictureSubmissionEnd:Time,
         timeWinner:Time,
         onClickGoHomeScreen: ()->Unit = {},
         currentUserRooms: List<String>,
@@ -29,8 +27,7 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
 
         val newRepicRoom = RePicRoom(id=roomRef.key,name = roomName, currentCapacity = 1, maxCapacity = roomCapacity.toInt(),
             maxNumOfChallenges = roomNumChallenges.toInt(), leaderboard = listOf(UserInLeaderboard(currentUserId,0)),
-            winnerAnnouncementTime = timeWinner, photoSubmissionOpeningTime = timePictureSubmissionStart,
-            photoSubmissionClosingTime = timePictureSubmissionEnd, pictureReleaseTime = timePictureRelease,
+            winnerAnnouncementTime = timeWinner, pictureReleaseTime = timePictureRelease,
             privacy = privacy, privacyCode = privacyCode)
 
         roomRef.setValue(newRepicRoom)

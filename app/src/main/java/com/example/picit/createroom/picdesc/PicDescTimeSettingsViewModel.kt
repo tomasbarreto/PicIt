@@ -17,9 +17,7 @@ class PicDescTimeSettingsViewModel: ViewModel() {
         privacy: Boolean,
         privacyCode: String,
         timeDescSubmissionStart: Time,
-        timeDescSubmissionEnd: Time,
         timePictureSubmissionStart:Time,
-        timePictureSubmissionEnd: Time,
         timeWinner:Time,
         onClickGoHomeScreen: ()->Unit = {},
         currentUserRooms: List<String>,
@@ -31,8 +29,7 @@ class PicDescTimeSettingsViewModel: ViewModel() {
         val newPicDescRoom = PicDescRoom(id = roomRef.key,name = roomName, currentCapacity = 1,
             maxCapacity = roomCapacity.toInt(), maxNumOfChallenges = roomNumChallenges.toInt(),
             winnerAnnouncementTime = timeWinner, photoSubmissionOpeningTime = timePictureSubmissionStart,
-            photoSubmissionClosingTime = timePictureSubmissionEnd, descriptionSubmissionOpeningTime = timeDescSubmissionStart,
-            descriptionSubmissionClosingTime = timeDescSubmissionEnd, currentLeader = currentUserId,
+            descriptionSubmissionOpeningTime = timeDescSubmissionStart, currentLeader = currentUserId,
             privacy = privacy, privacyCode = privacyCode, leaderboard = listOf(UserInLeaderboard(currentUserId,0))
         )
         roomRef.setValue(newPicDescRoom)
