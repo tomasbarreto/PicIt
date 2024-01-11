@@ -1,4 +1,4 @@
-package com.example.picit.picdesccreateroom
+package com.example.picit.createroom.picdesc
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -19,24 +18,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.createroom.InsertTime
-import com.example.picit.createroom.picdesc.PicDescTimeSettingsViewModel
 import com.example.picit.entities.Time
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomTimeSettingsPicDescScreen(
     modifier: Modifier = Modifier,
     onClickBackButton: ()->Unit = {},
-    roomName: String,
-    roomCapacity: String,
-    numChallenges: String,
-    privacy: Boolean,
-    privacyCode: String,
+    roomName: String = "",
+    roomCapacity: String = "",
+    numChallenges: String ="",
+    privacy: Boolean =false,
+    privacyCode: String ="",
     onClickGoHomeScreen: ()->Unit = {},
-    currentUserId: String,
-    currentUserRooms: List<String>
+    currentUserId: String ="",
+    currentUserRooms: List<String> = emptyList()
 ) {
     val viewModel : PicDescTimeSettingsViewModel = viewModel()
 
@@ -133,6 +130,6 @@ fun RoomTimeSettingsPicDescScreen(
 @Composable
 fun RoomTimeSettingsPicDescPreview() {
     PicItTheme {
-//        RoomTimeSettingsPicDescScreen()
+        RoomTimeSettingsPicDescScreen()
     }
 }

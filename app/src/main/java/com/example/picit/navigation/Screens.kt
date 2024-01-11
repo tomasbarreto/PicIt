@@ -17,7 +17,6 @@ sealed class Screens(val route:String){
     object InvitesNotifications: Screens("invite_notifications")
     object Settings: Screens("settings")
     object Camera: Screens("camera")
-    object PromptRoomTakePicture: Screens("prompt_room_take_picture/{room_id}")
-    object PromptRoomVoteLeader: Screens("prompt_room_vote_leader/{room_id}")
-    object RepicRoomTakePicture: Screens("repic_room_take_picture/{room_id}")
+    object PicDescRoomScreen: Screens("picdesc_room/{room_id}")
+    object RepicRoomScreen: Screens("repic_room/{room_id}")
 }
