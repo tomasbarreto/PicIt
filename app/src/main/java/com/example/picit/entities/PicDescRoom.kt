@@ -11,12 +11,12 @@ data class PicDescRoom(
     val currentNumOfChallengesDone: Int = 0,
     val winnerAnnouncementTime: Time = Time(),
     val photoSubmissionOpeningTime: Time = Time(),
-    val photoSubmissionClosingTime: Time = Time(),
+    //val photoSubmissionClosingTime: Time = Time(), // winnerAnnouncement
     val leaderboard: List<UserInLeaderboard> = emptyList(),
 
     val photosSubmitted: List<PicDescPhoto> = emptyList(),
     val descriptionSubmissionOpeningTime : Time = Time(),
-    val descriptionSubmissionClosingTime: Time = Time(),
+    //val descriptionSubmissionClosingTime: Time = Time(), // photoSubmissionOpening
     val currentLeader: String = "", // user id
 
     val privacy: Boolean = false,

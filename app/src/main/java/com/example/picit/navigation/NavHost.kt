@@ -35,7 +35,7 @@ import com.example.picit.picdesc.SubmitPhotoDescriptionScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
-import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
+import com.example.picit.createroom.picdesc.RoomTimeSettingsPicDescScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
 import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
@@ -199,9 +199,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             JoinPicDescRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
                 room.maxNumOfChallenges, room.currentNumOfChallengesDone,
                 String.format("%02d", room.descriptionSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.descriptionSubmissionOpeningTime.minutes),
-                String.format("%02d", room.descriptionSubmissionClosingTime.hours) + ":" + String.format("%02d", room.descriptionSubmissionClosingTime.minutes),
                 String.format("%02d", room.photoSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.photoSubmissionOpeningTime.minutes),
-                String.format("%02d", room.photoSubmissionClosingTime.hours) + ":" + String.format("%02d", room.photoSubmissionClosingTime.minutes),
+                String.format("%02d", room.photoSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.photoSubmissionOpeningTime.minutes),
+                String.format("%02d", room.winnerAnnouncementTime.hours) + ":" + String.format("%02d", room.winnerAnnouncementTime.minutes),
                 String.format("%02d", room.winnerAnnouncementTime.hours) + ":" + String.format("%02d", room.winnerAnnouncementTime.minutes),
                 onClickJoinRoom, onClickBackButton = { onClickBackButton() })
         }
@@ -302,12 +302,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val currentUserIsLeader = currentUser.id == currentPicDescRoom.currentLeader
 
             val descriptionSubmissionOpeningTime = currentPicDescRoom.descriptionSubmissionOpeningTime
-            val descriptionSubmissionClosingTime = currentPicDescRoom.descriptionSubmissionClosingTime
-            val photoSubmissionOpeningOpeningTime = currentPicDescRoom.photoSubmissionOpeningTime
-            val photoSubmissionOpeningClosingTime = currentPicDescRoom.photoSubmissionClosingTime
+            val photoSubmissionOpeningTime = currentPicDescRoom.photoSubmissionOpeningTime
             val winnerAnnouncementTime = currentPicDescRoom.winnerAnnouncementTime
 
-            if (checkInterval(currentTime,descriptionSubmissionOpeningTime,descriptionSubmissionClosingTime)){
+            if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
                 if(currentUserIsLeader){
                     SubmitPhotoDescriptionScreen(
                         onClickBackButton = { onClickBackButton() }
@@ -320,7 +318,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
             }
 
-            else if (checkInterval(currentTime,photoSubmissionOpeningOpeningTime,photoSubmissionOpeningClosingTime)){
+            else if (checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)){
                 if(currentUserIsLeader){
                     PromptRoomVoteLeader(
                         onClickBackButton = {onClickBackButton()}
@@ -345,9 +343,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                 }
             }
-
-
-
 
         }
         composable(route = Screens.RepicRoomScreen.route){ backStackEntry ->
