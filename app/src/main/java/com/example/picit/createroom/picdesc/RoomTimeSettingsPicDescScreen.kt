@@ -40,14 +40,8 @@ fun RoomTimeSettingsPicDescScreen(
     var hoursDescReleaseStart = remember { mutableStateOf("") }
     var minutesDescReleaseStart = remember { mutableStateOf("") }
 
-    var hoursDescReleaseEnd = remember { mutableStateOf("") }
-    var minutesDescReleaseEnd = remember { mutableStateOf("") }
-
     var hoursPictureSubmissionStart = remember { mutableStateOf("") }
     var minutesPictureSubmissionStart = remember { mutableStateOf("") }
-
-    var hoursPictureSubmissionEnd = remember { mutableStateOf("") }
-    var minutesPictureSubmissionEnd = remember { mutableStateOf("") }
 
     var hoursWinner = remember { mutableStateOf("") }
     var minutesWinner = remember { mutableStateOf("") }
@@ -77,10 +71,6 @@ fun RoomTimeSettingsPicDescScreen(
             verticalArrangement = Arrangement.Center
         ) {
             InsertTime(hours = hoursDescReleaseStart, minutes = minutesDescReleaseStart)
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = " to ", fontSize = 20.sp)
-            Spacer(modifier = Modifier.height(10.dp))
-            InsertTime(hours = hoursDescReleaseEnd, minutes = minutesDescReleaseEnd)
         }
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -95,10 +85,6 @@ fun RoomTimeSettingsPicDescScreen(
             verticalArrangement = Arrangement.Center
         ) {
             InsertTime(hours = hoursPictureSubmissionStart, minutes = minutesPictureSubmissionStart)
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = " to ", fontSize = 20.sp)
-            Spacer(modifier = Modifier.height(10.dp))
-            InsertTime(hours = hoursPictureSubmissionEnd, minutes = minutesPictureSubmissionEnd)
         }
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -114,9 +100,7 @@ fun RoomTimeSettingsPicDescScreen(
         Button(onClick = {
             viewModel.registerPicDescRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
                 Time(hoursDescReleaseStart.value.toInt(), minutesDescReleaseStart.value.toInt()),
-                Time(hoursDescReleaseEnd.value.toInt(), minutesDescReleaseEnd.value.toInt()),
                 Time(hoursPictureSubmissionStart.value.toInt(), minutesPictureSubmissionStart.value.toInt()),
-                Time(hoursPictureSubmissionEnd.value.toInt(), minutesPictureSubmissionEnd.value.toInt()),
                 Time(hoursWinner.value.toInt(), minutesWinner.value.toInt()),
                 onClickGoHomeScreen, currentUserRooms, currentUserId
             )

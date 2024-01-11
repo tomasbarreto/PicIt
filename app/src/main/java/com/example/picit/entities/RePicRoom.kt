@@ -14,7 +14,7 @@ data class RePicRoom(
     val currentNumOfChallengesDone: Int = 0,
     val winnerAnnouncementTime: Time = Time(),
     val photoSubmissionOpeningTime: Time = Time(),
-    val photoSubmissionClosingTime: Time = Time(),
+    //val photoSubmissionClosingTime: Time = Time(), // winner Announcement
     val leaderboard: List<UserInLeaderboard> = emptyList(),
     val picturesSubmitted: List<RePicPhoto> = emptyList(),
     val pictureReleaseTime: Time = Time(),
