@@ -291,20 +291,29 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
             val roomId = backStackEntry.arguments?.getString("room_id")
-            if (roomId != null) {
-                dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
+            if (roomId == null) return@composable
+            dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
 
-                PromptRoomTakePicture(
-                    onClickBackButton = {onClickBackButton()},
-                    onClickCameraButton = onClickCameraButton,
-                    currentPicDescRoom
-                )
-            }
+            val currentCalendar = Calendar.getInstance() // TODO:  o tempo vai andando
+            val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
+
+            val descriptionSubmissionOpeningTime = currentPicDescRoom.descriptionSubmissionOpeningTime
+            val descriptionSubmissionClosingTime = currentPicDescRoom.descriptionSubmissionClosingTime
+            val photoSubmissionOpeningOpeningTime = currentPicDescRoom.photoSubmissionOpeningTime
+            val photoSubmissionOpeningClosingTime = currentPicDescRoom.photoSubmissionClosingTime
+            val winnerAnouncemntTime = currentPicDescRoom.winnerAnnouncementTime
+
+
+            PromptRoomTakePicture(
+                onClickBackButton = {onClickBackButton()},
+                onClickCameraButton = onClickCameraButton,
+                currentPicDescRoom
+            )
         }
         composable(route = Screens.RepicRoomScreen.route){ backStackEntry ->
             val roomId = backStackEntry.arguments?.getString("room_id")
 
-            val currentCalendar = Calendar.getInstance()
+            val currentCalendar = Calendar.getInstance() // TODO: o tempo vai andando
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
 
             if (roomId != null) {
