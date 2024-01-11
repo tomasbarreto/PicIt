@@ -97,7 +97,7 @@ fun RepicRoomWinnerScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        TimeLeftDisplay("Next Picture",1,24,55)
+        TimeLeftDisplay("Next Picture","1","24")
         Spacer(modifier = Modifier.height(90.dp))
 
         Row(modifier = Modifier

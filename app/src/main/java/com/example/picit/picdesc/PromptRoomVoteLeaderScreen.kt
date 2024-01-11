@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
+import com.example.picit.entities.PicDescPhoto
 import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.InvalidButton
@@ -32,7 +33,15 @@ import com.example.picit.utils.ValidButton
 
 @Composable
 fun PromptRoomVoteLeader(
-    onClickBackButton: ()->Unit = {}
+    onClickBackButton: ()->Unit = {},
+    onClickLeaderboardButton: ()->Unit = {},
+    roomName: String = "Room name",
+    photoDescription:String = "photo description",
+    photo: PicDescPhoto = PicDescPhoto(),
+    clickValidButton: ()->Unit = {},
+    clickInvalidButton: ()->Unit={},
+    hours: String = "01",
+    minutes: String = "32"
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -40,7 +49,7 @@ fun PromptRoomVoteLeader(
     ){
         ScreenHeader(
             withBackButton = true,
-            text = "Room name",
+            text = roomName,
             onClickBackButton = onClickBackButton
         )
 
@@ -54,7 +63,7 @@ fun PromptRoomVoteLeader(
             Text(text="Time To Vote!", fontSize = 30.sp)
         }
 
-        PromptDisplay("Pose with the sunset")
+        PromptDisplay(photoDescription)
         Row (modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp),
@@ -67,7 +76,7 @@ fun PromptRoomVoteLeader(
                     Icon(Icons.Filled.Person, contentDescription = null, modifier = Modifier
                         .height(25.dp)
                         .fillMaxWidth(0.1F))
-                    Text(text = "User name", modifier = Modifier
+                    Text(text = photo.username, modifier = Modifier
                         .height(22.dp)
                         .fillMaxWidth(0.50F))
                     Image(
@@ -77,16 +86,18 @@ fun PromptRoomVoteLeader(
                             .width(15.dp)
                             .fillMaxWidth(0.05F)
                     )
-                    Text(text="08:00", fontSize = 12.sp)
+                    val submissionHours=String.format("%02d",photo.submissionTime.hours)
+                    val submissionMins=String.format("%02d",photo.submissionTime.minutes)
+                    Text(text="$submissionHours:$submissionMins", fontSize = 12.sp)
                 }
                 Image(
                     painter = painterResource(id = R.drawable.imagetorepic),
-                    contentDescription = "woman kissing the sunset"
+                    contentDescription = photoDescription
                 )
                 Row (modifier = Modifier.height(25.dp)) {
                     Icon(Icons.Filled.LocationOn, contentDescription = null, modifier = Modifier
                         .fillMaxWidth(0.1F))
-                    Text(text = "Location", modifier = Modifier
+                    Text(text = photo.location, modifier = Modifier
                         .height(22.dp)
                         .fillMaxWidth(0.55F))
                 }
@@ -99,11 +110,13 @@ fun PromptRoomVoteLeader(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically)
         {
-            InvalidButton()
-            ValidButton()
+            InvalidButton(clickInvalidButton)
+            ValidButton(clickValidButton)
         }
 
-        TimeLeftDisplay("Vote",1,32,23)
+        Spacer(modifier = Modifier.weight(1f))
+
+        TimeLeftDisplay("Vote",hours,minutes)
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -111,7 +124,7 @@ fun PromptRoomVoteLeader(
             .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 20.dp),
             horizontalArrangement = Arrangement.End) {
-            LeaderboardButton()
+            LeaderboardButton(onClickLeaderboardButton)
         }
 
     }

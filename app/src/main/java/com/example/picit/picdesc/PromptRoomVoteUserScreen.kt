@@ -109,7 +109,7 @@ fun PromptRoomVoteUserScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TimeLeftDisplay("Vote",1,32,23)
+        TimeLeftDisplay("Vote","1","32")
 
         Spacer(modifier = Modifier.weight(1f))
 

@@ -59,7 +59,7 @@ fun SubmitPhotoDescriptionScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
-                TimeLeftDisplay(timeFor = "Submit Description\n",2,34,12)
+                TimeLeftDisplay(timeFor = "Submit Description\n","2","34")
                 Spacer(modifier = Modifier.height(8.dp))
 
                 var text by remember { mutableStateOf("") } // TODO: check if its this
