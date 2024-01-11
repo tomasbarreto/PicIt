@@ -33,8 +33,7 @@ fun JoinRepicRoomScreen(
     maxDailyChallenges :Int = 30,
     challengesDone:Int = 13,
     pictureReleaseTime :String= "17:00",
-    photoSubmissionOpeningTime :String= "17:00",
-    limitToPicWinnerTime :String= "14:00",
+    limitToPicWinnerTime :String= "20:00",
     onClickJoinRoom: () -> Unit = {},
     onClickBackButton: () -> Unit = {},
 ) {
@@ -156,7 +155,7 @@ fun JoinRepicRoomScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = "$photoSubmissionOpeningTime", fontSize = parametersTextSize)
+            Text(text = "$pictureReleaseTime - $limitToPicWinnerTime", fontSize = parametersTextSize)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
