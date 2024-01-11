@@ -30,6 +30,8 @@ import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
+import com.example.picit.picdesc.SubmitPhotoDescription
+import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
@@ -135,7 +137,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route= Screens.RoomsToJoin.route){
-            // TODO : TOU AQUI --------------------
             val previewRoomsToJoinViewModel: PreviewRoomsToJoinViewModel = viewModel()
             previewRoomsToJoinViewModel.filterRoomsUserIsIn(currentUser.repicRooms,currentUser.picDescRooms)
             val clickJoinRepicRoom = { roomId: String ->
@@ -347,6 +348,20 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                 PromptRoomVoteLeader(
                     onClickBackButton = {onClickBackButton()}
+                )
+            }
+        }
+
+        composable(route = Screens.SubmitPhotoDescription.route){ backStackEntry->
+            val viewModel: SubmitPhotoDescriptionViewModel = viewModel()
+            val roomId = backStackEntry.arguments?.getString("room_id")
+            if (roomId != null) {
+                dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
+
+                SubmitPhotoDescription(
+                    onClickBackButton = {onClickBackButton()},
+                    viewModel = viewModel,
+                    currentPicDescRoom
                 )
             }
         }
