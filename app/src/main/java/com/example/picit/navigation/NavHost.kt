@@ -30,6 +30,7 @@ import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
+import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.SubmitPhotoDescriptionScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
@@ -316,6 +317,32 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     WaitingPhotoDescriptionScreen(
                         onClickBackButton = { onClickBackButton() }
                     )
+                }
+            }
+
+            else if (checkInterval(currentTime,photoSubmissionOpeningOpeningTime,photoSubmissionOpeningClosingTime)){
+                if(currentUserIsLeader){
+                    PromptRoomVoteLeader(
+                        onClickBackButton = {onClickBackButton()}
+                    )
+                }
+                else{
+                    // check if user already submitted photo
+                    val userAlreadySubmitted=
+                        currentPicDescRoom.photosSubmitted.filter{ it.userId == currentUser.id}.size == 1
+
+                    if(userAlreadySubmitted){
+                        PromptRoomVoteUserScreen(
+                            onClickBackButton = {onClickBackButton()}
+                        )
+                    }
+                    else{
+                        PromptRoomTakePicture(
+                            onClickBackButton = {onClickBackButton()},
+                            onClickCameraButton = {onClickCameraButton()},
+                            room = currentPicDescRoom
+                        )
+                    }
                 }
             }
 

@@ -24,19 +24,18 @@ import com.example.picit.entities.Time
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomTimeSettingsPicDescScreen(
     modifier: Modifier = Modifier,
     onClickBackButton: ()->Unit = {},
-    roomName: String,
-    roomCapacity: String,
-    numChallenges: String,
-    privacy: Boolean,
-    privacyCode: String,
+    roomName: String = "",
+    roomCapacity: String = "",
+    numChallenges: String ="",
+    privacy: Boolean =false,
+    privacyCode: String ="",
     onClickGoHomeScreen: ()->Unit = {},
-    currentUserId: String,
-    currentUserRooms: List<String>
+    currentUserId: String ="",
+    currentUserRooms: List<String> = emptyList()
 ) {
     val viewModel : PicDescTimeSettingsViewModel = viewModel()
 
@@ -133,6 +132,6 @@ fun RoomTimeSettingsPicDescScreen(
 @Composable
 fun RoomTimeSettingsPicDescPreview() {
     PicItTheme {
-//        RoomTimeSettingsPicDescScreen()
+        RoomTimeSettingsPicDescScreen()
     }
 }
