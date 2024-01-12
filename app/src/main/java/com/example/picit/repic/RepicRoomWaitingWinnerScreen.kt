@@ -66,7 +66,7 @@ fun RepicRoomWaitingWinnerScreen(
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        TimeLeftDisplay("Winner Announcement",1,24,55)
+        TimeLeftDisplay("Winner Announcement",1,24,32)
         Spacer(modifier = Modifier.height(80.dp))
 
         Row(modifier = Modifier

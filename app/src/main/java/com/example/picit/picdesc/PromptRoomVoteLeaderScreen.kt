@@ -43,6 +43,7 @@ fun PromptRoomVoteLeader(
     hoursRemaining: Int = 1,
     minutesRemaining: Int = 32,
     secsRemaining: Int = 8
+
 ){
     Column (
         modifier = Modifier.fillMaxSize(),

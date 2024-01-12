@@ -67,7 +67,7 @@ fun RepicRoomTakePicture(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        TimeLeftDisplay("Submit Photo",1,24,55)
+        TimeLeftDisplay("Submit Photo",1,24,32)
         Spacer(modifier = Modifier.height(20.dp))
         Row(modifier = Modifier
             .fillMaxWidth()
