@@ -8,27 +8,59 @@ import com.example.picit.entities.Time
 import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import com.google.firebase.storage.storage
 
 class PicDescCameraViewModel: ViewModel() {
 
     fun submitImage(room: PicDescRoom, user: User, uri: Uri){
         val db = Firebase.database
-        var roomRef = db.getReference("picDescRooms/${room.id}")
-        // TODO: save on FirebaseStorage
-        // get url
+        val storage = Firebase.storage
 
-        val url = ""
+
+        val roomImageStorageRef = storage.getReference("${room.id}/" +
+                "${user.username}P${room.currentNumOfChallengesDone}")
+
+        val uploadImage = roomImageStorageRef.putFile(uri)
+
+        uploadImage.addOnSuccessListener { taskSnapshot ->
+            // Image uploaded successfully
+            roomImageStorageRef.downloadUrl.addOnSuccessListener { uri ->
+                // Get the download URL
+                val imageUrl = uri.toString()
+
+                // Now that you have the image URL, update the Realtime Database
+                updateDatabase(room, user, imageUrl)
+            }
+        }.addOnFailureListener { exception ->
+            // Handle unsuccessful uploads
+        }
+
+
+    }
+
+
+    private fun updateDatabase(room: PicDescRoom, user: User, imageUrl: String) {
+        val db = Firebase.database
+        val roomRef = db.getReference("picDescRooms/${room.id}")
+
+        // Create PicDescPhoto with the image URL
         val photo = PicDescPhoto(
-            photoUrl = url, userId = user.id, username = user.username,
-            location = "TODO", submissionTime =  Time(), usersThatVoted =  emptyList(),
-            leaderVote = false, averageRating =  0.0)
+            photoUrl = imageUrl,
+            userId = user.id,
+            username = user.username,
+            location = "TODO",
+            submissionTime = Time(),
+            usersThatVoted = emptyList(),
+            leaderVote = false,
+            averageRating = 0.0
+        )
 
-        val updatedSubmittedPhotos= room.photosSubmitted.toMutableList()
+        // Update the list of submitted photos in the room
+        val updatedSubmittedPhotos = room.photosSubmitted.toMutableList()
         updatedSubmittedPhotos.add(photo)
 
+        // Update the room object in the Realtime Database
         val updatedRoom = room.copy(photosSubmitted = updatedSubmittedPhotos)
         roomRef.setValue(updatedRoom)
-
-
     }
 }

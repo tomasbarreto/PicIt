@@ -299,7 +299,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickBackButton = {onClickBackButton()},
                 getImageUri = { uri ->
                     viewModel.submitImage(currentPicDescRoom,currentUser,uri)
-                    navController.navigate(Screens.PicDescRoomScreen.route)
+//                    navController.navigate(Screens.PicDescRoomScreen.route)
                 }
             )
         }
@@ -345,13 +345,17 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
 
             else if (checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)){
+                val photosSubmitted = currentPicDescRoom.photosSubmitted
+                val photosUserDidntVote = photosSubmitted.filter{
+                    it.userId != currentUser.id && !it.usersThatVoted.contains(currentUser.id)
+                }
                 if(currentUserIsLeader){
                     PromptRoomVoteLeader(
                         onClickBackButton = {onClickBackButton()},
                         onClickLeaderboardButton = {/*TODO*/},
                         roomName = currentPicDescRoom.name,
                         photoDescription = currentPicDescRoom.photoDescription,
-                        photo = PicDescPhoto(), // // Buscar da lista de submissoes
+                        photo = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto(),
                         clickValidButton =  {/**/},
                         clickInvalidButton = {/**/},
                         hoursRemaining = 1,
@@ -362,7 +366,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 else{
                     // check if user already submitted photo
                     val userAlreadySubmitted=
-                        currentPicDescRoom.photosSubmitted.filter{ it.userId == currentUser.id}.size == 1
+                        photosSubmitted.filter{ it.userId == currentUser.id}.size == 1
 
                     if(userAlreadySubmitted){
                         PromptRoomVoteUserScreen(
