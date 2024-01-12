@@ -308,7 +308,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             CameraScreen(
                 onClickBackButton = {onClickBackButton()},
-                getImageUri = { context,uri ->
+                getImageUri = { uri ->
                     imageTakenUri = uri
 //                    navController.navigate(Screens.RepicRoomScreen.route)
                 }
