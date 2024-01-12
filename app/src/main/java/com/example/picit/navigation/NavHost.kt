@@ -30,8 +30,9 @@ import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
+import com.example.picit.picdesc.SubmitPhotoDescription
+import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
 import com.example.picit.picdesc.PromptRoomVoteUserScreen
-import com.example.picit.picdesc.SubmitPhotoDescriptionScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
@@ -134,7 +135,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route= Screens.RoomsToJoin.route){
-            // TODO : TOU AQUI --------------------
             val previewRoomsToJoinViewModel: PreviewRoomsToJoinViewModel = viewModel()
             previewRoomsToJoinViewModel.filterRoomsUserIsIn(currentUser.repicRooms,currentUser.picDescRooms)
             val clickJoinRepicRoom = { roomId: String ->
@@ -304,10 +304,14 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val photoSubmissionOpeningTime = currentPicDescRoom.photoSubmissionOpeningTime
             val winnerAnnouncementTime = currentPicDescRoom.winnerAnnouncementTime
 
+            val viewModel: SubmitPhotoDescriptionViewModel = viewModel()
+
             if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
                 if(currentUserIsLeader){
-                    SubmitPhotoDescriptionScreen(
+                    SubmitPhotoDescription(
                         onClickBackButton = { onClickBackButton() },
+                        viewModel,
+                        currentPicDescRoom
                     )
                 }
                 else{
@@ -389,10 +393,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
             }
         }
-
-
     }
-
 }
 
 
