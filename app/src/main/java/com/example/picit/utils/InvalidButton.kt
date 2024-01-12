@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun InvalidButton(){
+fun InvalidButton(onButtonClick: ()->Unit){
     Button(
-        onClick = { /*TODO*/ }
+        onClick = { onButtonClick() }
     ) {
         Icon(Icons.Rounded.Close, contentDescription = "verified", modifier = Modifier.size(40.dp))
     }

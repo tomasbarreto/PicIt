@@ -64,7 +64,7 @@ fun RepicRoomPictureReleasedScreen(
 
         Spacer(modifier = Modifier.height(70.dp))
 
-        TimeLeftDisplay("Wait Photo Submission",1,24,55)
+        TimeLeftDisplay("Wait Photo Submission",1,24,32)
         Spacer(modifier = Modifier.height(80.dp))
 
         Row(modifier = Modifier

@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
+import com.example.picit.entities.PicDescPhoto
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.utils.TimeLeftDisplay
 import com.example.picit.leaderboard.LeaderboardButton
@@ -39,7 +40,15 @@ import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun PromptRoomVoteUserScreen(
-    onClickBackButton: ()->Unit = {}
+    onClickBackButton: ()->Unit = {},
+    onClickLeaderboardButton: ()->Unit = {},
+    roomName: String = "Room name",
+    photoDescription: String = "photo description",
+    photo: PicDescPhoto = PicDescPhoto(),
+    onClickRaitingStars: (Int)->Unit = {},
+    hoursRemaining:Int=1,
+    minutesRemaining:Int=32,
+    secsRemaining:Int=23
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -47,7 +56,7 @@ fun PromptRoomVoteUserScreen(
     ){
         ScreenHeader(
             withBackButton = true,
-            text = "Room name",
+            text = roomName,
             onClickBackButton = onClickBackButton
         )
 
@@ -61,7 +70,7 @@ fun PromptRoomVoteUserScreen(
             Text(text="Time To Vote!", fontSize = 30.sp)
         }
 
-        PromptDisplay("Pose with the sunset")
+        PromptDisplay(photoDescription)
         Row (modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp),
@@ -74,7 +83,7 @@ fun PromptRoomVoteUserScreen(
                     Icon(Icons.Filled.Person, contentDescription = null, modifier = Modifier
                         .height(25.dp)
                         .fillMaxWidth(0.1F))
-                    Text(text = "User name", modifier = Modifier
+                    Text(text = photo.username, modifier = Modifier
                         .height(22.dp)
                         .fillMaxWidth(0.50F))
                     Image(
@@ -84,16 +93,18 @@ fun PromptRoomVoteUserScreen(
                             .width(15.dp)
                             .fillMaxWidth(0.05F)
                     )
-                    Text(text="08:00", fontSize = 12.sp)
+                    val submissionHours=String.format("%02d",photo.submissionTime.hours)
+                    val submissionMins=String.format("%02d",photo.submissionTime.minutes)
+                    Text(text="$submissionHours:$submissionMins", fontSize = 12.sp)
                 }
                 Image(
                     painter = painterResource(id = R.drawable.imagetorepic),
-                    contentDescription = "woman kissing the sunset"
+                    contentDescription = photoDescription
                 )
                 Row (modifier = Modifier.height(25.dp)) {
                     Icon(Icons.Filled.LocationOn, contentDescription = null, modifier = Modifier
                         .fillMaxWidth(0.1F))
-                    Text(text = "Location", modifier = Modifier
+                    Text(text = photo.location, modifier = Modifier
                         .height(22.dp)
                         .fillMaxWidth(0.55F))
                 }
@@ -104,12 +115,15 @@ fun PromptRoomVoteUserScreen(
         var myRating by remember { mutableStateOf(3) }
         RatingBar(
             currentRating = myRating,
-            onRatingChanged = { myRating = it }
+            onRatingChanged = {
+                myRating = it
+                onClickRaitingStars(it)
+            }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TimeLeftDisplay("Vote",1,32,23)
+        TimeLeftDisplay("Vote",hoursRemaining,minutesRemaining,secsRemaining)
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -117,7 +131,7 @@ fun PromptRoomVoteUserScreen(
             .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 20.dp),
             horizontalArrangement = Arrangement.End) {
-            LeaderboardButton()
+            LeaderboardButton(onClickLeaderboardButton)
         }
 
     }

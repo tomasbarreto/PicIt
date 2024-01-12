@@ -30,9 +30,13 @@ import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
+import com.example.picit.picdesc.PromptRoomVoteUserScreen
+import com.example.picit.picdesc.SubmitPhotoDescriptionScreen
+import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
-import com.example.picit.picdesccreateroom.RoomTimeSettingsPicDescScreen
+import com.example.picit.createroom.picdesc.RoomTimeSettingsPicDescScreen
+import com.example.picit.entities.PicDescPhoto
 import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
 import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
@@ -100,16 +104,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickCreateRoom = {navController.navigate(Screens.CreateRoomChooseGame.route)},
                 onClickInvitesButton = {navController.navigate(Screens.InvitesNotifications.route)},
                 onClickSettings = {navController.navigate(Screens.Settings.route)},
-                onClickRooms = { roomId, gameType, roomCurrentLeader ->
+                onClickRoom = { roomId, gameType ->
                     val route = if (gameType == GameType.REPIC) {
-                        Screens.RepicRoomTakePicture.route
+                        Screens.RepicRoomScreen.route
                     } else {
-                        print(currentUser.id + " " + roomCurrentLeader)
-                        if (currentUser.id != roomCurrentLeader) {
-                            Screens.PromptRoomTakePicture.route
-                        } else {
-                            Screens.PromptRoomVoteLeader.route
-                        }
+                        Screens.PicDescRoomScreen.route
                     }
                     if(roomId != null) {
                         navController.navigate(route.replace("{room_id}", roomId))
@@ -179,8 +178,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             JoinRepicRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
                 room.maxNumOfChallenges, room.currentNumOfChallengesDone,
                 String.format("%02d", room.pictureReleaseTime.hours) + ":" + String.format("%02d", room.pictureReleaseTime.minutes),
-                String.format("%02d", room.photoSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.photoSubmissionOpeningTime.minutes),
-                String.format("%02d", room.photoSubmissionClosingTime.hours) + ":" + String.format("%02d", room.photoSubmissionClosingTime.minutes),
                 String.format("%02d", room.winnerAnnouncementTime.hours) + ":" + String.format("%02d", room.winnerAnnouncementTime.minutes),
                 onClickJoinRoom, onClickBackButton = { onClickBackButton() })
 
@@ -201,9 +198,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             JoinPicDescRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
                 room.maxNumOfChallenges, room.currentNumOfChallengesDone,
                 String.format("%02d", room.descriptionSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.descriptionSubmissionOpeningTime.minutes),
-                String.format("%02d", room.descriptionSubmissionClosingTime.hours) + ":" + String.format("%02d", room.descriptionSubmissionClosingTime.minutes),
                 String.format("%02d", room.photoSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.photoSubmissionOpeningTime.minutes),
-                String.format("%02d", room.photoSubmissionClosingTime.hours) + ":" + String.format("%02d", room.photoSubmissionClosingTime.minutes),
+                String.format("%02d", room.photoSubmissionOpeningTime.hours) + ":" + String.format("%02d", room.photoSubmissionOpeningTime.minutes),
+                String.format("%02d", room.winnerAnnouncementTime.hours) + ":" + String.format("%02d", room.winnerAnnouncementTime.minutes),
                 String.format("%02d", room.winnerAnnouncementTime.hours) + ":" + String.format("%02d", room.winnerAnnouncementTime.minutes),
                 onClickJoinRoom, onClickBackButton = { onClickBackButton() })
         }
@@ -294,62 +291,106 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route= Screens.Camera.route){
             CameraScreen(onClickBackButton = {onClickBackButton()})
         }
-        composable(route = Screens.PromptRoomTakePicture.route){ backStackEntry->
+        composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
             val roomId = backStackEntry.arguments?.getString("room_id")
-            if (roomId != null) {
-                dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
+            if (roomId == null) return@composable
+            dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
 
-                PromptRoomTakePicture(
-                    onClickBackButton = {onClickBackButton()},
-                    onClickCameraButton = onClickCameraButton,
-                    currentPicDescRoom
-                )
+            val currentCalendar = Calendar.getInstance() // TODO:  o tempo vai andando
+            val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
+            val currentUserIsLeader = currentUser.id == currentPicDescRoom.currentLeader
+
+            val descriptionSubmissionOpeningTime = currentPicDescRoom.descriptionSubmissionOpeningTime
+            val photoSubmissionOpeningTime = currentPicDescRoom.photoSubmissionOpeningTime
+            val winnerAnnouncementTime = currentPicDescRoom.winnerAnnouncementTime
+
+            if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
+                if(currentUserIsLeader){
+                    SubmitPhotoDescriptionScreen(
+                        onClickBackButton = { onClickBackButton() },
+                    )
+                }
+                else{
+                    WaitingPhotoDescriptionScreen(
+                        onClickBackButton = { onClickBackButton() },
+                        onClickLeaderboardButton = {/*TODO*/},
+                        roomName = currentPicDescRoom.name,
+                        descriptionReleaseTime =
+                        "${currentPicDescRoom.photoSubmissionOpeningTime.hours}:${currentPicDescRoom.photoSubmissionOpeningTime.minutes}"
+                    )
+                }
             }
+
+            else if (checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)){
+                if(currentUserIsLeader){
+                    PromptRoomVoteLeader(
+                        onClickBackButton = {onClickBackButton()},
+                        onClickLeaderboardButton = {/*TODO*/},
+                        roomName = currentPicDescRoom.name,
+                        photoDescription = currentPicDescRoom.photoDescription,
+                        photo = PicDescPhoto(), // // Buscar da lista de submissoes
+                        clickValidButton =  {/**/},
+                        clickInvalidButton = {/**/},
+                        hoursRemaining = 1,
+                        minutesRemaining = 2,
+                        secsRemaining = 6
+                    )
+                }
+                else{
+                    // check if user already submitted photo
+                    val userAlreadySubmitted=
+                        currentPicDescRoom.photosSubmitted.filter{ it.userId == currentUser.id}.size == 1
+
+                    if(userAlreadySubmitted){
+                        PromptRoomVoteUserScreen(
+                            onClickBackButton = {onClickBackButton()},
+                            onClickLeaderboardButton = {/*TODO*/},
+                            roomName = currentPicDescRoom.name,
+                            photoDescription = currentPicDescRoom.photoDescription,
+                            photo = PicDescPhoto(), // Buscar da lista de submissoes
+                            hoursRemaining = 1,
+                            minutesRemaining = 2,
+                            secsRemaining = 6,
+                        )
+                    }
+                    else{
+                        PromptRoomTakePicture(
+                            onClickBackButton = {onClickBackButton()},
+                            onClickCameraButton = {onClickCameraButton()},
+                            room = currentPicDescRoom
+                        )
+                    }
+                }
+            }
+
         }
-        composable(route = Screens.RepicRoomTakePicture.route){ backStackEntry ->
+        composable(route = Screens.RepicRoomScreen.route){ backStackEntry ->
             val roomId = backStackEntry.arguments?.getString("room_id")
 
-            val currentCalendar = Calendar.getInstance()
+            val currentCalendar = Calendar.getInstance() // TODO: o tempo vai andando
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
 
             if (roomId != null) {
                 dbutils.findRepicRoomById(roomId, {room -> currentRepicRoom = room})
 
                 val picReleaseTime = currentRepicRoom.pictureReleaseTime
-                val submissionPicStartTime = currentRepicRoom.photoSubmissionOpeningTime
-                val submissionPicEndTime = currentRepicRoom.photoSubmissionClosingTime
                 val winnerTime = currentRepicRoom.winnerAnnouncementTime
 
-                if (checkInterval(currentTime, picReleaseTime, submissionPicStartTime)) {
-                    Log.w("TIMEEEEE", "WAIT FOR PHOTO SUBMISSION START")
-                    RepicRoomPictureReleasedScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
-                } else if(checkInterval(currentTime, submissionPicStartTime, submissionPicEndTime)) {
-                    Log.w("TIMEEEEE", "SUBMIT PHOTO")
+                if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
+                    Log.w("TIME", "SUBMIT PHOTO")
                     RepicRoomTakePicture(
                         onClickBackButton = { onClickBackButton() },
                         onClickCameraButton = onClickCameraButton,
                         currentRepicRoom
                     )
-                } else if(checkInterval(currentTime, submissionPicEndTime, winnerTime)) {
-                    Log.w("TIMEEEEE", "WAITING FOR WINNER ANNOUNCEMENT")
-                    RepicRoomWaitingWinnerScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
                 } else {
-                    Log.w("TIMEEEEE", "WINNER ANNOUNCED")
+                    Log.w("TIME", "WINNER ANNOUNCED")
                     RepicRoomWinnerScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
                 }
             }
         }
 
-        composable(route = Screens.PromptRoomVoteLeader.route) { backStackEntry->
-            val roomId = backStackEntry.arguments?.getString("room_id")
-            if (roomId != null) {
-                dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
 
-                PromptRoomVoteLeader(
-                    onClickBackButton = {onClickBackButton()}
-                )
-            }
-        }
     }
 
 }

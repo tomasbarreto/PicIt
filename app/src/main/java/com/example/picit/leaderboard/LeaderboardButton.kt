@@ -10,9 +10,11 @@ import androidx.compose.ui.unit.dp
 import com.example.picit.R
 
 @Composable
-fun LeaderboardButton(){
+fun LeaderboardButton(
+    onClickButton: ()->Unit={}
+){
     Button(
-        onClick = { /*TODO*/ }
+        onClick = { onClickButton()}
     ) {
         Image(
             painter = painterResource(id = R.drawable.trofeu),

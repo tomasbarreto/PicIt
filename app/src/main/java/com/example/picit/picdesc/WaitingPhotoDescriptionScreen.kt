@@ -19,28 +19,29 @@ import com.example.picit.ui.theme.PicItTheme
 
 @Composable
 fun WaitingPhotoDescriptionScreen(
-    onClickBackButton: ()->Unit = {}
+    onClickBackButton: ()->Unit = {},
+    onClickLeaderboardButton: () -> Unit = {},
+    roomName: String = "Room name",
+    descriptionReleaseTime: String = "16:00"
 ){
     Column (
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        var roomName = "Room name" // get in database from the room fields
         ScreenHeader(
             withBackButton = true,
             text = roomName,
             onClickBackButton = onClickBackButton
         )
 
-        var timeForDescriptionRelease = "16:00" // get in database from the room fields
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .fillMaxHeight(0.9f)
         ){
             Text(
-                text ="Comeback at $timeForDescriptionRelease for the photo description release...",
+                text ="Comeback at $descriptionReleaseTime for the photo description release...",
                 textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.Center),
                 fontSize = 40.sp,
@@ -48,7 +49,7 @@ fun WaitingPhotoDescriptionScreen(
             )
 
             Box(modifier = Modifier.align(Alignment.BottomEnd)){
-                LeaderboardButton()
+                LeaderboardButton({onClickLeaderboardButton()})
             }
         }
 

@@ -29,7 +29,7 @@ import com.example.picit.utils.TimeLeftDisplay
 fun PromptRoomTakePicture(
     onClickBackButton: ()->Unit = {},
     onClickCameraButton: ()->Unit = {},
-    room: PicDescRoom
+    room: PicDescRoom = PicDescRoom()
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -59,7 +59,7 @@ fun PromptRoomTakePicture(
 
         Spacer(modifier = Modifier.height(60.dp))
 
-        TimeLeftDisplay("Photo", 1, 20, 54)
+        TimeLeftDisplay("Photo", 1,20,32)
         Spacer(modifier = Modifier.height(70.dp))
 
         Row(modifier = Modifier
@@ -85,6 +85,6 @@ fun PromptRoomTakePicture(
 @Composable
 fun PromptRoomTakePicturePreview() {
     PicItTheme {
-//        PromptRoomTakePicture()
+        PromptRoomTakePicture()
     }
 }

@@ -27,26 +27,20 @@ import com.example.picit.utils.ScreenHeader
 fun RoomTimeSettingsRepicScreen(
     modifier: Modifier = Modifier,
     onClickBackButton: ()->Unit = {},
-    roomName: String,
-    roomCapacity: String,
-    numChallenges: String,
-    privacy: Boolean,
-    privacyCode: String,
+    roomName: String = "",
+    roomCapacity: String = "",
+    numChallenges: String = "",
+    privacy: Boolean = false,
+    privacyCode: String = "",
     onClickGoHomeScreen: ()->Unit = {},
-    currentUserId: String,
-    currentUserRooms: List<String>
+    currentUserId: String = "",
+    currentUserRooms: List<String> = emptyList()
 
 ) {
     val viewModel : RepicRoomTimeSettingsViewModel = viewModel()
 
     var hoursPictureRelease = remember { mutableStateOf("") }
     var minutesPictureRelease = remember { mutableStateOf("") }
-
-    var hoursPictureSubmissionStart = remember { mutableStateOf("") }
-    var minutesPictureSubmissionStart = remember { mutableStateOf("") }
-
-    var hoursPictureSubmissionEnd = remember { mutableStateOf("") }
-    var minutesPictureSubmissionEnd = remember { mutableStateOf("") }
 
     var hoursWinner = remember { mutableStateOf("") }
     var minutesWinner = remember { mutableStateOf("") }
@@ -75,23 +69,6 @@ fun RoomTimeSettingsRepicScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        Text(text = "Photo submission time", fontSize = 20.sp)
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            InsertTime(hours = hoursPictureSubmissionStart, minutes = minutesPictureSubmissionStart)
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = " to ", fontSize = 20.sp)
-            Spacer(modifier = Modifier.height(10.dp))
-            InsertTime(hours = hoursPictureSubmissionEnd, minutes = minutesPictureSubmissionEnd)
-        }
-
-        Spacer(modifier = Modifier.height(30.dp))
 
         Text(text = "Winner announcement time", fontSize = 20.sp)
 
@@ -99,19 +76,19 @@ fun RoomTimeSettingsRepicScreen(
 
         InsertTime(hours = hoursWinner, minutes = minutesWinner)
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         Button(onClick = {
             viewModel.registerRepicRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
                 Time(hoursPictureRelease.value.toInt(), minutesPictureRelease.value.toInt()),
-                Time(hoursPictureSubmissionStart.value.toInt(), minutesPictureSubmissionStart.value.toInt()),
-                Time(hoursPictureSubmissionEnd.value.toInt(), minutesPictureSubmissionStart.value.toInt()),
                 Time(hoursWinner.value.toInt(), minutesWinner.value.toInt()),
                 onClickGoHomeScreen, currentUserRooms, currentUserId)
 
         }) {
             Text(text = "Next", fontSize = 22.sp)
         }
+
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
@@ -119,6 +96,6 @@ fun RoomTimeSettingsRepicScreen(
 @Composable
 fun RoomTimeSettingsRepicPreview() {
     PicItTheme {
-//        RoomTimeSettingsRepicScreen()
+        RoomTimeSettingsRepicScreen()
     }
 }

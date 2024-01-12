@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.lang.Integer.parseInt
 
 @Composable
 fun TimeLeftDisplay(timeFor: String, hours:Int, mins:Int, secs:Int) {
@@ -29,12 +30,12 @@ fun TimeLeftDisplay(timeFor: String, hours:Int, mins:Int, secs:Int) {
         Spacer(modifier = Modifier.height(4.dp))
         Row (modifier = Modifier
             .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically)
         {
             TimeColumn(timeUnit = "Hours", timeLeft = hours)
             TimeColumn(timeUnit = "Minutes", timeLeft = mins)
-            TimeColumn(timeUnit = "Seconds", timeLeft = secs)
+            TimeColumn(timeUnit = "Minutes", timeLeft = secs)
         }
     }
 }
@@ -48,7 +49,7 @@ fun TimeColumn(timeUnit: String, timeLeft: Int) {
         verticalArrangement = Arrangement.Center)
 
     {
-        Text(text= if (timeLeft<10) "0$timeLeft" else timeLeft.toString(), fontSize = 30.sp)
+        Text(text= String.format("%02d",timeLeft), fontSize = 30.sp)
         Text(text= timeUnit, fontSize = 20.sp)
     }
 }
