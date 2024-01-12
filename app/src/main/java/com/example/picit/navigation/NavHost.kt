@@ -36,6 +36,7 @@ import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
 import com.example.picit.createroom.picdesc.RoomTimeSettingsPicDescScreen
+import com.example.picit.entities.PicDescPhoto
 import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
 import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
@@ -323,7 +324,16 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             else if (checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)){
                 if(currentUserIsLeader){
                     PromptRoomVoteLeader(
-                        onClickBackButton = {onClickBackButton()}
+                        onClickBackButton = {onClickBackButton()},
+                        onClickLeaderboardButton = {/*TODO*/},
+                        roomName = currentPicDescRoom.name,
+                        photoDescription = currentPicDescRoom.photoDescription,
+                        photo = PicDescPhoto(),
+                        clickValidButton =  {/**/},
+                        clickInvalidButton = {/**/},
+                        hoursRemaining = 1,
+                        minutesRemaining = 2,
+                        secsRemaining = 6
                     )
                 }
                 else{
