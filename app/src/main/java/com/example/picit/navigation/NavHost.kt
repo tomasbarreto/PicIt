@@ -328,7 +328,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         onClickLeaderboardButton = {/*TODO*/},
                         roomName = currentPicDescRoom.name,
                         photoDescription = currentPicDescRoom.photoDescription,
-                        photo = PicDescPhoto(),
+                        photo = PicDescPhoto(), // // Buscar da lista de submissoes
                         clickValidButton =  {/**/},
                         clickInvalidButton = {/**/},
                         hoursRemaining = 1,
@@ -343,7 +343,14 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                     if(userAlreadySubmitted){
                         PromptRoomVoteUserScreen(
-                            onClickBackButton = {onClickBackButton()}
+                            onClickBackButton = {onClickBackButton()},
+                            onClickLeaderboardButton = {/*TODO*/},
+                            roomName = currentPicDescRoom.name,
+                            photoDescription = currentPicDescRoom.photoDescription,
+                            photo = PicDescPhoto(), // Buscar da lista de submissoes
+                            hoursRemaining = 1,
+                            minutesRemaining = 2,
+                            secsRemaining = 6,
                         )
                     }
                     else{
