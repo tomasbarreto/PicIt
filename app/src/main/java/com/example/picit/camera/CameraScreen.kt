@@ -2,7 +2,9 @@ package com.example.picit.camera
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
@@ -38,10 +40,10 @@ import java.util.concurrent.Executors
 private val TAG:String ="CameraScreen"
 
 @Composable
-fun CameraScreen(onClickBackButton: ()->Unit = {}) {
+fun CameraScreen(onClickBackButton: ()->Unit = {}, getImageUri: (Uri) -> Unit) {
 
     if (allPermissionsGranted()) {
-        CameraView(onClickBackButton)
+        CameraView(onClickBackButton, getImageUri)
     } else {
         ActivityCompat.requestPermissions(
             LocalContext.current as Activity, arrayOf(Manifest.permission.CAMERA), 10)
@@ -59,7 +61,7 @@ private lateinit var cameraExecutor: Executor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CameraView(onClickBackButton: ()->Unit = {}) {
+fun CameraView(onClickBackButton: ()->Unit = {}, getImageUri: (Uri) -> Unit) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -67,13 +69,14 @@ fun CameraView(onClickBackButton: ()->Unit = {}) {
     val imageCapture = remember { ImageCapture.Builder().build() }
 
     cameraExecutor = Executors.newSingleThreadExecutor()
-    val onClickTakePhotoButton = {
-        val file = File.createTempFile("img",".jpg")
+    val getImage = {
+        val file = File.createTempFile("img",".jpeg")
         val outputFileOptions = ImageCapture.OutputFileOptions.Builder(file).build()
         imageCapture.takePicture(outputFileOptions,cameraExecutor,
             object: ImageCapture.OnImageSavedCallback{
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     Log.d(TAG, "URI: ${outputFileResults.savedUri}")
+                    getImageUri( outputFileResults.savedUri!!)
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -85,7 +88,7 @@ fun CameraView(onClickBackButton: ()->Unit = {}) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        floatingActionButton = { CameraButtons(onClickBackButton, onClickTakePhotoButton) },
+        floatingActionButton = { CameraButtons(onClickBackButton, getImage) },
     ) { paddingValues : PaddingValues ->
         AndroidView(
             modifier = Modifier
