@@ -36,11 +36,16 @@ class TimerViewModel: ViewModel() {
 
             while (!isOver) {
                 delay(second)
-                timeLeftMillis = finalTimeMillis - System.currentTimeMillis()
+
+                var now = LocalDateTime.now()
+                timeLeftMillis = finalTimeMillis - getTimeMillis(Time(hours = now.hour, minutes = now.minute, second = now.second))
+
+                print(finalTimeMillis)
+                print(System.currentTimeMillis())
 
                 formattedTime = formatTime(timeLeftMillis)
 
-                if (System.currentTimeMillis() == finalTimeMillis)
+                if (finalTimeMillis <= 0)
                     isOver = true
             }
         }
@@ -61,10 +66,10 @@ class TimerViewModel: ViewModel() {
     }
 
     private fun getTimeMillis(finalTime: Time): Long {
-        return finalTime.hours * 60 * 1000L + finalTime.minutes * 1000L
+        return finalTime.hours * 60 * 60 * 1000L + finalTime.minutes * 60 * 1000L + finalTime.second * 1000L
     }
 
-    fun getFormattedTime(): String {
+    fun getFormattedTimer(): String {
         return formattedTime
     }
 }

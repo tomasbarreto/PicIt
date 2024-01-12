@@ -18,13 +18,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.R
+import com.example.picit.Timers.Timer
+import com.example.picit.Timers.TimerViewModel
 import com.example.picit.entities.RePicRoom
 import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.utils.TakePhotoButton
-import com.example.picit.utils.TimeLeftDisplay
 
 @Composable
 fun RepicRoomTakePicture(
@@ -67,7 +69,9 @@ fun RepicRoomTakePicture(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        TimeLeftDisplay("Submit Photo",1,24,32)
+        var viewModel: TimerViewModel = viewModel()
+
+        Timer(timeFor = "Submit Photo", viewModel = viewModel, room.winnerAnnouncementTime)
         Spacer(modifier = Modifier.height(20.dp))
         Row(modifier = Modifier
             .fillMaxWidth()

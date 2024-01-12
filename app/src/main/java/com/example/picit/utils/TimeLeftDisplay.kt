@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.lang.Integer.parseInt
 
 @Composable
 fun TimeLeftDisplay(timeFor: String, hours:Int, mins:Int, secs:Int) {
@@ -35,7 +34,7 @@ fun TimeLeftDisplay(timeFor: String, hours:Int, mins:Int, secs:Int) {
         {
             TimeColumn(timeUnit = "Hours", timeLeft = hours)
             TimeColumn(timeUnit = "Minutes", timeLeft = mins)
-            TimeColumn(timeUnit = "Minutes", timeLeft = secs)
+            TimeColumn(timeUnit = "Seconds", timeLeft = secs)
         }
     }
 }
