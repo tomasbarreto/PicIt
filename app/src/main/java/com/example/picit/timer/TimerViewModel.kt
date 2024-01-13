@@ -1,4 +1,4 @@
-package com.example.picit.Timers
+package com.example.picit.timer
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +22,6 @@ class TimerViewModel: ViewModel() {
     private var coroutineScope = CoroutineScope(Dispatchers.Main)
 
     private var finalTimeMillis = 0L
-    private var currentTimeMillis = 0L
 
     private var timeLeftMillis = 0L
 

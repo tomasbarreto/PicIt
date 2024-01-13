@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.sp
 import com.example.picit.R
 import com.example.picit.entities.RePicRoom
 import com.example.picit.leaderboard.LeaderboardButton
+import com.example.picit.timer.Timer
+import com.example.picit.timer.TimerViewModel
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.utils.TimeLeftDisplay
@@ -27,7 +29,8 @@ import com.example.picit.utils.TimeLeftDisplay
 @Composable
 fun RepicRoomPictureReleasedScreen(
     onClickBackButton: ()->Unit = {},
-    room: RePicRoom
+    room: RePicRoom,
+    viewModel: TimerViewModel
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -64,6 +67,7 @@ fun RepicRoomPictureReleasedScreen(
 
         Spacer(modifier = Modifier.height(70.dp))
 
+        Timer(timeFor = "Take your photo!\n", viewModel = viewModel, endingTime = room.winnerAnnouncementTime)
         TimeLeftDisplay("Wait Photo Submission",1,24,32)
         Spacer(modifier = Modifier.height(80.dp))
 
@@ -82,6 +86,6 @@ fun RepicRoomPictureReleasedScreen(
 @Composable
 fun RepicRoomPictureReleasedPreview() {
     PicItTheme {
-        RepicRoomPictureReleasedScreen(room = RePicRoom())
+        //RepicRoomPictureReleasedScreen(room = RePicRoom())
     }
 }

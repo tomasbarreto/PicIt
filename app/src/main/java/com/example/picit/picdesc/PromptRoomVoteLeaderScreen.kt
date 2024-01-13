@@ -28,7 +28,6 @@ import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.InvalidButton
 import com.example.picit.utils.ScreenHeader
-import com.example.picit.utils.TimeLeftDisplay
 import com.example.picit.utils.ValidButton
 
 @Composable
@@ -42,8 +41,6 @@ fun PromptRoomVoteLeader(
     clickInvalidButton: ()->Unit={},
     hoursRemaining: Int = 1,
     minutesRemaining: Int = 32,
-    secsRemaining: Int = 8
-
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -118,7 +115,8 @@ fun PromptRoomVoteLeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        TimeLeftDisplay("Vote",hoursRemaining,minutesRemaining,secsRemaining)
+        //Timer(timeFor = "Choose a winner!\n", viewModel = viewModel, endingTime = room.)
+        //TimeLeftDisplay("Vote",hoursRemaining,minutesRemaining,secsRemaining)
 
         Spacer(modifier = Modifier.weight(1f))
 

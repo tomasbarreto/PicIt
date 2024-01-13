@@ -20,16 +20,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.leaderboard.LeaderboardButton
+import com.example.picit.timer.Timer
+import com.example.picit.timer.TimerViewModel
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.utils.TakePhotoButton
-import com.example.picit.utils.TimeLeftDisplay
 
 @Composable
 fun PromptRoomTakePicture(
     onClickBackButton: ()->Unit = {},
     onClickCameraButton: ()->Unit = {},
-    room: PicDescRoom = PicDescRoom()
+    room: PicDescRoom = PicDescRoom(),
+    viewModel: TimerViewModel
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -59,7 +61,7 @@ fun PromptRoomTakePicture(
 
         Spacer(modifier = Modifier.height(60.dp))
 
-        TimeLeftDisplay("Photo", 1,20,32)
+        Timer(timeFor = "Take your photo! \n", viewModel = viewModel, endingTime = room.winnerAnnouncementTime)
         Spacer(modifier = Modifier.height(70.dp))
 
         Row(modifier = Modifier
@@ -85,6 +87,6 @@ fun PromptRoomTakePicture(
 @Composable
 fun PromptRoomTakePicturePreview() {
     PicItTheme {
-        PromptRoomTakePicture()
+        //PromptRoomTakePicture()
     }
 }

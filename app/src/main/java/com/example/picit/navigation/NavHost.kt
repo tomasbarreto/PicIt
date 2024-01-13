@@ -11,7 +11,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.picit.camera.CameraScreen
+import com.example.picit.createroom.picdesc.RoomTimeSettingsPicDescScreen
 import com.example.picit.entities.GameType
+import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.Time
@@ -35,16 +37,13 @@ import com.example.picit.picdesc.SubmitPhotoDescriptionScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
-import com.example.picit.createroom.picdesc.RoomTimeSettingsPicDescScreen
-import com.example.picit.entities.PicDescPhoto
 import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
 import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
-import com.example.picit.repic.RepicRoomPictureReleasedScreen
 import com.example.picit.repic.RepicRoomTakePicture
-import com.example.picit.repic.RepicRoomWaitingWinnerScreen
 import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.settings.SettingsScreen
+import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
 import java.util.Calendar
 
@@ -369,6 +368,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             val currentCalendar = Calendar.getInstance() // TODO: o tempo vai andando
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
+
+            var viewModel: TimerViewModel = viewModel()
 
             if (roomId != null) {
                 dbutils.findRepicRoomById(roomId, {room -> currentRepicRoom = room})
