@@ -13,7 +13,6 @@ import com.google.firebase.storage.storage
 class PicDescCameraViewModel: ViewModel() {
 
     fun submitImage(room: PicDescRoom, user: User, uri: Uri){
-        val db = Firebase.database
         val storage = Firebase.storage
 
 

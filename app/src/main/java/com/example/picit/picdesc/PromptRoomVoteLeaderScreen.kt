@@ -124,7 +124,7 @@ fun PromptRoomVoteLeader(
                 }
                 else{
                     Spacer(modifier = Modifier.height(60.dp))
-                    Text("There's no more images for you to vote!", fontSize = 28.sp,
+                    Text("There's no images for you to vote!", fontSize = 28.sp,
                         textAlign = TextAlign.Center)
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(text = "Wait for other users to submit photos",fontSize = 28.sp

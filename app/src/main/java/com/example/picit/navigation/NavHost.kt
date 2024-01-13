@@ -319,7 +319,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             if (roomId == null) return@composable
             dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
 
-            val currentCalendar = Calendar.getInstance() // TODO:  o tempo vai andando
+            val currentCalendar = Calendar.getInstance()
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
             val currentUserIsLeader = currentUser.id == currentPicDescRoom.currentLeader
 
@@ -343,7 +343,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     )
                 }
             }
-
+            // time to submit photo
             else if (checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)){
                 val photosSubmitted = currentPicDescRoom.photosSubmitted
                 val photosUserDidntVote = photosSubmitted.filter{
@@ -364,17 +364,17 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     )
                 }
                 else{
-                    // check if user already submitted photo
                     val userAlreadySubmitted=
                         photosSubmitted.filter{ it.userId == currentUser.id}.size == 1
 
+                    // check if user already submitted photo
                     if(userAlreadySubmitted){
                         PromptRoomVoteUserScreen(
                             onClickBackButton = {onClickBackButton()},
                             onClickLeaderboardButton = {/*TODO*/},
                             roomName = currentPicDescRoom.name,
                             photoDescription = currentPicDescRoom.photoDescription,
-                            photo = PicDescPhoto(), // Buscar da lista de submissoes
+                            photo = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto(),
                             hoursRemaining = 1,
                             minutesRemaining = 2,
                             secsRemaining = 6,
@@ -388,6 +388,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         )
                     }
                 }
+            }
+            // show winner
+            else{
+
             }
 
         }
