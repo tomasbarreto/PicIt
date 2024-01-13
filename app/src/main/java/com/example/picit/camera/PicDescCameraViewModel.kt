@@ -9,6 +9,7 @@ import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.storage.storage
+import java.util.Calendar
 
 class PicDescCameraViewModel: ViewModel() {
 
@@ -42,13 +43,17 @@ class PicDescCameraViewModel: ViewModel() {
         val db = Firebase.database
         val roomRef = db.getReference("picDescRooms/${room.id}")
 
+        val currentCalendar = Calendar.getInstance()
+        val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(
+            Calendar.MINUTE))
+
         // Create PicDescPhoto with the image URL
         val photo = PicDescPhoto(
             photoUrl = imageUrl,
             userId = user.id,
             username = user.username,
             location = "TODO",
-            submissionTime = Time(),
+            submissionTime = currentTime,
             usersThatVoted = emptyList(),
             leaderVote = false,
             averageRating = 0.0
