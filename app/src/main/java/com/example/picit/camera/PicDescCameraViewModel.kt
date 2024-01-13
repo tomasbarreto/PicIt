@@ -55,7 +55,9 @@ class PicDescCameraViewModel: ViewModel() {
         )
 
         // Update the list of submitted photos in the room
-        val updatedSubmittedPhotos = room.photosSubmitted.toMutableList()
+        val updatedSubmittedPhotos = room.photosSubmitted.filter{
+            it.userId != user.id
+        }.toMutableList()
         updatedSubmittedPhotos.add(photo)
 
         // Update the room object in the Realtime Database
