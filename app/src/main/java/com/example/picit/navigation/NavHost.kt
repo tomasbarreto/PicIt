@@ -32,9 +32,9 @@ import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
+import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
-import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
@@ -304,6 +304,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val winnerAnnouncementTime = currentPicDescRoom.winnerAnnouncementTime
 
             val viewModel: SubmitPhotoDescriptionViewModel = viewModel()
+            val timerViewModel: TimerViewModel = viewModel()
 
             if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
                 if(currentUserIsLeader){
@@ -334,9 +335,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         photo = PicDescPhoto(), // // Buscar da lista de submissoes
                         clickValidButton =  {/**/},
                         clickInvalidButton = {/**/},
-                        hoursRemaining = 1,
-                        minutesRemaining = 2,
-                        secsRemaining = 6
+                        endingTime = currentPicDescRoom.winnerAnnouncementTime,
+                        viewModel = timerViewModel
                     )
                 }
                 else{
@@ -351,16 +351,16 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             roomName = currentPicDescRoom.name,
                             photoDescription = currentPicDescRoom.photoDescription,
                             photo = PicDescPhoto(), // Buscar da lista de submissoes
-                            hoursRemaining = 1,
-                            minutesRemaining = 2,
-                            secsRemaining = 6,
+                            endingTime = currentPicDescRoom.winnerAnnouncementTime,
+                            viewModel = timerViewModel
                         )
                     }
                     else{
                         PromptRoomTakePicture(
                             onClickBackButton = {onClickBackButton()},
                             onClickCameraButton = {onClickCameraButton()},
-                            room = currentPicDescRoom
+                            room = currentPicDescRoom,
+                            viewModel = timerViewModel
                         )
                     }
                 }

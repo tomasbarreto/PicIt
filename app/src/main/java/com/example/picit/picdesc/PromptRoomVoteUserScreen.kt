@@ -33,10 +33,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
 import com.example.picit.entities.PicDescPhoto
-import com.example.picit.utils.ScreenHeader
-import com.example.picit.utils.TimeLeftDisplay
+import com.example.picit.entities.Time
 import com.example.picit.leaderboard.LeaderboardButton
+import com.example.picit.timer.Timer
+import com.example.picit.timer.TimerViewModel
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun PromptRoomVoteUserScreen(
@@ -46,9 +48,8 @@ fun PromptRoomVoteUserScreen(
     photoDescription: String = "photo description",
     photo: PicDescPhoto = PicDescPhoto(),
     onClickRaitingStars: (Int)->Unit = {},
-    hoursRemaining:Int=1,
-    minutesRemaining:Int=32,
-    secsRemaining:Int=23
+    endingTime: Time,
+    viewModel: TimerViewModel
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -123,7 +124,7 @@ fun PromptRoomVoteUserScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TimeLeftDisplay("Vote",hoursRemaining,minutesRemaining,secsRemaining)
+        Timer(timeFor = "Vote on your favourites!\n", viewModel = viewModel, endingTime = endingTime)
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -167,6 +168,6 @@ fun RatingBar(
 @Composable
 fun PromptRoomVoteUserScreenPreview() {
     PicItTheme {
-        PromptRoomVoteUserScreen()
+        //PromptRoomVoteUserScreen()
     }
 }

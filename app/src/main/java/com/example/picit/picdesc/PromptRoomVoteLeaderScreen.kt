@@ -24,7 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.picit.R
 import com.example.picit.entities.PicDescPhoto
+import com.example.picit.entities.Time
 import com.example.picit.leaderboard.LeaderboardButton
+import com.example.picit.timer.Timer
+import com.example.picit.timer.TimerViewModel
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.InvalidButton
 import com.example.picit.utils.ScreenHeader
@@ -39,8 +42,8 @@ fun PromptRoomVoteLeader(
     photo: PicDescPhoto = PicDescPhoto(),
     clickValidButton: ()->Unit = {},
     clickInvalidButton: ()->Unit={},
-    hoursRemaining: Int = 1,
-    minutesRemaining: Int = 32,
+    endingTime: Time,
+    viewModel: TimerViewModel
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -115,8 +118,7 @@ fun PromptRoomVoteLeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        //Timer(timeFor = "Choose a winner!\n", viewModel = viewModel, endingTime = room.)
-        //TimeLeftDisplay("Vote",hoursRemaining,minutesRemaining,secsRemaining)
+        Timer(timeFor = "Choose a winner!\n", viewModel = viewModel, endingTime = endingTime)
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -135,6 +137,6 @@ fun PromptRoomVoteLeader(
 @Composable
 fun PromptRoomVotePreview() {
     PicItTheme {
-        PromptRoomVoteLeader()
+        //PromptRoomVoteLeader()
     }
 }
