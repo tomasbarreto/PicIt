@@ -75,7 +75,10 @@ fun PromptRoomVoteLeader(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically)
         {
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
                 if(photo.photoUrl.isNotEmpty()) {
                     Row (modifier = Modifier.height(25.dp),
