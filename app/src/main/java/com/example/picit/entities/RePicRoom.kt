@@ -7,14 +7,13 @@ data class RePicRoom(
     var id: String? = null,
     val name:String = "",
     val gameType: GameType = GameType.REPIC,
-    val image: String = "", // TODO: mudar para representar imagem
+    val imageUrl: String = "", // TODO: mudar para representar imagem
+    val photosSubmitted: List<RePicPhoto> = emptyList(),
     val maxCapacity: Int = 0,
     val currentCapacity: Int = 0,
     val maxNumOfChallenges: Int = 0,
     val currentNumOfChallengesDone: Int = 0,
     val winnerAnnouncementTime: Time = Time(),
-    //val photoSubmissionOpeningTime: Time = Time(), // pciture release
-    //val photoSubmissionClosingTime: Time = Time(), // winner Announcement
     val leaderboard: List<UserInLeaderboard> = emptyList(),
     val picturesSubmitted: List<RePicPhoto> = emptyList(),
     val pictureReleaseTime: Time = Time(),

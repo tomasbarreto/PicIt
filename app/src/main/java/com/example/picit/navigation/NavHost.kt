@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.picit.camera.CameraScreen
 import com.example.picit.camera.PicDescCameraViewModel
+import com.example.picit.camera.RePicCameraViewModel
 import com.example.picit.createroom.picdesc.RoomTimeSettingsPicDescScreen
 import com.example.picit.entities.GameType
 import com.example.picit.entities.PicDescPhoto
@@ -292,7 +293,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route= Screens.PicDescCamera.route){
-//            Image( bitmap = bm.asImageBitmap(), contentDescription = "")
             val viewModel: PicDescCameraViewModel = viewModel()
 
             CameraScreen(
@@ -304,12 +304,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route= Screens.RePicCamera.route){
-            var imageTakenUri = Uri.EMPTY
+            val viewModel: RePicCameraViewModel = viewModel()
 
             CameraScreen(
                 onClickBackButton = {onClickBackButton()},
                 getImageUri = { uri ->
-                    imageTakenUri = uri
+                    viewModel.submitImage(currentRepicRoom,currentUser,uri)
 //                    navController.navigate(Screens.RepicRoomScreen.route)
                 }
             )
