@@ -18,6 +18,7 @@ class PromptRoomVoteLeaderViewModel: ViewModel() {
 
         var photoUpdated = photo.copy(leaderVote = vote, usersThatVoted = usersThatVoteUpdated)
 
+        // remove this photo to add the updated one
         val roomPhotosUpdated = room.photosSubmitted.filter{ it.userId != photo.userId }.toMutableList()
         roomPhotosUpdated.add(photoUpdated)
         val roomUpdated = room.copy(photosSubmitted = roomPhotosUpdated)

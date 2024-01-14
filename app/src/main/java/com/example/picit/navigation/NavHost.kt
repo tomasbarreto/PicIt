@@ -39,6 +39,7 @@ import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
 import com.example.picit.picdesc.PromptRoomVoteLeaderViewModel
 import com.example.picit.picdesc.PromptRoomVoteUserScreen
+import com.example.picit.picdesc.PromptRoomVoteUserViewModel
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
@@ -384,6 +385,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     val userAlreadySubmitted=
                         photosSubmitted.filter{ it.userId == currentUser.id}.size == 1
 
+                    val viewModel: PromptRoomVoteUserViewModel = viewModel()
+
                     // check if user already submitted photo
                     if(userAlreadySubmitted){
                         PromptRoomVoteUserScreen(
@@ -393,7 +396,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             photoDescription = currentPicDescRoom.photoDescription,
                             endingTime = currentPicDescRoom.winnerAnnouncementTime,
                             viewModel = timerViewModel,
-                            photo = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto(),
+                            photo = photoDisplayed,
+                            onClickRaitingStars = {raiting:Int ->
+                                viewModel.userVote(currentUser,currentPicDescRoom,photoDisplayed,raiting)
+                            }
                         )
                     }
                     else{

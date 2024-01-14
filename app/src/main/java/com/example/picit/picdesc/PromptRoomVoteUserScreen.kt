@@ -53,7 +53,7 @@ fun PromptRoomVoteUserScreen(
     photo: PicDescPhoto = PicDescPhoto(photoUrl = "i0ohjou"),
     onClickRaitingStars: (Int)->Unit = {},
     endingTime: Time = Time(),
-    viewModel: TimerViewModel
+    viewModel: TimerViewModel,
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
