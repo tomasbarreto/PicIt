@@ -1,7 +1,7 @@
 package com.example.picit.entities
 
 data class PicDescPhoto(
-    val photo: String ="",// TODO: ver como representar a photo
+    val photoUrl: String = "",// TODO: ver como representar a photo
     val userId: String = "",
     val username: String = "user name",
     val location: String = "location",

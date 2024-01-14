@@ -1,5 +1,8 @@
 package com.example.picit.navigation
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,6 +14,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.picit.camera.CameraScreen
+import com.example.picit.camera.PicDescCameraViewModel
+import com.example.picit.camera.RePicCameraViewModel
 import com.example.picit.createroom.picdesc.RoomTimeSettingsPicDescScreen
 import com.example.picit.entities.GameType
 import com.example.picit.entities.PicDescPhoto
@@ -46,6 +51,7 @@ import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
+import java.io.ByteArrayOutputStream
 import java.util.Calendar
 
 private val TAG = "NavHost"
@@ -63,7 +69,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             { navController.navigate(Screens.Profile.route){ launchSingleTop = true } },
         )
         val onClickBackButton = {navController.popBackStack()}
-        val onClickCameraButton = {navController.navigate(Screens.Camera.route)}
         val onClickGoToRegistry = {navController.navigate(Screens.Register.route)}
         val onClickGoBackToLogin = {navController.navigate(Screens.Login.route)}
         val onClickGoToMainScreen = {navController.navigate(Screens.Home.route)}
@@ -71,8 +76,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         // done with id instead of the user, because updates with the user needed to be done with
         // listeners and that would have very complex logic
         var currentUser by mutableStateOf(User())
-        var currentRepicRoom by mutableStateOf(RePicRoom())
-        var currentPicDescRoom by mutableStateOf(PicDescRoom())
+        var currentRepicRoom by mutableStateOf(RePicRoom()) // TODO: tem de se ir buscar com listener
+        var currentPicDescRoom by mutableStateOf(PicDescRoom()) // TODO: tem de se ir buscar com listener
+        // E tirar o listener quando se toca noutra sala
         var dbutils = DBUtils()
 
         fun checkInterval(currentTime: Time, startTime: Time, endTime: Time): Boolean {
@@ -287,15 +293,34 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickBackButton = {onClickBackButton()}
             )
         }
-        composable(route= Screens.Camera.route){
-            CameraScreen(onClickBackButton = {onClickBackButton()})
+        composable(route= Screens.PicDescCamera.route){
+            val viewModel: PicDescCameraViewModel = viewModel()
+
+            CameraScreen(
+                onClickBackButton = {onClickBackButton()},
+                getImageUri = { uri ->
+                    viewModel.submitImage(currentPicDescRoom,currentUser,uri)
+//                    navController.navigate(Screens.PicDescRoomScreen.route)
+                }
+            )
+        }
+        composable(route= Screens.RePicCamera.route){
+            val viewModel: RePicCameraViewModel = viewModel()
+
+            CameraScreen(
+                onClickBackButton = {onClickBackButton()},
+                getImageUri = { uri ->
+                    viewModel.submitImage(currentRepicRoom,currentUser,uri)
+//                    navController.navigate(Screens.RepicRoomScreen.route)
+                }
+            )
         }
         composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
             val roomId = backStackEntry.arguments?.getString("room_id")
             if (roomId == null) return@composable
             dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
 
-            val currentCalendar = Calendar.getInstance() // TODO:  o tempo vai andando
+            val currentCalendar = Calendar.getInstance()
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
             val currentUserIsLeader = currentUser.id == currentPicDescRoom.currentLeader
 
@@ -324,15 +349,19 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     )
                 }
             }
-
+            // time to submit photo
             else if (checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)){
+                val photosSubmitted = currentPicDescRoom.photosSubmitted
+                val photosUserDidntVote = photosSubmitted.filter{
+                    it.userId != currentUser.id && !it.usersThatVoted.contains(currentUser.id)
+                }
                 if(currentUserIsLeader){
                     PromptRoomVoteLeader(
                         onClickBackButton = {onClickBackButton()},
                         onClickLeaderboardButton = {/*TODO*/},
                         roomName = currentPicDescRoom.name,
                         photoDescription = currentPicDescRoom.photoDescription,
-                        photo = PicDescPhoto(), // // Buscar da lista de submissoes
+                        photo = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto(),
                         clickValidButton =  {/**/},
                         clickInvalidButton = {/**/},
                         endingTime = currentPicDescRoom.winnerAnnouncementTime,
@@ -340,30 +369,34 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     )
                 }
                 else{
-                    // check if user already submitted photo
                     val userAlreadySubmitted=
-                        currentPicDescRoom.photosSubmitted.filter{ it.userId == currentUser.id}.size == 1
+                        photosSubmitted.filter{ it.userId == currentUser.id}.size == 1
 
+                    // check if user already submitted photo
                     if(userAlreadySubmitted){
                         PromptRoomVoteUserScreen(
                             onClickBackButton = {onClickBackButton()},
                             onClickLeaderboardButton = {/*TODO*/},
                             roomName = currentPicDescRoom.name,
                             photoDescription = currentPicDescRoom.photoDescription,
-                            photo = PicDescPhoto(), // Buscar da lista de submissoes
                             endingTime = currentPicDescRoom.winnerAnnouncementTime,
-                            viewModel = timerViewModel
+                            viewModel = timerViewModel,
+                            photo = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto(),
                         )
                     }
                     else{
                         PromptRoomTakePicture(
                             onClickBackButton = {onClickBackButton()},
-                            onClickCameraButton = {onClickCameraButton()},
                             room = currentPicDescRoom,
-                            viewModel = timerViewModel
+                            viewModel = timerViewModel,
+                            onClickCameraButton = {navController.navigate(Screens.PicDescCamera.route)}
                         )
                     }
                 }
+            }
+            // show winner
+            else{
+
             }
 
         }
@@ -385,7 +418,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     Log.w("TIME", "SUBMIT PHOTO")
                     RepicRoomTakePicture(
                         onClickBackButton = { onClickBackButton() },
-                        onClickCameraButton = onClickCameraButton,
+                        onClickCameraButton = {navController.navigate(Screens.RePicCamera.route)},
                         currentRepicRoom
                     )
                 } else {
