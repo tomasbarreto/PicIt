@@ -54,6 +54,7 @@ fun ScreenHeader(
                 fontSize = headerFontSize,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
+                lineHeight = 30.sp
             )
         }
 
