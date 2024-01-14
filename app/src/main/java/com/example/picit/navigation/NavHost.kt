@@ -1,8 +1,5 @@
 package com.example.picit.navigation
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,7 +48,7 @@ import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
-import java.io.ByteArrayOutputStream
+import com.example.picit.winner.DailyWinnerScreen
 import java.util.Calendar
 
 private val TAG = "NavHost"
@@ -396,6 +393,28 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
             // show winner
             else{
+
+                var roomPhotos = currentPicDescRoom.photosSubmitted
+
+                var winnerPhoto = PicDescPhoto()
+
+                for (photo in roomPhotos) {
+                    if (photo.leaderVote) {
+                        winnerPhoto = photo
+                        break
+                    }
+                }
+
+                DailyWinnerScreen(
+                    gameType = GameType.PICDESC,
+                    onClickBackButton = { onClickBackButton() },
+                    winScreenTitle = "Fastest Player Award",
+                    winnerUsername = winnerPhoto.username,
+                    location = winnerPhoto.location,
+                    timestamp = winnerPhoto.submissionTime.hours.toString() + ":" + winnerPhoto.submissionTime.minutes.toString(),
+                    photoUrl = winnerPhoto.photoUrl,
+                    rating = String()
+                )
 
             }
 
