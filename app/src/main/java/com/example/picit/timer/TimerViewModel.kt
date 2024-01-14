@@ -21,30 +21,25 @@ class TimerViewModel: ViewModel() {
 
     private var coroutineScope = CoroutineScope(Dispatchers.Main)
 
-    private var finalTimeMillis = 0L
-
-    private var timeLeftMillis = 0L
-
     private var isOver by mutableStateOf(false)
 
     private var second = 1000L
 
     fun startTimer(finalTime: Time) {
         coroutineScope.launch {
-            finalTimeMillis = getTimeMillis(finalTime)
+            var finalTimeMillis = getTimeMillis(finalTime)
+            var now = LocalDateTime.now()
+            var currentMillis = getTimeMillis(Time(hours = now.hour, minutes = now.minute, second = now.second))
+            var timeLeftMillis = finalTimeMillis - currentMillis
 
             while (!isOver) {
                 delay(second)
 
-                var now = LocalDateTime.now()
-                timeLeftMillis = finalTimeMillis - getTimeMillis(Time(hours = now.hour, minutes = now.minute, second = now.second))
-
-                print(finalTimeMillis)
-                print(System.currentTimeMillis())
+                timeLeftMillis -= 1000
 
                 formattedTime = formatTime(timeLeftMillis)
 
-                if (finalTimeMillis <= 0)
+                if (timeLeftMillis <= 0)
                     isOver = true
             }
         }
@@ -57,7 +52,7 @@ class TimerViewModel: ViewModel() {
         )
 
         val formatter = DateTimeFormatter.ofPattern(
-            "hh:mm:ss",
+            "HH:mm:ss",
             Locale.getDefault()
         )
 

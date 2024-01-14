@@ -319,8 +319,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         onClickBackButton = { onClickBackButton() },
                         onClickLeaderboardButton = {/*TODO*/},
                         roomName = currentPicDescRoom.name,
-                        descriptionReleaseTime =
-                        "${currentPicDescRoom.photoSubmissionOpeningTime.hours}:${currentPicDescRoom.photoSubmissionOpeningTime.minutes}"
+                        endingTime = currentPicDescRoom.photoSubmissionOpeningTime,
+                        viewModel = timerViewModel
                     )
                 }
             }
