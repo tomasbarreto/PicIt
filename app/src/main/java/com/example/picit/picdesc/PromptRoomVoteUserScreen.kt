@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.picit.R
 import com.example.picit.entities.PicDescPhoto
@@ -49,9 +50,9 @@ fun PromptRoomVoteUserScreen(
     onClickLeaderboardButton: ()->Unit = {},
     roomName: String = "Room name",
     photoDescription: String = "photo description",
-    photo: PicDescPhoto = PicDescPhoto(),
+    photo: PicDescPhoto = PicDescPhoto(photoUrl = "i0ohjou"),
     onClickRaitingStars: (Int)->Unit = {},
-    endingTime: Time,
+    endingTime: Time = Time(),
     viewModel: TimerViewModel
 ){
     Column (
@@ -120,7 +121,6 @@ fun PromptRoomVoteUserScreen(
                             .height(22.dp)
                             .fillMaxWidth(0.55F))
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     var myRating by remember { mutableStateOf(3) }
                     RatingBar(
@@ -185,6 +185,6 @@ fun RatingBar(
 @Composable
 fun PromptRoomVoteUserScreenPreview() {
     PicItTheme {
-        //PromptRoomVoteUserScreen()
+        PromptRoomVoteUserScreen(viewModel = viewModel())
     }
 }
