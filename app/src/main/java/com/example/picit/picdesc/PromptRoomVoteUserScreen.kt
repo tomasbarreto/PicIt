@@ -50,7 +50,7 @@ fun PromptRoomVoteUserScreen(
     onClickLeaderboardButton: ()->Unit = {},
     roomName: String = "Room name",
     photoDescription: String = "photo description",
-    photo: PicDescPhoto = PicDescPhoto(photoUrl = "i0ohjou"),
+    photo: PicDescPhoto = PicDescPhoto(),
     onClickRaitingStars: (Int)->Unit = {},
     endingTime: Time = Time(),
     viewModel: TimerViewModel,
@@ -143,7 +143,11 @@ fun PromptRoomVoteUserScreen(
             }
         }
 
+        Spacer(modifier = Modifier.weight(1f))
+
         Timer(timeFor = "Vote on your favourites!\n", viewModel = viewModel, endingTime = endingTime)
+
+        Spacer(modifier = Modifier.weight(1f))
 
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -151,6 +155,7 @@ fun PromptRoomVoteUserScreen(
             horizontalArrangement = Arrangement.End) {
             LeaderboardButton(onClickLeaderboardButton)
         }
+
 
     }
 }

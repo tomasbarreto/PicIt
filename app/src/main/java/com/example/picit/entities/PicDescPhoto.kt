@@ -8,5 +8,5 @@ data class PicDescPhoto(
     val submissionTime: Time = Time(),
     val usersThatVoted: List<String> = emptyList(), // ids de users que votaram
     val leaderVote: Boolean = false,
-    val averageRating: Double = 0.0
+    val ratingSum: Int = 0
 )
