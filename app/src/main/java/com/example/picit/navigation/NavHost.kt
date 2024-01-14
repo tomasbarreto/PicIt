@@ -37,6 +37,7 @@ import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
+import com.example.picit.picdesc.PromptRoomVoteLeaderViewModel
 import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
@@ -355,15 +356,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val photosUserDidntVote = photosSubmitted.filter{
                     it.userId != currentUser.id && !it.usersThatVoted.contains(currentUser.id)
                 }
+                val photoDisplayed = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto()
+
+                val viewModel: PromptRoomVoteLeaderViewModel = viewModel()
                 if(currentUserIsLeader){
                     PromptRoomVoteLeader(
                         onClickBackButton = {onClickBackButton()},
                         onClickLeaderboardButton = {/*TODO*/},
                         roomName = currentPicDescRoom.name,
                         photoDescription = currentPicDescRoom.photoDescription,
-                        photo = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto(),
+                        photo = photoDisplayed,
                         clickValidButton =  {/**/},
-                        clickInvalidButton = {/**/},
+                        clickInvalidButton = { viewModel.invalidVote(photoDisplayed,currentUser,currentPicDescRoom) },
                         endingTime = currentPicDescRoom.winnerAnnouncementTime,
                         viewModel = timerViewModel
                     )
