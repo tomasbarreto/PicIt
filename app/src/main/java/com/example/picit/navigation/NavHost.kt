@@ -423,6 +423,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                 }
 
+                var winnerPhotoRating = winnerPhoto.ratingSum / winnerPhoto.usersThatVoted.size
+
                 DailyWinnerScreen(
                     gameType = GameType.PICDESC,
                     onClickBackButton = { onClickBackButton() },
@@ -431,7 +433,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     location = winnerPhoto.location,
                     timestamp = winnerPhoto.submissionTime.hours.toString() + ":" + winnerPhoto.submissionTime.minutes.toString(),
                     photoUrl = winnerPhoto.photoUrl,
-                    rating = String()
+                    rating = winnerPhotoRating.toString()
                 )
 
             }
