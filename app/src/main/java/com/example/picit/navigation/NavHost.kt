@@ -34,7 +34,9 @@ import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
+import com.example.picit.picdesc.PromptRoomVoteLeaderViewModel
 import com.example.picit.picdesc.PromptRoomVoteUserScreen
+import com.example.picit.picdesc.PromptRoomVoteUserViewModel
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
@@ -313,9 +315,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
-            val roomId = backStackEntry.arguments?.getString("room_id")
-            if (roomId == null) return@composable
-            dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
+            val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
+
+            if (!currentPicDescRoom.id.isNullOrEmpty()){
+                dbutils.removePicDescListener(currentPicDescRoom.id!!)
+            }
+
+            dbutils.setPicDescRoomListener(roomId, {room -> currentPicDescRoom = room})
 
             val currentCalendar = Calendar.getInstance()
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
@@ -352,15 +358,22 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val photosUserDidntVote = photosSubmitted.filter{
                     it.userId != currentUser.id && !it.usersThatVoted.contains(currentUser.id)
                 }
+                val photoDisplayed = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto()
+
+                val viewModel: PromptRoomVoteLeaderViewModel = viewModel()
                 if(currentUserIsLeader){
                     PromptRoomVoteLeader(
                         onClickBackButton = {onClickBackButton()},
                         onClickLeaderboardButton = {/*TODO*/},
                         roomName = currentPicDescRoom.name,
                         photoDescription = currentPicDescRoom.photoDescription,
-                        photo = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto(),
-                        clickValidButton =  {/**/},
-                        clickInvalidButton = {/**/},
+                        photo = photoDisplayed,
+                        clickValidButton =  {
+                            viewModel.leaderVote(photoDisplayed,currentUser,currentPicDescRoom,true)
+                        },
+                        clickInvalidButton = {
+                            viewModel.leaderVote(photoDisplayed,currentUser,currentPicDescRoom,false)
+                                             },
                         endingTime = currentPicDescRoom.winnerAnnouncementTime,
                         viewModel = timerViewModel
                     )
@@ -368,6 +381,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 else{
                     val userAlreadySubmitted=
                         photosSubmitted.filter{ it.userId == currentUser.id}.size == 1
+
+                    val viewModel: PromptRoomVoteUserViewModel = viewModel()
 
                     // check if user already submitted photo
                     if(userAlreadySubmitted){
@@ -378,7 +393,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             photoDescription = currentPicDescRoom.photoDescription,
                             endingTime = currentPicDescRoom.winnerAnnouncementTime,
                             viewModel = timerViewModel,
-                            photo = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto(),
+                            photo = photoDisplayed,
+                            onClickRaitingStars = {raiting:Int ->
+                                viewModel.userVote(currentUser,currentPicDescRoom,photoDisplayed,raiting)
+                            }
                         )
                     }
                     else{

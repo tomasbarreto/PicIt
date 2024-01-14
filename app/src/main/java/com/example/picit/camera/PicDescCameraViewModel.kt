@@ -56,7 +56,7 @@ class PicDescCameraViewModel: ViewModel() {
             submissionTime = currentTime,
             usersThatVoted = emptyList(),
             leaderVote = false,
-            averageRating = 0.0
+            ratingSum = 0
         )
 
         // Update the list of submitted photos in the room

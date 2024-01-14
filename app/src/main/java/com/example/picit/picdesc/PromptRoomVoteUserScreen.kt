@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.picit.R
 import com.example.picit.entities.PicDescPhoto
@@ -51,8 +52,8 @@ fun PromptRoomVoteUserScreen(
     photoDescription: String = "photo description",
     photo: PicDescPhoto = PicDescPhoto(),
     onClickRaitingStars: (Int)->Unit = {},
-    endingTime: Time,
-    viewModel: TimerViewModel
+    endingTime: Time = Time(),
+    viewModel: TimerViewModel,
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -120,7 +121,6 @@ fun PromptRoomVoteUserScreen(
                             .height(22.dp)
                             .fillMaxWidth(0.55F))
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     var myRating by remember { mutableStateOf(3) }
                     RatingBar(
@@ -143,7 +143,11 @@ fun PromptRoomVoteUserScreen(
             }
         }
 
+        Spacer(modifier = Modifier.weight(1f))
+
         Timer(timeFor = "Vote on your favourites!\n", viewModel = viewModel, endingTime = endingTime)
+
+        Spacer(modifier = Modifier.weight(1f))
 
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -151,6 +155,7 @@ fun PromptRoomVoteUserScreen(
             horizontalArrangement = Arrangement.End) {
             LeaderboardButton(onClickLeaderboardButton)
         }
+
 
     }
 }
@@ -185,6 +190,6 @@ fun RatingBar(
 @Composable
 fun PromptRoomVoteUserScreenPreview() {
     PicItTheme {
-        //PromptRoomVoteUserScreen()
+        PromptRoomVoteUserScreen(viewModel = viewModel())
     }
 }
