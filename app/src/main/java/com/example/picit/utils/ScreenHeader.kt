@@ -31,7 +31,7 @@ fun ScreenHeader(
     onClickBackButton: () -> Unit={},
     onClickSettings: () -> Unit = {}
 ){
-    Spacer(modifier = Modifier.height(60.dp))
+    Spacer(modifier = Modifier.height(24.dp))
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
