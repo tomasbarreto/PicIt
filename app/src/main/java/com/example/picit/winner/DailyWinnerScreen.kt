@@ -26,22 +26,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.R
 import com.example.picit.entities.GameType
+import com.example.picit.picdesc.Award
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun DailyWinnerScreen(
     onClickBackButton: () -> Unit = {},
-    winScreenTitle: String = "",
-    winnerUsername: String = "",
-    location: String = "",
-    timestamp: String = "",
-    photoUrl: String = "",
-    rating: String = "",
+    award: Award,
     gameType: GameType,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: DailyWinnerViewModel = viewModel()
 ) {
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -49,7 +47,7 @@ fun DailyWinnerScreen(
     ){
         ScreenHeader(
             withBackButton = false,
-            text = winScreenTitle,
+            text = viewModel.getScreenTitle(),
             onClickBackButton = onClickBackButton
         )
 
@@ -60,7 +58,7 @@ fun DailyWinnerScreen(
         ) {
             Icon(Icons.Outlined.AccountCircle, contentDescription = null, modifier = Modifier.size(160.dp))
 
-            Text(text = "Username".uppercase(), textAlign = TextAlign.Center, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+            Text(text = viewModel.getUsername().uppercase(), textAlign = TextAlign.Center, fontSize = 25.sp, fontWeight = FontWeight.Bold)
 
             Spacer(modifier = modifier.height(30.dp))
 
@@ -75,7 +73,7 @@ fun DailyWinnerScreen(
                     Spacer(modifier = modifier.width(3.dp))
 
                     Column {
-                        Text(text = "Lisbon, Portugal", textAlign = TextAlign.Center, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                        Text(text = viewModel.getLocation(), textAlign = TextAlign.Center, fontSize = 15.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = modifier.height(3.dp))
                     }
                 }
@@ -91,7 +89,7 @@ fun DailyWinnerScreen(
 
                     Column {
                         Text(
-                            text = "18:30",
+                            text = viewModel.getTimeStamp(),
                             textAlign = TextAlign.Center,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold
@@ -103,6 +101,7 @@ fun DailyWinnerScreen(
 
             Spacer(modifier = modifier.height(5.dp))
 
+            // TO DO COLOCAR A IMAGEM
             Image(
                 painter = painterResource(id = R.drawable.imagetorepic),
                 contentDescription = "winner picture",
@@ -113,7 +112,7 @@ fun DailyWinnerScreen(
             Spacer(modifier = modifier.height(10.dp))
 
             Text(
-                text = "\"You holding and kissing the sun\"",
+                text = viewModel.getPicDescDescription(),
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp,
                 modifier = modifier.width(300.dp)
@@ -136,7 +135,7 @@ fun DailyWinnerScreen(
 
                     Column {
                         Text(
-                            text = "4.7",
+                            text = viewModel.getRating(),
                             textAlign = TextAlign.Center,
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold

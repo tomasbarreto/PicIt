@@ -32,6 +32,7 @@ import com.example.picit.joinroom.UserRoomsViewModel
 import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
+import com.example.picit.picdesc.Award
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
 import com.example.picit.picdesc.PromptRoomVoteLeaderViewModel
@@ -51,6 +52,7 @@ import com.example.picit.settings.SettingsScreen
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
 import com.example.picit.winner.DailyWinnerScreen
+import com.example.picit.winner.DailyWinnerViewModel
 import java.util.Calendar
 
 private val TAG = "NavHost"
@@ -412,28 +414,38 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             // show winner
             else{
 
+                var dailyWinnerViewModel: DailyWinnerViewModel = viewModel()
                 var roomPhotos = currentPicDescRoom.photosSubmitted
 
-                var winnerPhoto = PicDescPhoto()
+                var fastestWinnerPhoto = PicDescPhoto()
+                var mostVotedWinnerPhoto = PicDescPhoto()
+
+                var currentMaxRating = 0.0
 
                 for (photo in roomPhotos) {
                     if (photo.leaderVote) {
-                        winnerPhoto = photo
+                        fastestWinnerPhoto = photo
                         break
+                    }
+
+                    var currentPhotoRating = photo.ratingSum / (photo.usersThatVoted.size - 1.0)
+
+                    if (currentPhotoRating > currentMaxRating) {
+                        currentMaxRating = currentPhotoRating
+                        mostVotedWinnerPhoto = photo
                     }
                 }
 
-                var winnerPhotoRating = winnerPhoto.ratingSum / winnerPhoto.usersThatVoted.size
+                dailyWinnerViewModel.setPicDescDescription(currentPicDescRoom.photoDescription)
+                dailyWinnerViewModel.setFastestWinnerPhoto(fastestWinnerPhoto)
+                dailyWinnerViewModel.setMostVotedWinnerPhoto(mostVotedWinnerPhoto)
+                dailyWinnerViewModel.setAward(Award.FASTEST)
 
                 DailyWinnerScreen(
                     gameType = GameType.PICDESC,
                     onClickBackButton = { onClickBackButton() },
-                    winScreenTitle = "Fastest Player Award",
-                    winnerUsername = winnerPhoto.username,
-                    location = winnerPhoto.location,
-                    timestamp = winnerPhoto.submissionTime.hours.toString() + ":" + winnerPhoto.submissionTime.minutes.toString(),
-                    photoUrl = winnerPhoto.photoUrl,
-                    rating = winnerPhotoRating.toString()
+                    award = Award.FASTEST,
+                    viewModel = dailyWinnerViewModel
                 )
 
             }
