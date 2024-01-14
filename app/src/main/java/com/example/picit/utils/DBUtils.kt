@@ -4,12 +4,16 @@ import android.util.Log
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicRoom
 import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 
 class DBUtils() {
 
     private var db = Firebase.database
+    private lateinit var picDescRoomEventListener: ValueEventListener
 
     fun findRepicRoomById(roomId: String, onRoomFound: (RePicRoom) -> Unit) {
         val roomsRef = db.getReference("repicRooms")
@@ -38,5 +42,31 @@ class DBUtils() {
         }.addOnFailureListener{
             Log.e("firebase", "Error getting data", it)
         }
+    }
+
+    fun setPicDescRoomListener(roomId: String, onUpdate: (PicDescRoom) -> Unit) {
+        val roomRef = db.getReference("picDescRooms/$roomId")
+
+        val eventListener = object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val room = snapshot.getValue<PicDescRoom>()
+
+                if(room != null){
+                    onUpdate(room)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("firebase", "Error getting data $error")
+            }
+        }
+        roomRef.addValueEventListener(eventListener)
+        picDescRoomEventListener = eventListener
+    }
+
+    fun removePicDescListener(roomId:String){
+        val roomRef = db.getReference("picDescRooms/$roomId")
+
+        roomRef.removeEventListener(picDescRoomEventListener)
     }
 }

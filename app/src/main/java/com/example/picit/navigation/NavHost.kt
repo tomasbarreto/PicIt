@@ -317,9 +317,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
-            val roomId = backStackEntry.arguments?.getString("room_id")
-            if (roomId == null) return@composable
-            dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
+            val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
+
+            if (!currentPicDescRoom.id.isNullOrEmpty()){
+                dbutils.removePicDescListener(currentPicDescRoom.id!!)
+            }
+
+            dbutils.setPicDescRoomListener(roomId, {room -> currentPicDescRoom = room})
 
             val currentCalendar = Calendar.getInstance()
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
@@ -367,7 +371,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         photoDescription = currentPicDescRoom.photoDescription,
                         photo = photoDisplayed,
                         clickValidButton =  {/**/},
-                        clickInvalidButton = { viewModel.invalidVote(photoDisplayed,currentUser,currentPicDescRoom) },
+                        clickInvalidButton = {
+                            viewModel.invalidVote(photoDisplayed,currentUser,currentPicDescRoom)
+                                             },
                         endingTime = currentPicDescRoom.winnerAnnouncementTime,
                         viewModel = timerViewModel
                     )
