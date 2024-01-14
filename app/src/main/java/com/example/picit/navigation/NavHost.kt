@@ -370,9 +370,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         roomName = currentPicDescRoom.name,
                         photoDescription = currentPicDescRoom.photoDescription,
                         photo = photoDisplayed,
-                        clickValidButton =  {/**/},
+                        clickValidButton =  {
+                            viewModel.leaderVote(photoDisplayed,currentUser,currentPicDescRoom,true)
+                        },
                         clickInvalidButton = {
-                            viewModel.invalidVote(photoDisplayed,currentUser,currentPicDescRoom)
+                            viewModel.leaderVote(photoDisplayed,currentUser,currentPicDescRoom,false)
                                              },
                         endingTime = currentPicDescRoom.winnerAnnouncementTime,
                         viewModel = timerViewModel
