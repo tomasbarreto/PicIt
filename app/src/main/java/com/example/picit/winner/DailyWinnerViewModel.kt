@@ -72,4 +72,34 @@ class DailyWinnerViewModel: ViewModel() {
         val roomRef = database.getReference("picDescRooms/${currentPicDescRoom.id}")
         roomRef.setValue(updatedPicDescRoom)
     }
+
+    fun incrementPlayersScores(currentPicDescRoom: PicDescRoom) {
+        val database = Firebase.database
+
+        val currentLeaderboard = currentPicDescRoom.leaderboard
+        val updatedLeaderboard = mutableListOf<UserInLeaderboard>()
+
+        for (user in currentLeaderboard) {
+            if (user.userId == fastestWinnerPhoto.userId || user.userId == mostVotedWinnerPhoto.userId) {
+                updatedLeaderboard.add(user.copy(points = user.points + 1))
+            }
+            else {
+                updatedLeaderboard.add(user)
+            }
+        }
+
+        val updatedPicDescRoom = currentPicDescRoom.copy(leaderboard = updatedLeaderboard)
+
+        val roomRef = database.getReference("picDescRooms/${currentPicDescRoom.id}")
+        roomRef.setValue(updatedPicDescRoom)
+    }
+
+    fun incrementDailyChallenges(currentPicDescRoom: PicDescRoom) {
+        val database = Firebase.database
+
+        val updatedPicDescRoom = currentPicDescRoom.copy(currentNumOfChallengesDone = currentPicDescRoom.currentNumOfChallengesDone + 1)
+
+        val roomRef = database.getReference("picDescRooms/${currentPicDescRoom.id}")
+        roomRef.setValue(updatedPicDescRoom)
+    }
 }

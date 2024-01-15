@@ -469,6 +469,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     viewModel = dailyWinnerViewModel,
                     onClickRoom = {
 
+                        dailyWinnerViewModel.incrementPlayersScores(currentPicDescRoom)
+
+                        dailyWinnerViewModel.incrementDailyChallenges(currentPicDescRoom)
+
                         dailyWinnerViewModel.setUserWinnerScreenVisibility(currentPicDescRoom, currentUser.id, true)
 
                         if(currentPicDescRoom.id != null) {
