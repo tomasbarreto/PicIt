@@ -122,7 +122,7 @@ fun PromptRoomVoteUserScreen(
                             .fillMaxWidth(0.55F))
                     }
 
-                    var myRating by remember { mutableStateOf(3) }
+                    var myRating by remember { mutableStateOf(0) }
                     RatingBar(
                         currentRating = myRating,
                         onRatingChanged = {
