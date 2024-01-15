@@ -247,7 +247,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val privacy = privacyTokens?.get(0).toBoolean()
             val privacyCode = privacyTokens?.get(1)
 
-
             if (roomName != null && roomCapacity != null && numChallenges != null && privacyCode != null) {
                 RoomTimeSettingsPicDescScreen(
                     onClickBackButton = { onClickBackButton() },
@@ -336,7 +335,26 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val viewModel: SubmitPhotoDescriptionViewModel = viewModel()
             val timerViewModel: TimerViewModel = viewModel()
 
-            if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
+            var didSeeWinnerScreen = false
+
+            var dailyWinnerViewModel: DailyWinnerViewModel = viewModel()
+
+            for (user in currentPicDescRoom.leaderboard) {
+                if (user.userId == currentUser.id)
+                    didSeeWinnerScreen = user.didSeeWinnerScreen
+            }
+
+            if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)
+                || didSeeWinnerScreen) {
+
+                if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
+                    dailyWinnerViewModel.setUserWinnerScreenVisibility(
+                        currentPicDescRoom,
+                        currentUser.id,
+                        false
+                    )
+                }
+
                 if(currentUserIsLeader){
                     SubmitPhotoDescription(
                         onClickBackButton = { onClickBackButton() },
@@ -346,7 +364,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
                 else{
                     WaitingPhotoDescriptionScreen(
-                        onClickBackButton = { onClickBackButton() },
+                        onClickBackButton = { onClickGoToMainScreen() },
                         onClickLeaderboardButton = {/*TODO*/},
                         roomName = currentPicDescRoom.name,
                         endingTime = currentPicDescRoom.photoSubmissionOpeningTime,
@@ -420,6 +438,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 var fastestWinnerPhoto = PicDescPhoto()
                 var mostVotedWinnerPhoto = PicDescPhoto()
 
+                if (roomPhotos.isNotEmpty()) {
+                    fastestWinnerPhoto = roomPhotos[0]
+                    mostVotedWinnerPhoto = roomPhotos[0]
+                }
+
                 var currentMaxRating = 0.0
 
                 for (photo in roomPhotos) {
@@ -436,16 +459,22 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                 }
 
-                dailyWinnerViewModel.setPicDescDescription(currentPicDescRoom.photoDescription)
+                dailyWinnerViewModel.setPicDescDesc(currentPicDescRoom.photoDescription)
                 dailyWinnerViewModel.setFastestWinnerPhoto(fastestWinnerPhoto)
                 dailyWinnerViewModel.setMostVotedWinnerPhoto(mostVotedWinnerPhoto)
-                dailyWinnerViewModel.setAward(Award.FASTEST)
+                dailyWinnerViewModel.setCurrentAward(Award.FASTEST)
 
                 DailyWinnerScreen(
                     gameType = GameType.PICDESC,
-                    onClickBackButton = { onClickBackButton() },
-                    award = Award.FASTEST,
-                    viewModel = dailyWinnerViewModel
+                    viewModel = dailyWinnerViewModel,
+                    onClickRoom = {
+
+                        dailyWinnerViewModel.setUserWinnerScreenVisibility(currentPicDescRoom, currentUser.id, true)
+
+                        if(currentPicDescRoom.id != null) {
+                            navController.navigate(Screens.PicDescRoomScreen.route.replace("{room_id}", currentPicDescRoom.id!!))
+                        }
+                    }
                 )
 
             }
@@ -456,8 +485,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             val currentCalendar = Calendar.getInstance() // TODO: o tempo vai andando
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
-
-            var viewModel: TimerViewModel = viewModel()
 
             if (roomId != null) {
                 dbutils.findRepicRoomById(roomId, {room -> currentRepicRoom = room})

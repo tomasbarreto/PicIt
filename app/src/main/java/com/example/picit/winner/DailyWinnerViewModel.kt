@@ -1,15 +1,24 @@
 package com.example.picit.winner
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
+import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.UserInLeaderboard
 import com.example.picit.picdesc.Award
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 
 class DailyWinnerViewModel: ViewModel() {
 
+    var shownPicDescWinnerPhoto: PicDescPhoto by mutableStateOf(PicDescPhoto())
+    var screenTitle: String by mutableStateOf("")
+    var picDescDescription: String by mutableStateOf("")
+    private lateinit var award: Award
     private lateinit var fastestWinnerPhoto: PicDescPhoto
     private lateinit var mostVotedWinnerPhoto: PicDescPhoto
-    private lateinit var award: Award
-    private lateinit var picDescDescription: String
 
     fun setFastestWinnerPhoto(winnerPhoto: PicDescPhoto) {
         this.fastestWinnerPhoto = winnerPhoto
@@ -19,79 +28,48 @@ class DailyWinnerViewModel: ViewModel() {
         this.mostVotedWinnerPhoto = winnerPhoto
     }
 
-    fun setPicDescDescription(description: String) {
+    fun setPicDescDesc(description: String) {
         this.picDescDescription = description
     }
 
-    fun getPicDescDescription(): String {
-        return "\n" + this.picDescDescription + "\n"
+    fun setCurrentAward(award: Award) {
+        this.award = award
+
+        shownPicDescWinnerPhoto = if (this.award == Award.FASTEST) {
+            this.fastestWinnerPhoto
+        } else {
+            this.mostVotedWinnerPhoto
+        }
+
+        screenTitle = if (this.award == Award.FASTEST) {
+            "Fastest Award"
+        } else {
+            "Most Voted Award"
+        }
     }
 
-    fun getAward(): Award {
+    fun getCurrentAward(): Award {
         return this.award
     }
 
-    fun setAward(award: Award) {
-        this.award = award
-    }
+    fun setUserWinnerScreenVisibility(currentPicDescRoom: PicDescRoom, userID: String, visibility: Boolean) {
+        val database = Firebase.database
 
-    fun getScreenTitle(): String {
-        when(this.award) {
-            Award.FASTEST -> return "Fastest Award"
-            Award.MOST_VOTED -> return "Most Voted Award"
-            else -> {}
+        val currentLeaderboard = currentPicDescRoom.leaderboard
+        val updatedLeaderboard = mutableListOf<UserInLeaderboard>()
+
+        for (user in currentLeaderboard) {
+            if (user.userId == userID) {
+                updatedLeaderboard.add(user.copy(didSeeWinnerScreen = visibility))
+            }
+            else {
+                updatedLeaderboard.add(user)
+            }
         }
 
-        return ""
-    }
+        val updatedPicDescRoom = currentPicDescRoom.copy(leaderboard = updatedLeaderboard)
 
-    fun getUsername(): String {
-        when(this.award) {
-            Award.FASTEST -> return fastestWinnerPhoto.username
-            Award.MOST_VOTED -> return mostVotedWinnerPhoto.username
-            else -> {}
-        }
-
-        return ""
-    }
-
-    fun getLocation(): String {
-        when(this.award) {
-            Award.FASTEST -> return fastestWinnerPhoto.location
-            Award.MOST_VOTED -> return mostVotedWinnerPhoto.location
-            else -> {}
-        }
-
-        return ""
-    }
-
-    fun getPhotoUrl(): String {
-        when(this.award) {
-            Award.FASTEST -> return fastestWinnerPhoto.photoUrl
-            Award.MOST_VOTED -> return mostVotedWinnerPhoto.photoUrl
-            else -> {}
-        }
-
-        return ""
-    }
-
-    fun getTimeStamp(): String {
-        when(this.award) {
-            Award.FASTEST -> return fastestWinnerPhoto.submissionTime.hours.toString() + ":" + fastestWinnerPhoto.submissionTime.minutes.toString()
-            Award.MOST_VOTED -> return mostVotedWinnerPhoto.submissionTime.hours.toString() + ":" + fastestWinnerPhoto.submissionTime.minutes.toString()
-            else -> {}
-        }
-
-        return ""
-    }
-
-    fun getRating(): String {
-        when(this.award) {
-            Award.FASTEST -> return (fastestWinnerPhoto.ratingSum / (fastestWinnerPhoto.usersThatVoted.size - 1.0)).toString()
-            Award.MOST_VOTED -> return (mostVotedWinnerPhoto.ratingSum / (mostVotedWinnerPhoto.usersThatVoted.size - 1.0)).toString()
-            else -> {}
-        }
-
-        return ""
+        val roomRef = database.getReference("picDescRooms/${currentPicDescRoom.id}")
+        roomRef.setValue(updatedPicDescRoom)
     }
 }

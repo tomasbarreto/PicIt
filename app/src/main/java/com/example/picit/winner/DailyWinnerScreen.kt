@@ -38,20 +38,29 @@ import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun DailyWinnerScreen(
-    onClickBackButton: () -> Unit = {},
-    award: Award,
     gameType: GameType,
     modifier: Modifier = Modifier,
-    viewModel: DailyWinnerViewModel = viewModel()
+    viewModel: DailyWinnerViewModel = viewModel(),
+    onClickRoom: () -> Unit = {}
 ) {
+
+    var timestamp = viewModel.shownPicDescWinnerPhoto.submissionTime.hours.toString() + ":" + viewModel.shownPicDescWinnerPhoto.submissionTime.minutes.toString()
+
+    var rating = if (viewModel.shownPicDescWinnerPhoto.usersThatVoted.size - 1 > 1) {
+        String.format("%.1f",
+                viewModel.shownPicDescWinnerPhoto.ratingSum / (viewModel.shownPicDescWinnerPhoto.usersThatVoted.size - 1.0)
+        )
+    } else {
+        "0.0"
+    }
+
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         ScreenHeader(
             withBackButton = false,
-            text = viewModel.getScreenTitle(),
-            onClickBackButton = onClickBackButton
+            text = viewModel.screenTitle,
         )
 
         Spacer(modifier = Modifier.height(25.dp))
@@ -61,7 +70,7 @@ fun DailyWinnerScreen(
         ) {
             Icon(Icons.Outlined.AccountCircle, contentDescription = null, modifier = Modifier.size(160.dp))
 
-            Text(text = viewModel.getUsername().uppercase(), textAlign = TextAlign.Center, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+            Text(text = viewModel.shownPicDescWinnerPhoto.username.uppercase(), textAlign = TextAlign.Center, fontSize = 25.sp, fontWeight = FontWeight.Bold)
 
             Spacer(modifier = modifier.height(30.dp))
 
@@ -76,7 +85,7 @@ fun DailyWinnerScreen(
                     Spacer(modifier = modifier.width(3.dp))
 
                     Column {
-                        Text(text = viewModel.getLocation(), textAlign = TextAlign.Center, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                        Text(text = viewModel.shownPicDescWinnerPhoto.location, textAlign = TextAlign.Center, fontSize = 15.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = modifier.height(3.dp))
                     }
                 }
@@ -92,7 +101,7 @@ fun DailyWinnerScreen(
 
                     Column {
                         Text(
-                            text = viewModel.getTimeStamp(),
+                            text = timestamp,
                             textAlign = TextAlign.Center,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold
@@ -106,8 +115,8 @@ fun DailyWinnerScreen(
 
             // TO DO COLOCAR A IMAGEM
             AsyncImage(
-                model = viewModel.getPhotoUrl(),
-                contentDescription = viewModel.getPicDescDescription(),
+                model = viewModel.shownPicDescWinnerPhoto.photoUrl,
+                contentDescription = viewModel.picDescDescription,
                 modifier = Modifier
                     .fillMaxHeight(0.45f)
                     .fillMaxWidth(0.8f)
@@ -117,7 +126,7 @@ fun DailyWinnerScreen(
             Spacer(modifier = modifier.height(10.dp))
 
             Text(
-                text = viewModel.getPicDescDescription(),
+                text = viewModel.picDescDescription,
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp,
                 modifier = modifier.width(300.dp)
@@ -140,7 +149,7 @@ fun DailyWinnerScreen(
 
                     Column {
                         Text(
-                            text = viewModel.getRating(),
+                            text = rating,
                             textAlign = TextAlign.Center,
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold
@@ -152,9 +161,9 @@ fun DailyWinnerScreen(
             Spacer(modifier = Modifier.height(45.dp))
 
             Button(onClick = {
-                when (viewModel.getAward()) {
-                    Award.FASTEST -> viewModel.setAward(Award.MOST_VOTED)
-                    Award.MOST_VOTED -> onClickBackButton
+                when (viewModel.getCurrentAward()) {
+                    Award.FASTEST -> viewModel.setCurrentAward(Award.MOST_VOTED)
+                    Award.MOST_VOTED -> onClickRoom()
                 }
             }) {
                 Text(text = "Continue", fontSize = 22.sp)
