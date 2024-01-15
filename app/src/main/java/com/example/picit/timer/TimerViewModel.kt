@@ -30,7 +30,15 @@ class TimerViewModel: ViewModel() {
             var finalTimeMillis = getTimeMillis(finalTime)
             var now = LocalDateTime.now()
             var currentMillis = getTimeMillis(Time(hours = now.hour, minutes = now.minute, second = now.second))
-            var timeLeftMillis = finalTimeMillis - currentMillis
+
+            var timeLeftMillis = 0L
+
+            if (finalTimeMillis - currentMillis >= 0)
+                timeLeftMillis = finalTimeMillis - currentMillis
+            else {
+                var millisToMidNight = getTimeMillis(Time(hours = 24, minutes = 0, second = 0)) - currentMillis
+                timeLeftMillis = millisToMidNight + finalTimeMillis
+            }
 
             while (!isOver) {
                 delay(second)
