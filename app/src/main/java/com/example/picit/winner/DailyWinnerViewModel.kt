@@ -27,6 +27,10 @@ class DailyWinnerViewModel: ViewModel() {
         return "\n" + this.picDescDescription + "\n"
     }
 
+    fun getAward(): Award {
+        return this.award
+    }
+
     fun setAward(award: Award) {
         this.award = award
     }

@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.picit.R
 import com.example.picit.entities.GameType
 import com.example.picit.picdesc.Award
@@ -102,10 +105,12 @@ fun DailyWinnerScreen(
             Spacer(modifier = modifier.height(5.dp))
 
             // TO DO COLOCAR A IMAGEM
-            Image(
-                painter = painterResource(id = R.drawable.imagetorepic),
-                contentDescription = "winner picture",
-                modifier = modifier
+            AsyncImage(
+                model = viewModel.getPhotoUrl(),
+                contentDescription = viewModel.getPicDescDescription(),
+                modifier = Modifier
+                    .fillMaxHeight(0.45f)
+                    .fillMaxWidth(0.8f)
                     .clip(shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 20.dp))
             )
 
@@ -146,7 +151,12 @@ fun DailyWinnerScreen(
 
             Spacer(modifier = Modifier.height(45.dp))
 
-            Button(onClick = {  }) {
+            Button(onClick = {
+                when (viewModel.getAward()) {
+                    Award.FASTEST -> viewModel.setAward(Award.MOST_VOTED)
+                    Award.MOST_VOTED -> onClickBackButton
+                }
+            }) {
                 Text(text = "Continue", fontSize = 22.sp)
             }
         }
