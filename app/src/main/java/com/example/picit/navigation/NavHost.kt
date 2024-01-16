@@ -436,7 +436,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
                     Log.w("TIME", "SUBMIT PHOTO")
                     val viewModelPicture: RepicRoomTakePictureViewModel = viewModel()
-                    viewModelPicture.getGeneratedImage()
+
+                    if(currentRepicRoom.imageUrl.isEmpty()){
+                        viewModelPicture.getGeneratedImage(currentRepicRoom)
+                    }
                     RepicRoomTakePicture(
                         onClickBackButton = { onClickBackButton() },
                         onClickCameraButton = {navController.navigate(Screens.RePicCamera.route)},

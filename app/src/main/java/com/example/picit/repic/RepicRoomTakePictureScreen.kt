@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.picit.R
 import com.example.picit.entities.RePicRoom
 import com.example.picit.leaderboard.LeaderboardButton
@@ -61,9 +63,12 @@ fun RepicRoomTakePicture(
                 .padding(20.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.imagetorepic),
-                contentDescription = "woman kissing the sunset",
+            AsyncImage(
+                model = room.imageUrl,
+                contentDescription = "",
+                modifier = Modifier
+                    .fillMaxHeight(0.45f)
+                    .fillMaxWidth(0.8f)
             )
         }
 
