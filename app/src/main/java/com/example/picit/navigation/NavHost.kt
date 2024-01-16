@@ -80,7 +80,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         // listeners and that would have very complex logic
         var currentUser by mutableStateOf(User())
         var currentRepicRoom by mutableStateOf(RePicRoom()) // TODO: tem de se ir buscar com listener
-        var currentPicDescRoom by mutableStateOf(PicDescRoom()) // TODO: tem de se ir buscar com listener
+        var currentPicDescRoom by mutableStateOf(PicDescRoom())
         // E tirar o listener quando se toca noutra sala
         var dbutils = DBUtils()
 

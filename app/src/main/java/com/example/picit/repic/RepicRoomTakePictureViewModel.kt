@@ -20,8 +20,8 @@ class RepicRoomTakePictureViewModel: ViewModel() {
 
     fun getGeneratedImage(room: RePicRoom){
         val storage = Firebase.storage
-        val roomImagesGenerated = storage.getReference("repicRooms/${room.id}/" +
-                "P${room.currentNumOfChallengesDone}")
+        val roomImagesGenerated = storage.getReference("rePic/${room.id}/" +
+                "Challenge${room.currentNumOfChallengesDone}")
 
         viewModelScope.launch {
             val requestBody = RequestModel(
