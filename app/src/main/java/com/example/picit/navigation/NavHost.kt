@@ -49,6 +49,7 @@ import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
 import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
+import com.example.picit.repic.RepicRoomTakePictureViewModel
 import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.timer.TimerViewModel
@@ -434,6 +435,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                 if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
                     Log.w("TIME", "SUBMIT PHOTO")
+                    val viewModelPicture: RepicRoomTakePictureViewModel = viewModel()
+                    viewModelPicture.getGeneratedImage()
                     RepicRoomTakePicture(
                         onClickBackButton = { onClickBackButton() },
                         onClickCameraButton = {navController.navigate(Screens.RePicCamera.route)},
