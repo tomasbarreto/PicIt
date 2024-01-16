@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.picit"
-        minSdk = 26
+        minSdk = 33
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -105,4 +105,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     implementation("io.coil-kt:coil-compose:2.4.0")
+
+    // Location Services
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }

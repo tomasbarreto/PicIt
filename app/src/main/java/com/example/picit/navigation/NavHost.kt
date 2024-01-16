@@ -49,6 +49,7 @@ import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.settings.SettingsScreen
+import com.example.picit.settings.SettingsViewModel
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
 import com.example.picit.winner.DailyWinnerScreen
@@ -289,8 +290,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route = Screens.Settings.route){
+
+            var viewModel: SettingsViewModel = viewModel()
+
             SettingsScreen(
-                onClickBackButton = {onClickBackButton()}
+                onClickBackButton = {onClickBackButton()},
+                viewModel = viewModel
             )
         }
         composable(route= Screens.PicDescCamera.route){
