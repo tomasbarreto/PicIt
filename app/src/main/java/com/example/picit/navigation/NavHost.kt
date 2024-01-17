@@ -313,11 +313,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route= Screens.RePicCamera.route){
             val viewModel: RePicCameraViewModel = viewModel()
+            var context = LocalContext.current
 
             CameraScreen(
                 onClickBackButton = {onClickBackButton()},
                 getImageUri = { uri ->
-                    viewModel.submitImage(currentRepicRoom,currentUser,uri)
+                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context)
 //                    navController.navigate(Screens.RepicRoomScreen.route)
                 }
             )

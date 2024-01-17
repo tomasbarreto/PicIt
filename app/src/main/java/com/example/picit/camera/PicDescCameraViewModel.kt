@@ -50,11 +50,11 @@ class PicDescCameraViewModel: ViewModel() {
         val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(
             Calendar.MINUTE))
 
-        val location = ""
+        var location = ""
 
         if (locationClient.isLocationPermGranted(context)) {
             locationClient.startLocationClient(context)
-            locationClient.getLocation(context)
+            location = locationClient.getLocation(context)
         }
 
         // Create PicDescPhoto with the image URL
@@ -62,7 +62,7 @@ class PicDescCameraViewModel: ViewModel() {
             photoUrl = imageUrl,
             userId = user.id,
             username = user.username,
-            location = "TODO",
+            location = location,
             submissionTime = currentTime,
             usersThatVoted = emptyList(),
             leaderVote = false,
