@@ -29,6 +29,8 @@ import com.example.picit.joinroom.PreviewRoomsToJoinScreen
 import com.example.picit.joinroom.PreviewRoomsToJoinViewModel
 import com.example.picit.joinroom.UserRoomsScreen
 import com.example.picit.joinroom.UserRoomsViewModel
+import com.example.picit.leaderboard.LeaderboardScreen
+import com.example.picit.leaderboard.LeaderboardViewModel
 import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
@@ -181,6 +183,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 joinRepicRoomViewModel.updateUserRepicRooms(currentUser)
                 navController.navigate(Screens.Home.route)
             }
+
+            val onClickLeaderboardButton = {
+                navController.navigate(Screens.LeaderboardScreen.route
+                    .replace("{game_type}",GameType.REPIC.toString())
+                    .replace("{room_id}", roomId))
+            }
+
             JoinRepicRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
                 room.maxNumOfChallenges, room.currentNumOfChallengesDone,
                 String.format("%02d", room.pictureReleaseTime.hours) + ":" + String.format("%02d", room.pictureReleaseTime.minutes),
@@ -507,6 +516,26 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     Log.w("TIME", "WINNER ANNOUNCED")
                     RepicRoomWinnerScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
                 }
+            }
+        }
+
+        composable(route = Screens.LeaderboardScreen.route){ backStackEntry ->
+            val roomId = backStackEntry.arguments?.getString("room_id")
+            val gameType = backStackEntry.arguments?.getString("game_type")
+            val leaderboardViewModel : LeaderboardViewModel = viewModel()
+
+            if (roomId != null) {
+                if (gameType.equals(GameType.REPIC.toString())) {
+                    dbutils.findRepicRoomById(roomId, {room -> currentRepicRoom = room})
+                    leaderboardViewModel.getLeaderboardRepic(currentRepicRoom)
+                    LeaderboardScreen(currentRepicRoom.name, leaderboardViewModel.usersInLeaderboard)
+                }
+                else {
+                    dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
+                    leaderboardViewModel.getLeaderboardPicDesc(currentPicDescRoom)
+                    LeaderboardScreen(currentPicDescRoom.name, leaderboardViewModel.usersInLeaderboard)
+                }
+
             }
         }
     }

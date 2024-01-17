@@ -23,13 +23,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.entities.UserInLeaderboard
+import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.BackButton
 import com.example.picit.utils.RoomHeader
-import com.example.picit.ui.theme.PicItTheme
 
 
 @Composable
-fun LeaderboardScreen(){
+fun LeaderboardScreen(
+    roomName: String = "Room Name",
+    leaderboard: List<UserInLeaderboard> = emptyList()
+){
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -48,7 +52,7 @@ fun LeaderboardScreen(){
             }
         }
 
-        RoomHeader()
+        RoomHeader(roomName)
 
         Row(
             modifier = Modifier
