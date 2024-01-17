@@ -9,7 +9,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 private const val BASE_URL =
-    "https://api.stability.ai/v1/generation/stable-diffusion-v1-6/"
+    "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/"
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
@@ -18,7 +18,7 @@ private val retrofit = Retrofit.Builder()
 
 interface StableDiffusionService {
     @Headers(
-        "Authorization:sk-loKXxdpOoLYTreb66GempY9Fh0qxaq1uhHBhwHAkA783dc4W",
+        "Authorization:sk-1XB99bzty5eZMzRu1vEWPSOw4yEQwhFuoExxTbFnRXgk9Blj",
         "Content-Type:application/json"
     )
     @POST("text-to-image")

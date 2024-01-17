@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -34,8 +35,10 @@ import com.example.picit.utils.TakePhotoButton
 fun RepicRoomTakePicture(
     onClickBackButton: ()->Unit = {},
     onClickCameraButton: ()->Unit = {},
-    room: RePicRoom
+    viewModel: TimerViewModel,
+    room: RePicRoom = RePicRoom()
 ){
+
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -72,22 +75,19 @@ fun RepicRoomTakePicture(
             )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        var viewModel: TimerViewModel = viewModel()
-
         Timer(timeFor = "Submit Photo", viewModel = viewModel, room.winnerAnnouncementTime)
         Spacer(modifier = Modifier.height(20.dp))
         Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp),
+            .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center) {
             TakePhotoButton(onButtonClick = onClickCameraButton)
         }
 
+        Spacer(modifier = Modifier.weight(1f))
+
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, bottom = 10.dp, top = 20.dp),
+            .padding(12.dp),
             horizontalArrangement = Arrangement.End) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 LeaderboardButton()
@@ -101,6 +101,6 @@ fun RepicRoomTakePicture(
 @Composable
 fun RepicRoomTakePicturePreview() {
     PicItTheme {
-//        RepicRoomTakePicture()
+        RepicRoomTakePicture(viewModel=viewModel())
     }
 }

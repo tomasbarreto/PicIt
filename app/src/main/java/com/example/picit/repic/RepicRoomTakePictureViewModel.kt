@@ -1,6 +1,7 @@
 package com.example.picit.repic
 
 import android.util.Base64
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.picit.entities.RePicPhoto
@@ -26,11 +27,13 @@ class RepicRoomTakePictureViewModel: ViewModel() {
         viewModelScope.launch {
             val requestBody = RequestModel(
                 listOf(
-                    TextPrompt(text = "A painting of a cat", weight = 1.0),
-                    TextPrompt(text= "blurry, bad", weight = -1.0)
+                    TextPrompt(text = "humorous and widely relatable image", weight = 1.0),
+                    TextPrompt(text= "blurry, bad, disfigured, cartoons, unreal, drawings", weight = -1.0)
                 )
             )
+            Log.d(TAG,"Sending request $requestBody")
             val generatedImage = StableDiffusionApi.retrofitService.getGeneratedImage(requestBody)
+            Log.d(TAG, "Answer: $generatedImage")
 
             val imageByteArray = Base64.decode(generatedImage.artifacts[0].base64, Base64.DEFAULT)
 
