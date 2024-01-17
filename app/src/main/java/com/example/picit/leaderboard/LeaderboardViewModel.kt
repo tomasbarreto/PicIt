@@ -24,6 +24,7 @@ class LeaderboardViewModel: ViewModel() {
             var picDescRoom = picdescRoomSnapshot.getValue<PicDescRoom>()
             if (picDescRoom != null) {
                 usersInLeaderboard = picDescRoom.leaderboard
+                usersInLeaderboard = usersInLeaderboard.sortedByDescending { it.points }
             }
 
             Log.d("firebase", "PICDESC LEADERBOARD: $usersInLeaderboard")
@@ -41,6 +42,8 @@ class LeaderboardViewModel: ViewModel() {
             var repicRoom = repicRoomSnapshot.getValue<RePicRoom>()
             if (repicRoom != null) {
                 usersInLeaderboard = repicRoom.leaderboard
+                usersInLeaderboard = usersInLeaderboard.sortedByDescending { it.points }
+
             }
 
             Log.d("firebase", "REPIC LEADERBOARD: $usersInLeaderboard")
