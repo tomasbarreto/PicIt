@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
@@ -73,6 +75,7 @@ fun LeaderboardScreen(
 fun LeaderboardPanel(modifier : Modifier = Modifier, leaderboard: List<UserInLeaderboard>) {
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxWidth()
             .fillMaxHeight(0.95F)
             .background(Color.LightGray)
@@ -83,9 +86,6 @@ fun LeaderboardPanel(modifier : Modifier = Modifier, leaderboard: List<UserInLea
             LeaderboardRow(position.toString(), user.userName, user.points.toString())
             position = position+1;
         }
-//        LeaderboardRow("2.", "Participant Name", "130pts")
-//        LeaderboardRow("3.", "Participant Name", "50pts")
-//        LeaderboardRow("4.", "Participant Name", "2pts")
     }
 }
 
