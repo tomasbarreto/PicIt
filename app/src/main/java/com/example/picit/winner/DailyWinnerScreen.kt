@@ -74,19 +74,38 @@ fun DailyWinnerScreen(
 
             Spacer(modifier = modifier.height(30.dp))
 
+            var hasLocation = viewModel.shownPicDescWinnerPhoto.location.isNotEmpty()
+
+            var arrangement = Arrangement.End
+
+            if (hasLocation) {
+                arrangement = Arrangement.SpaceBetween
+            }
+
             Row(
                 modifier = modifier.width(270.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = arrangement
             ) {
-                Row {
-                    Icon(Icons.Filled.LocationOn, contentDescription = null, modifier = Modifier.size(20.dp))
+                if (hasLocation) {
+                    Row {
+                        Icon(
+                            Icons.Filled.LocationOn,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
 
-                    Spacer(modifier = modifier.width(3.dp))
+                        Spacer(modifier = modifier.width(3.dp))
 
-                    Column {
-                        Text(text = viewModel.shownPicDescWinnerPhoto.location, textAlign = TextAlign.Center, fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = modifier.height(3.dp))
+                        Column {
+                            Text(
+                                text = viewModel.shownPicDescWinnerPhoto.location,
+                                textAlign = TextAlign.Center,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = modifier.height(3.dp))
+                        }
                     }
                 }
 

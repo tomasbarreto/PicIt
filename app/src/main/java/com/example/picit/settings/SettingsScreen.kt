@@ -28,8 +28,6 @@ fun SettingsScreen(
 ) {
     var context = LocalContext.current
 
-    viewModel.startLocationClient(context)
-
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally

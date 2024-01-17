@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -300,11 +301,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route= Screens.PicDescCamera.route){
             val viewModel: PicDescCameraViewModel = viewModel()
+            val context = LocalContext.current
 
             CameraScreen(
                 onClickBackButton = {onClickBackButton()},
                 getImageUri = { uri ->
-                    viewModel.submitImage(currentPicDescRoom,currentUser,uri)
+                    viewModel.submitImage(currentPicDescRoom,currentUser,uri, context)
 //                    navController.navigate(Screens.PicDescRoomScreen.route)
                 }
             )
