@@ -39,6 +39,7 @@ fun JoinPicDescRoomScreen(
     limitToPicWinnerTime :String= "14:00",
     onClickJoinRoom: () -> Unit = {},
     onClickBackButton: () -> Unit = {},
+    onClickLeaderboardButton: () -> Unit = {}
 ) {
 
 
@@ -185,7 +186,7 @@ fun JoinPicDescRoomScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            LeaderboardButton()
+            LeaderboardButton(onClickLeaderboardButton)
 
             Button(onClick = {onClickJoinRoom()}) {
                 Text(text = "Join room", fontSize = 22.sp)

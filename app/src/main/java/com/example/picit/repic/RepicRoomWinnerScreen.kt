@@ -32,6 +32,7 @@ import com.example.picit.utils.TimeLeftDisplay
 @Composable
 fun RepicRoomWinnerScreen(
     onClickBackButton: ()->Unit = {},
+    onClickLeaderboardButton: () -> Unit = {},
     room: RePicRoom
 ){
     Column (
@@ -105,7 +106,7 @@ fun RepicRoomWinnerScreen(
             .padding(start = 20.dp, end = 20.dp, bottom = 10.dp, top = 20.dp),
             horizontalArrangement = Arrangement.End) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                LeaderboardButton()
+                LeaderboardButton(onClickLeaderboardButton)
             }
         }
     }
