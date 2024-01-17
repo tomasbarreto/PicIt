@@ -32,7 +32,8 @@ import com.example.picit.utils.RoomHeader
 @Composable
 fun LeaderboardScreen(
     roomName: String = "Room Name",
-    leaderboard: List<UserInLeaderboard> = emptyList()
+    leaderboard: List<UserInLeaderboard> = emptyList(),
+    onClickBackButton: () -> Unit = {}
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -42,7 +43,7 @@ fun LeaderboardScreen(
         Box(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            BackButton(onButtonClick={/*TODO: go to UserRoomsScreen*/})
+            BackButton(onButtonClick= onClickBackButton)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -61,7 +62,7 @@ fun LeaderboardScreen(
                 .fillMaxHeight(0.90F),
             horizontalArrangement = Arrangement.Center
         ) {
-            LeaderboardPanel()
+            LeaderboardPanel(leaderboard = leaderboard)
         }
 
 
@@ -69,7 +70,7 @@ fun LeaderboardScreen(
 }
 
 @Composable
-fun LeaderboardPanel(modifier : Modifier = Modifier) {
+fun LeaderboardPanel(modifier : Modifier = Modifier, leaderboard: List<UserInLeaderboard>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,10 +78,14 @@ fun LeaderboardPanel(modifier : Modifier = Modifier) {
             .background(Color.LightGray)
             .padding(30.dp)
     ) {
-        LeaderboardRow("1.", "Participant Name", "1002pts")
-        LeaderboardRow("2.", "Participant Name", "130pts")
-        LeaderboardRow("3.", "Participant Name", "50pts")
-        LeaderboardRow("4.", "Participant Name", "2pts")
+        var position = 1;
+        leaderboard.forEach { user ->
+            LeaderboardRow(position.toString(), user.userName, user.points.toString())
+            position = position+1;
+        }
+//        LeaderboardRow("2.", "Participant Name", "130pts")
+//        LeaderboardRow("3.", "Participant Name", "50pts")
+//        LeaderboardRow("4.", "Participant Name", "2pts")
     }
 }
 

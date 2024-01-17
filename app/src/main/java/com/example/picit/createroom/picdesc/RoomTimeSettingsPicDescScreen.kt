@@ -33,7 +33,8 @@ fun RoomTimeSettingsPicDescScreen(
     privacyCode: String ="",
     onClickGoHomeScreen: ()->Unit = {},
     currentUserId: String ="",
-    currentUserRooms: List<String> = emptyList()
+    currentUserName: String = "",
+    currentUserRooms: List<String> = emptyList(),
 ) {
     val viewModel : PicDescTimeSettingsViewModel = viewModel()
 
@@ -102,7 +103,7 @@ fun RoomTimeSettingsPicDescScreen(
                 Time(hoursDescReleaseStart.value.toInt(), minutesDescReleaseStart.value.toInt()),
                 Time(hoursPictureSubmissionStart.value.toInt(), minutesPictureSubmissionStart.value.toInt()),
                 Time(hoursWinner.value.toInt(), minutesWinner.value.toInt()),
-                onClickGoHomeScreen, currentUserRooms, currentUserId
+                onClickGoHomeScreen, currentUserRooms, currentUserId,currentUserName
             )
         }) {
             Text(text = "Next", fontSize = 22.sp)

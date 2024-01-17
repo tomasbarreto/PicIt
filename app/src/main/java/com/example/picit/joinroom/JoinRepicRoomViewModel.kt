@@ -56,12 +56,12 @@ class JoinRepicRoomViewModel : ViewModel() {
     /**
      * @requires loadRepicRoom(roomId)
      */
-    fun userJoinRoom(userId : String) {
+    fun userJoinRoom(userId : String, userName: String) {
         val database = Firebase.database
 
         val updatedCapacity = repicRoom.currentCapacity +1
         val updatedLeaderboard = repicRoom.leaderboard.toMutableList()
-        updatedLeaderboard.add(UserInLeaderboard(userId,0))
+        updatedLeaderboard.add(UserInLeaderboard(userId,userName, 0))
 
         val updatedRoom = repicRoom.copy(currentCapacity = updatedCapacity,
             leaderboard = updatedLeaderboard)

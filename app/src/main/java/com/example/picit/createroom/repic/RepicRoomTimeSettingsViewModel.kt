@@ -20,13 +20,14 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
         timeWinner:Time,
         onClickGoHomeScreen: ()->Unit = {},
         currentUserRooms: List<String>,
-        currentUserId: String
+        currentUserId: String,
+        currentUserName: String
     ) {
         val database = Firebase.database
         val roomRef = database.getReference("repicRooms").push()
 
         val newRepicRoom = RePicRoom(id=roomRef.key,name = roomName, currentCapacity = 1, maxCapacity = roomCapacity.toInt(),
-            maxNumOfChallenges = roomNumChallenges.toInt(), leaderboard = listOf(UserInLeaderboard(currentUserId,0)),
+            maxNumOfChallenges = roomNumChallenges.toInt(), leaderboard = listOf(UserInLeaderboard(currentUserId,currentUserName, 0)),
             winnerAnnouncementTime = timeWinner, pictureReleaseTime = timePictureRelease,
             privacy = privacy, privacyCode = privacyCode)
 

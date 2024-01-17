@@ -179,12 +179,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val room = joinRepicRoomViewModel.repicRoom
 
             val onClickJoinRoom = {
-                joinRepicRoomViewModel.userJoinRoom(currentUser.id)
+                joinRepicRoomViewModel.userJoinRoom(currentUser.id, currentUser.name)
                 joinRepicRoomViewModel.updateUserRepicRooms(currentUser)
                 navController.navigate(Screens.Home.route)
             }
 
-            val onClickLeaderboardButton = {
+            val onClickLeaderboard = {
                 navController.navigate(Screens.LeaderboardScreen.route
                     .replace("{game_type}",GameType.REPIC.toString())
                     .replace("{room_id}", roomId))
@@ -194,7 +194,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 room.maxNumOfChallenges, room.currentNumOfChallengesDone,
                 String.format("%02d", room.pictureReleaseTime.hours) + ":" + String.format("%02d", room.pictureReleaseTime.minutes),
                 String.format("%02d", room.winnerAnnouncementTime.hours) + ":" + String.format("%02d", room.winnerAnnouncementTime.minutes),
-                onClickJoinRoom, onClickBackButton = { onClickBackButton() })
+                onClickJoinRoom, onClickBackButton = { onClickBackButton() }, onClickLeaderboard)
 
         }
         composable(
@@ -207,7 +207,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             val onClickJoinRoom = {
                 joinPicDescRoomViewModel.updateUserPicDescRooms(currentUser)
-                joinPicDescRoomViewModel.userJoinRoom(currentUser.id)
+                joinPicDescRoomViewModel.userJoinRoom(currentUser.id, currentUser.name)
                 navController.navigate(Screens.Home.route)
             }
             JoinPicDescRoomScreen(room.name, room.maxCapacity, room.currentCapacity,
@@ -266,6 +266,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     privacyCode = privacyCode,
                     onClickGoHomeScreen = onClickGoToMainScreen,
                     currentUserId = currentUser.id,
+                    currentUserName = currentUser.name,
                     currentUserRooms = currentUser.picDescRooms
                 )
             }
@@ -288,6 +289,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     privacyCode = privacyCode,
                     onClickGoHomeScreen = onClickGoToMainScreen,
                     currentUserId = currentUser.id,
+                    currentUserName = currentUser.name,
                     currentUserRooms = currentUser.repicRooms
                 )
             }
@@ -528,12 +530,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 if (gameType.equals(GameType.REPIC.toString())) {
                     dbutils.findRepicRoomById(roomId, {room -> currentRepicRoom = room})
                     leaderboardViewModel.getLeaderboardRepic(currentRepicRoom)
-                    LeaderboardScreen(currentRepicRoom.name, leaderboardViewModel.usersInLeaderboard)
+                    LeaderboardScreen(currentRepicRoom.name, leaderboardViewModel.usersInLeaderboard, {onClickBackButton()})
                 }
                 else {
                     dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
                     leaderboardViewModel.getLeaderboardPicDesc(currentPicDescRoom)
-                    LeaderboardScreen(currentPicDescRoom.name, leaderboardViewModel.usersInLeaderboard)
+                    LeaderboardScreen(currentPicDescRoom.name, leaderboardViewModel.usersInLeaderboard, {onClickBackButton()})
                 }
 
             }
