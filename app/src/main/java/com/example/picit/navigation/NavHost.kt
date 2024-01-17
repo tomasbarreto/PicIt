@@ -289,8 +289,15 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route = Screens.Settings.route){
+            val onClickLogOutButton = {
+                currentUser = User()
+                navController.navigate(Screens.Login.route)
+            }
+
+
             SettingsScreen(
-                onClickBackButton = {onClickBackButton()}
+                onClickBackButton = {onClickBackButton()},
+                onClickLogOutButton = {onClickLogOutButton()}
             )
         }
         composable(route= Screens.PicDescCamera.route){

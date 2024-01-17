@@ -21,13 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.picit.utils.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    onClickBackButton: ()->Unit = {}
+    onClickBackButton: ()->Unit = {},
+    onClickLogOutButton: ()->Unit = {}
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -64,7 +65,7 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(500.dp))
 
-            Button(onClick = { }) {
+            Button(onClick = onClickLogOutButton) {
                 Text(text = "Logout", fontSize = 22.sp)
             }
         }
