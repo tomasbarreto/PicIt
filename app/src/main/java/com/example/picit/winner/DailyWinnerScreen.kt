@@ -32,7 +32,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.picit.R
 import com.example.picit.entities.GameType
-import com.example.picit.picdesc.Award
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
@@ -41,7 +40,9 @@ fun DailyWinnerScreen(
     gameType: GameType,
     modifier: Modifier = Modifier,
     viewModel: DailyWinnerViewModel = viewModel(),
-    onClickRoom: () -> Unit = {}
+    onClickRoom: () -> Unit = {},
+    dailyChallenges: Int = 0,
+    maxDailyChallenges: Int = 0
 ) {
 
     var timestamp = viewModel.shownPicDescWinnerPhoto.submissionTime.hours.toString() + ":" + viewModel.shownPicDescWinnerPhoto.submissionTime.minutes.toString()
@@ -68,38 +69,70 @@ fun DailyWinnerScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(Icons.Outlined.AccountCircle, contentDescription = null, modifier = Modifier.size(160.dp))
+            Icon(
+                Icons.Outlined.AccountCircle,
+                contentDescription = null,
+                modifier = Modifier.size(160.dp)
+            )
 
-            Text(text = viewModel.shownPicDescWinnerPhoto.username.uppercase(), textAlign = TextAlign.Center, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+            Text(
+                text = viewModel.shownPicDescWinnerPhoto.username.uppercase(),
+                textAlign = TextAlign.Center,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold
+            )
 
             Spacer(modifier = modifier.height(30.dp))
 
-            var hasLocation = viewModel.shownPicDescWinnerPhoto.location.isNotEmpty()
+            if (viewModel.getCurrentAward() == Award.FASTEST || viewModel.getCurrentAward() == Award.MOST_VOTED) {
 
-            var arrangement = Arrangement.End
+                var hasLocation = viewModel.shownPicDescWinnerPhoto.location.isNotEmpty()
 
-            if (hasLocation) {
-                arrangement = Arrangement.SpaceBetween
-            }
+                var arrangement = Arrangement.End
 
-            Row(
-                modifier = modifier.width(270.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = arrangement
-            ) {
                 if (hasLocation) {
+                    arrangement = Arrangement.SpaceBetween
+                }
+
+                Row(
+                    modifier = modifier.width(270.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = arrangement
+                ) {
+                    if (hasLocation) {
+                        Row {
+                            Icon(
+                                Icons.Filled.LocationOn,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+
+                            Spacer(modifier = modifier.width(3.dp))
+
+                            Column {
+                                Text(
+                                    text = viewModel.shownPicDescWinnerPhoto.location,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = modifier.height(3.dp))
+                            }
+                        }
+                    }
+
                     Row {
-                        Icon(
-                            Icons.Filled.LocationOn,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp)
+                        Image(
+                            painter = painterResource(id = R.drawable.clock2),
+                            contentDescription = "picture timestamp",
+                            modifier = modifier.size(20.dp)
                         )
 
                         Spacer(modifier = modifier.width(3.dp))
 
                         Column {
                             Text(
-                                text = viewModel.shownPicDescWinnerPhoto.location,
+                                text = timestamp,
                                 textAlign = TextAlign.Center,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold
@@ -109,72 +142,55 @@ fun DailyWinnerScreen(
                     }
                 }
 
-                Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.clock2),
-                        contentDescription = "picture timestamp",
-                        modifier = modifier.size(20.dp)
-                    )
+                Spacer(modifier = modifier.height(5.dp))
 
-                    Spacer(modifier = modifier.width(3.dp))
+                // TO DO COLOCAR A IMAGEM
+                AsyncImage(
+                    model = viewModel.shownPicDescWinnerPhoto.photoUrl,
+                    contentDescription = viewModel.picDescDescription,
+                    modifier = Modifier
+                        .fillMaxHeight(0.45f)
+                        .fillMaxWidth(0.8f)
+                        .clip(shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 20.dp))
+                )
 
-                    Column {
-                        Text(
-                            text = timestamp,
-                            textAlign = TextAlign.Center,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold
+                Spacer(modifier = modifier.height(10.dp))
+
+                Text(
+                    text = viewModel.picDescDescription,
+                    textAlign = TextAlign.Center,
+                    fontSize = 25.sp,
+                    modifier = modifier.width(300.dp)
+                )
+
+                if (gameType == GameType.PICDESC) {
+                    Spacer(modifier = modifier.height(10.dp))
+
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.estrela2),
+                            contentDescription = "star rating",
+                            modifier = Modifier.size(25.dp)
                         )
-                        Spacer(modifier = modifier.height(3.dp))
+
+                        Spacer(modifier = modifier.width(3.dp))
+
+                        Column {
+                            Text(
+                                text = rating,
+                                textAlign = TextAlign.Center,
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
             }
+            else {
 
-            Spacer(modifier = modifier.height(5.dp))
-
-            // TO DO COLOCAR A IMAGEM
-            AsyncImage(
-                model = viewModel.shownPicDescWinnerPhoto.photoUrl,
-                contentDescription = viewModel.picDescDescription,
-                modifier = Modifier
-                    .fillMaxHeight(0.45f)
-                    .fillMaxWidth(0.8f)
-                    .clip(shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 20.dp))
-            )
-
-            Spacer(modifier = modifier.height(10.dp))
-
-            Text(
-                text = viewModel.picDescDescription,
-                textAlign = TextAlign.Center,
-                fontSize = 25.sp,
-                modifier = modifier.width(300.dp)
-            )
-
-            if (gameType == GameType.PICDESC) {
-                Spacer(modifier = modifier.height(10.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.estrela2),
-                        contentDescription = "star rating",
-                        modifier = Modifier.size(25.dp)
-                    )
-
-                    Spacer(modifier = modifier.width(3.dp))
-
-                    Column {
-                        Text(
-                            text = rating,
-                            textAlign = TextAlign.Center,
-                            fontSize = 25.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
             }
 
             Spacer(modifier = Modifier.height(45.dp))
@@ -182,7 +198,13 @@ fun DailyWinnerScreen(
             Button(onClick = {
                 when (viewModel.getCurrentAward()) {
                     Award.FASTEST -> viewModel.setCurrentAward(Award.MOST_VOTED)
-                    Award.MOST_VOTED -> onClickRoom()
+                    Award.MOST_VOTED -> {
+                        if (dailyChallenges < maxDailyChallenges)
+                            onClickRoom()
+                        else
+                            viewModel.setCurrentAward(Award.ROOM_WINNER)
+                    }
+                    Award.ROOM_WINNER -> onClickRoom()
                 }
             }) {
                 Text(text = "Continue", fontSize = 22.sp)

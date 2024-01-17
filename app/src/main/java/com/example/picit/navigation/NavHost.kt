@@ -33,7 +33,6 @@ import com.example.picit.joinroom.UserRoomsViewModel
 import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
-import com.example.picit.picdesc.Award
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
 import com.example.picit.picdesc.PromptRoomVoteLeaderViewModel
@@ -53,6 +52,7 @@ import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
+import com.example.picit.winner.Award
 import com.example.picit.winner.DailyWinnerScreen
 import com.example.picit.winner.DailyWinnerViewModel
 import java.util.Calendar
@@ -124,8 +124,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                 },
                 userCurrentRepicRooms = viewModel.userRepicRooms,
-                userCurrentPicDescRooms = viewModel.userPicdescRooms
-
+                userCurrentPicDescRooms = viewModel.userPicdescRooms,
+                userID = currentUser.id
             )
         }
         composable(route= Screens.Friends.route){
@@ -476,17 +476,25 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     gameType = GameType.PICDESC,
                     viewModel = dailyWinnerViewModel,
                     onClickRoom = {
+                        if (currentPicDescRoom.currentNumOfChallengesDone < currentPicDescRoom.maxNumOfChallenges) {
+                            dailyWinnerViewModel.incrementPlayersScores(currentPicDescRoom)
 
-                        dailyWinnerViewModel.incrementPlayersScores(currentPicDescRoom)
+                            dailyWinnerViewModel.incrementDailyChallenges(currentPicDescRoom)
 
-                        dailyWinnerViewModel.incrementDailyChallenges(currentPicDescRoom)
+                            dailyWinnerViewModel.setUserWinnerScreenVisibility(currentPicDescRoom, currentUser.id, true)
 
-                        dailyWinnerViewModel.setUserWinnerScreenVisibility(currentPicDescRoom, currentUser.id, true)
-
-                        if(currentPicDescRoom.id != null) {
-                            navController.navigate(Screens.PicDescRoomScreen.route.replace("{room_id}", currentPicDescRoom.id!!))
+                            if(currentPicDescRoom.id != null) {
+                                navController.navigate(Screens.PicDescRoomScreen.route.replace("{room_id}", currentPicDescRoom.id!!))
+                            }
                         }
-                    }
+                        else {
+                            dailyWinnerViewModel.setUserWinnerScreenVisibility(currentPicDescRoom, currentUser.id, true)
+
+                            navController.navigate(Screens.Home.route)
+                        }
+                    },
+                    dailyChallenges = currentPicDescRoom.currentNumOfChallengesDone,
+                    maxDailyChallenges = currentPicDescRoom.maxNumOfChallenges
                 )
 
             }

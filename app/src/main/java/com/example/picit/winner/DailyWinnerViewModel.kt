@@ -8,7 +8,6 @@ import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicPhoto
 import com.example.picit.entities.UserInLeaderboard
-import com.example.picit.picdesc.Award
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 
@@ -49,8 +48,11 @@ class DailyWinnerViewModel: ViewModel() {
 
         screenTitle = if (this.award == Award.FASTEST) {
             "Fastest Award"
-        } else {
+        } else if (this.award == Award.MOST_VOTED) {
             "Most Voted Award"
+        }
+        else {
+            "WINNER"
         }
     }
 

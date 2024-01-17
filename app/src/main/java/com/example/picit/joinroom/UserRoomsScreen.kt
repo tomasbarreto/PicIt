@@ -44,7 +44,8 @@ fun UserRoomsScreen(
     onClickSettings: ()-> Unit = {},
     onClickRoom: (String?, GameType) -> Unit,
     userCurrentRepicRooms: List<RePicRoom> = emptyList(),
-    userCurrentPicDescRooms: List<PicDescRoom> = emptyList()
+    userCurrentPicDescRooms: List<PicDescRoom> = emptyList(),
+    userID: String = ""
 ) {
 
 
@@ -83,27 +84,53 @@ fun UserRoomsScreen(
                 .verticalScroll(rememberScrollState())
                 .weight(5f)
         ) {
+
             // Rooms of the user, get from databse
             userCurrentRepicRooms.forEach { room ->
-                var roomName = room.name
-                var roomMaxSize = room.maxCapacity
-                var usersInRoom = room.currentCapacity
-                var gameType = "RePic" //
-                var maxDailyChallenges = room.maxNumOfChallenges
-                var challengesDone = room.currentNumOfChallengesDone
-                Spacer(modifier = Modifier.height(16.dp))
-                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,{onClickRoom(room.id, room.gameType)})
+                var showRoom = true
+
+                for (user in room.leaderboard) {
+                    if (user.userId == userID)
+                        showRoom = !user.didSeeWinnerScreen
+                }
+
+                if (room.currentNumOfChallengesDone < room.maxNumOfChallenges && showRoom) {
+                    var roomName = room.name
+                    var roomMaxSize = room.maxCapacity
+                    var usersInRoom = room.currentCapacity
+                    var gameType = "RePic" //
+                    var maxDailyChallenges = room.maxNumOfChallenges
+                    var challengesDone = room.currentNumOfChallengesDone
+                    Spacer(modifier = Modifier.height(16.dp))
+                    RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,{onClickRoom(room.id, room.gameType)})
+                }
             }
 
             userCurrentPicDescRooms.forEach { room ->
-                var roomName = room.name
-                var roomMaxSize = room.maxCapacity
-                var usersInRoom = room.currentCapacity
-                var gameType = "PicDesc" //
-                var maxDailyChallenges = room.maxNumOfChallenges
-                var challengesDone = room.currentNumOfChallengesDone
-                Spacer(modifier = Modifier.height(16.dp))
-                RoomPreview(roomName, roomMaxSize, usersInRoom,gameType, maxDailyChallenges,challengesDone,{onClickRoom(room.id, room.gameType)})
+                var showRoom = true
+
+                for (user in room.leaderboard) {
+                    if (user.userId == userID)
+                        showRoom = !user.didSeeWinnerScreen
+                }
+
+                if (room.currentNumOfChallengesDone < room.maxNumOfChallenges && showRoom) {
+                    var roomName = room.name
+                    var roomMaxSize = room.maxCapacity
+                    var usersInRoom = room.currentCapacity
+                    var gameType = "PicDesc" //
+                    var maxDailyChallenges = room.maxNumOfChallenges
+                    var challengesDone = room.currentNumOfChallengesDone
+                    Spacer(modifier = Modifier.height(16.dp))
+                    RoomPreview(
+                        roomName,
+                        roomMaxSize,
+                        usersInRoom,
+                        gameType,
+                        maxDailyChallenges,
+                        challengesDone,
+                        { onClickRoom(room.id, room.gameType) })
+                }
             }
         }
 
