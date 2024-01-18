@@ -103,6 +103,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickGoToMainScreen = onClickGoToMainScreen,
                 currentUserUpdate = currentUserUpdate,
                 viewModel = loginViewModel,
+                dbutils = dbutils
             )
         }
         composable(route= Screens.Register.route) {
@@ -315,10 +316,17 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.Settings.route){
 
+            val onClickLogOutButton = {
+                dbutils.removeCurrentUserListener(currentUser.id)
+                currentUser = User()
+                navController.navigate(Screens.Login.route)
+            }
+
             var viewModel: SettingsViewModel = viewModel()
 
             SettingsScreen(
                 onClickBackButton = {onClickBackButton()},
+                onClickLogOutButton = {onClickLogOutButton()},
                 viewModel = viewModel
             )
         }

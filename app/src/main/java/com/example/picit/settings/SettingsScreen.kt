@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
@@ -24,6 +25,7 @@ import com.example.picit.utils.ScreenHeader
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     onClickBackButton: ()->Unit = {},
+    onClickLogOutButton: ()->Unit = {},
     viewModel: SettingsViewModel
 ) {
     var context = LocalContext.current
@@ -55,13 +57,15 @@ fun SettingsScreen(
                     Text(text = "Change")
                 }
             }
+
+            Spacer(modifier = Modifier.height(550.dp))
+
+            Button(onClick = onClickLogOutButton) {
+                Text(text = "Logout", fontSize = 22.sp)
+            }
         }
 
-        Spacer(modifier = Modifier.height(500.dp))
 
-        Button(onClick = { }) {
-            Text(text = "Logout", fontSize = 22.sp)
-        }
     }
 }
 
@@ -69,6 +73,6 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenPreview() {
     PicItTheme {
-        //SettingsScreen()
+        SettingsScreen(viewModel = viewModel())
     }
 }
