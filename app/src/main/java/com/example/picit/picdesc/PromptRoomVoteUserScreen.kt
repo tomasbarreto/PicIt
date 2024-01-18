@@ -48,6 +48,7 @@ import com.example.picit.utils.ScreenHeader
 fun PromptRoomVoteUserScreen(
     onClickBackButton: ()->Unit = {},
     onClickLeaderboardButton: ()->Unit = {},
+    onClickAddFriends: ()->Unit = {},
     roomName: String = "Room name",
     photoDescription: String = "photo description",
     photo: PicDescPhoto = PicDescPhoto(),
@@ -61,8 +62,10 @@ fun PromptRoomVoteUserScreen(
     ){
         ScreenHeader(
             withBackButton = true,
+            withAddUsers = true,
             text = roomName,
-            onClickBackButton = onClickBackButton
+            onClickBackButton = onClickBackButton,
+            onClickAddFriends = onClickAddFriends
         )
 
         Spacer(modifier = Modifier.height(15.dp))

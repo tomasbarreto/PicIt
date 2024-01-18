@@ -41,6 +41,7 @@ fun DailyWinnerScreen(
     modifier: Modifier = Modifier,
     viewModel: DailyWinnerViewModel = viewModel(),
     onClickRoom: () -> Unit = {},
+    onClickAddFriends: ()->Unit = {},
     dailyChallenges: Int = 0,
     maxDailyChallenges: Int = 0
 ) {
@@ -61,7 +62,9 @@ fun DailyWinnerScreen(
     ){
         ScreenHeader(
             withBackButton = false,
+            withAddUsers = true,
             text = viewModel.screenTitle,
+            onClickAddFriends = onClickAddFriends
         )
 
         Spacer(modifier = Modifier.height(25.dp))

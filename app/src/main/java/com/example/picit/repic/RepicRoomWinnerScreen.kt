@@ -33,6 +33,7 @@ import com.example.picit.utils.TimeLeftDisplay
 fun RepicRoomWinnerScreen(
     onClickBackButton: ()->Unit = {},
     onClickLeaderboardButton: () -> Unit = {},
+    onClickAddFriends: ()->Unit = {},
     room: RePicRoom
 ){
     Column (
@@ -41,8 +42,10 @@ fun RepicRoomWinnerScreen(
     ){
         ScreenHeader(
             withBackButton = true,
+            withAddUsers = true,
             text = room.name,
-            onClickBackButton = onClickBackButton
+            onClickBackButton = onClickBackButton,
+            onClickAddFriends = onClickAddFriends
         )
 
         Spacer(modifier = Modifier.height(40.dp))

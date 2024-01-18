@@ -32,6 +32,7 @@ fun PromptRoomTakePicture(
     onClickBackButton: ()->Unit = {},
     onClickCameraButton: ()->Unit = {},
     onClickLeaderboardButton: ()->Unit = {},
+    onClickAddFriends: ()->Unit = {},
     room: PicDescRoom = PicDescRoom(),
     viewModel: TimerViewModel
 ){
@@ -43,7 +44,8 @@ fun PromptRoomTakePicture(
             withBackButton = true,
             text = room.name,
             withAddUsers = true,
-            onClickBackButton = onClickBackButton
+            onClickBackButton = onClickBackButton,
+            onClickAddFriends = onClickAddFriends
         )
 
         Spacer(modifier = Modifier.height(80.dp))

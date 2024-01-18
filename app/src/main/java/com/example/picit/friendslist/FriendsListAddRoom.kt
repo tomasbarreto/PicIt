@@ -28,13 +28,13 @@ import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
 @Composable
-fun FriendsListAddRoomScreen(){
+fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}){
     Column (
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        ScreenHeader(withBackButton = true, text = "Friends")
+        ScreenHeader(withBackButton = true, text = "Friends", onClickBackButton = onClickBackButton)
         Spacer(modifier = Modifier.height(60.dp))
 
         var friends = arrayOf("FriendName","FriendName","FriendName","FriendName","FriendName","FriendName","FriendName","FriendName","FriendName") // user objects

@@ -30,7 +30,8 @@ fun ScreenHeader(
     withSettings: Boolean = false,
     withAddUsers: Boolean = false,
     onClickBackButton: () -> Unit={},
-    onClickSettings: () -> Unit = {}
+    onClickSettings: () -> Unit = {},
+    onClickAddFriends: () -> Unit = {}
 ){
     Spacer(modifier = Modifier.height(24.dp))
     Box(
@@ -77,9 +78,9 @@ fun ScreenHeader(
                     .align(Alignment.CenterEnd)
                     .padding(end = 40.dp)
                     .width(35.dp)
-                    .clickable { onClickSettings() }
+                    .clickable { onClickAddFriends() }
             ){
-                Image(painter = painterResource(id = R.drawable.add_user), contentDescription = "settings" )
+                Image(painter = painterResource(id = R.drawable.add_user), contentDescription = "add friends to room" )
             }
         }
     }
