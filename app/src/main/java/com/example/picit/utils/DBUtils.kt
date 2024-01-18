@@ -97,7 +97,7 @@ class DBUtils() {
     }
 
     fun removeCurrentUserListener(userId:String) {
-        val userRef = db.getReference("picDescRooms/$userId")
+        val userRef = db.getReference("users/$userId")
 
         userRef.removeEventListener(userEventListener)
     }
