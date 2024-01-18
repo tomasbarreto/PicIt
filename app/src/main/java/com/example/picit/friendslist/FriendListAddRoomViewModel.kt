@@ -10,7 +10,7 @@ import com.google.firebase.database.getValue
 class FriendListAddRoomViewModel: ViewModel() {
     val friendsToAdd = mutableListOf<User>()
 
-    fun getFriendsToAdd(membersOfRoom: List<User>) {
+    fun getFriendsToAdd(membersOfRoomIds: List<String>) {
         var db = Firebase.database
         val usersRef = db.getReference("users")
         usersRef.get().addOnSuccessListener { usersListSnapshot ->
@@ -20,7 +20,7 @@ class FriendListAddRoomViewModel: ViewModel() {
                 if(user != null){
                     val userId = userSnapshtop.key.toString()
                     user.id = userId
-                    if (!membersOfRoom.contains(user)) {
+                    if (!membersOfRoomIds.contains(user.id)) {
                         friendsToAdd.add(user)
                     }
                 }

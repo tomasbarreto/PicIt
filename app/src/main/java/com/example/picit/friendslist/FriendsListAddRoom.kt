@@ -24,11 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
 @Composable
-fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}){
+fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}, viewModel: FriendListAddRoomViewModel){
     Column (
         modifier = Modifier
             .fillMaxSize(),
@@ -37,10 +38,12 @@ fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}){
         ScreenHeader(withBackButton = true, text = "Friends", onClickBackButton = onClickBackButton)
         Spacer(modifier = Modifier.height(60.dp))
 
-        var friends = arrayOf("FriendName","FriendName","FriendName","FriendName","FriendName","FriendName","FriendName","FriendName","FriendName") // user objects
-        Column(modifier = Modifier.verticalScroll(rememberScrollState()).height(600.dp)) {
+        var friends = viewModel.friendsToAdd // user objects
+        Column(modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .height(600.dp)) {
             for (f in friends){
-                FriendPreview(f, true)
+                FriendPreview(f.username, true)
             }
         }
 
@@ -67,6 +70,6 @@ fun addButton() {
 @Composable
 fun FriendsListAddRoomScreenPreview() {
     PicItTheme {
-        FriendsListAddRoomScreen()
+        FriendsListAddRoomScreen(viewModel = viewModel())
     }
 }
