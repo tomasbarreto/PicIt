@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicPhoto
+import com.example.picit.entities.User
 import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 
 class DailyWinnerViewModel: ViewModel() {
 
@@ -89,10 +91,13 @@ class DailyWinnerViewModel: ViewModel() {
 
         for (user in currentLeaderboard) {
             if (user.userId == fastestWinnerPhoto.userId || user.userId == mostVotedWinnerPhoto.userId) {
-                updatedLeaderboard.add(user.copy(points = user.points + 1))
+                val newPoints = user.points + 1
+                val newStreak = user.winStreak + 1
+                updatedLeaderboard.add(user.copy(points = newPoints, winStreak = newStreak))
+                updateUserAchievements(user.userId,newPoints,newStreak)
             }
             else {
-                updatedLeaderboard.add(user)
+                updatedLeaderboard.add(user.copy(winStreak = 0))
             }
         }
 
@@ -100,6 +105,20 @@ class DailyWinnerViewModel: ViewModel() {
 
         val roomRef = database.getReference("picDescRooms/${currentPicDescRoom.id}")
         roomRef.setValue(updatedPicDescRoom)
+    }
+
+    private fun updateUserAchievements(userId: String, newPoints: Int, newStreak: Int) {
+        val db = Firebase.database
+        val userRef = db.getReference("users/$userId")
+        userRef.get().addOnSuccessListener {
+            val user = it.getValue<User>()!!
+
+            val updatedMaxPoints = if ( newPoints > user.maxPoints) newPoints else newPoints
+            val updatedMaxStreak = if ( newStreak > user.maxWinStreak) newStreak else newStreak
+            val updatedUser = user.copy(maxPoints = updatedMaxPoints, maxWinStreak = updatedMaxStreak)
+
+            userRef.setValue(user)
+        }
     }
 
     fun incrementDailyChallenges(currentPicDescRoom: PicDescRoom) {

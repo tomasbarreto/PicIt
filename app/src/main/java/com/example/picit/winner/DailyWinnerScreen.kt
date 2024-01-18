@@ -37,7 +37,7 @@ import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun DailyWinnerScreen(
-    gameType: GameType,
+    gameType: GameType = GameType.PICDESC,
     modifier: Modifier = Modifier,
     viewModel: DailyWinnerViewModel = viewModel(),
     onClickRoom: () -> Unit = {},
@@ -217,6 +217,6 @@ fun DailyWinnerScreen(
 @Composable
 fun DailyWinnerPreview() {
     PicItTheme {
-        //DailyWinnerScreen()
+        DailyWinnerScreen()
     }
 }
