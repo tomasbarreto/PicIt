@@ -521,6 +521,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     )
                 } else {
                     Log.w("TIME", "WINNER ANNOUNCED")
+
                     RepicRoomWinnerScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
                 }
             }
