@@ -1,13 +1,11 @@
 package com.example.picit.entities
 
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class RePicRoom(
     var id: String? = null,
     val name:String = "",
     val gameType: GameType = GameType.REPIC,
-    val imageUrl: String = "", // TODO: mudar para representar imagem
+    val imageUrl: String = "",
     val photosSubmitted: List<RePicPhoto> = emptyList(),
     val maxCapacity: Int = 0,
     val currentCapacity: Int = 0,

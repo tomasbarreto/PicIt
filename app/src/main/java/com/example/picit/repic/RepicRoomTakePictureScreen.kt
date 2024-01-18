@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -19,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.picit.R
 import com.example.picit.entities.RePicRoom
 import com.example.picit.leaderboard.LeaderboardButton
@@ -33,8 +36,10 @@ fun RepicRoomTakePicture(
     onClickBackButton: ()->Unit = {},
     onClickCameraButton: ()->Unit = {},
     onClickLeaderboardButton: () -> Unit = {},
-    room: RePicRoom
+    viewModel: TimerViewModel,
+    room: RePicRoom = RePicRoom()
 ){
+
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -62,28 +67,28 @@ fun RepicRoomTakePicture(
                 .padding(20.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.imagetorepic),
-                contentDescription = "woman kissing the sunset",
+            AsyncImage(
+                model = room.imageUrl,
+                contentDescription = "",
+                modifier = Modifier
+                    .fillMaxHeight(0.45f)
+                    .fillMaxWidth(0.8f)
             )
         }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        var viewModel: TimerViewModel = viewModel()
 
         Timer(timeFor = "Submit Photo", viewModel = viewModel, room.winnerAnnouncementTime)
         Spacer(modifier = Modifier.height(20.dp))
         Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp),
+            .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center) {
             TakePhotoButton(onButtonClick = onClickCameraButton)
         }
 
+        Spacer(modifier = Modifier.weight(1f))
+
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, bottom = 10.dp, top = 20.dp),
+            .padding(12.dp),
             horizontalArrangement = Arrangement.End) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 LeaderboardButton(onClickLeaderboardButton)
@@ -97,6 +102,6 @@ fun RepicRoomTakePicture(
 @Composable
 fun RepicRoomTakePicturePreview() {
     PicItTheme {
-//        RepicRoomTakePicture()
+        RepicRoomTakePicture(viewModel=viewModel())
     }
 }

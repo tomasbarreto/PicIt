@@ -6,13 +6,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.RePicPhoto
 import com.example.picit.entities.UserInLeaderboard
-import com.example.picit.picdesc.Award
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 
 class DailyWinnerViewModel: ViewModel() {
 
+    var shownRepoicWinnerPhoto: RePicPhoto by mutableStateOf(RePicPhoto())
     var shownPicDescWinnerPhoto: PicDescPhoto by mutableStateOf(PicDescPhoto())
     var screenTitle: String by mutableStateOf("")
     var picDescDescription: String by mutableStateOf("")
@@ -32,6 +33,10 @@ class DailyWinnerViewModel: ViewModel() {
         this.picDescDescription = description
     }
 
+    fun setRePicWinnerPhoto(winnerPhoto: RePicPhoto) {
+        this.shownRepoicWinnerPhoto = winnerPhoto
+    }
+
     fun setCurrentAward(award: Award) {
         this.award = award
 
@@ -43,8 +48,11 @@ class DailyWinnerViewModel: ViewModel() {
 
         screenTitle = if (this.award == Award.FASTEST) {
             "Fastest Award"
-        } else {
+        } else if (this.award == Award.MOST_VOTED) {
             "Most Voted Award"
+        }
+        else {
+            "WINNER"
         }
     }
 

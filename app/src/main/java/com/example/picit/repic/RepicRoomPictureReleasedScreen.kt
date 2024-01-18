@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.R
 import com.example.picit.entities.RePicRoom
 import com.example.picit.leaderboard.LeaderboardButton
@@ -29,7 +30,7 @@ import com.example.picit.utils.TimeLeftDisplay
 @Composable
 fun RepicRoomPictureReleasedScreen(
     onClickBackButton: ()->Unit = {},
-    room: RePicRoom,
+    room: RePicRoom = RePicRoom(),
     viewModel: TimerViewModel
 ){
     Column (
@@ -86,6 +87,6 @@ fun RepicRoomPictureReleasedScreen(
 @Composable
 fun RepicRoomPictureReleasedPreview() {
     PicItTheme {
-        //RepicRoomPictureReleasedScreen(room = RePicRoom())
+        RepicRoomPictureReleasedScreen(viewModel=viewModel())
     }
 }
