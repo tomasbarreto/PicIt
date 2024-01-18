@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.timer.Timer
@@ -41,6 +42,7 @@ fun PromptRoomTakePicture(
         ScreenHeader(
             withBackButton = true,
             text = room.name,
+            withAddUsers = true,
             onClickBackButton = onClickBackButton
         )
 
@@ -88,6 +90,6 @@ fun PromptRoomTakePicture(
 @Composable
 fun PromptRoomTakePicturePreview() {
     PicItTheme {
-        //PromptRoomTakePicture()
+        PromptRoomTakePicture(viewModel = viewModel())
     }
 }

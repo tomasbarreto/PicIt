@@ -28,6 +28,7 @@ fun ScreenHeader(
     text: String,
     headerFontSize: TextUnit = 32.sp,
     withSettings: Boolean = false,
+    withAddUsers: Boolean = false,
     onClickBackButton: () -> Unit={},
     onClickSettings: () -> Unit = {}
 ){
@@ -67,6 +68,18 @@ fun ScreenHeader(
                     .clickable { onClickSettings() }
             ){
                 Image(painter = painterResource(id = R.drawable.setting), contentDescription = "settings" )
+            }
+        }
+
+        if(withAddUsers) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 40.dp)
+                    .width(35.dp)
+                    .clickable { onClickSettings() }
+            ){
+                Image(painter = painterResource(id = R.drawable.add_user), contentDescription = "settings" )
             }
         }
     }
