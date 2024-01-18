@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -51,8 +52,12 @@ import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
 import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.settings.SettingsScreen
+import com.example.picit.settings.SettingsViewModel
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
+import com.example.picit.winner.Award
+import com.example.picit.winner.DailyWinnerScreen
+import com.example.picit.winner.DailyWinnerViewModel
 import java.util.Calendar
 
 private val TAG = "NavHost"
@@ -124,8 +129,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                 },
                 userCurrentRepicRooms = viewModel.userRepicRooms,
-                userCurrentPicDescRooms = viewModel.userPicdescRooms
-
+                userCurrentPicDescRooms = viewModel.userPicdescRooms,
+                userID = currentUser.id
             )
         }
         composable(route= Screens.Friends.route){
@@ -249,7 +254,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val privacy = privacyTokens?.get(0).toBoolean()
             val privacyCode = privacyTokens?.get(1)
 
-
             if (roomName != null && roomCapacity != null && numChallenges != null && privacyCode != null) {
                 RoomTimeSettingsPicDescScreen(
                     onClickBackButton = { onClickBackButton() },
@@ -292,28 +296,34 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route = Screens.Settings.route){
+
+            var viewModel: SettingsViewModel = viewModel()
+
             SettingsScreen(
-                onClickBackButton = {onClickBackButton()}
+                onClickBackButton = {onClickBackButton()},
+                viewModel = viewModel
             )
         }
         composable(route= Screens.PicDescCamera.route){
             val viewModel: PicDescCameraViewModel = viewModel()
+            val context = LocalContext.current
 
             CameraScreen(
                 onClickBackButton = {onClickBackButton()},
                 getImageUri = { uri ->
-                    viewModel.submitImage(currentPicDescRoom,currentUser,uri)
+                    viewModel.submitImage(currentPicDescRoom,currentUser,uri, context)
 //                    navController.navigate(Screens.PicDescRoomScreen.route)
                 }
             )
         }
         composable(route= Screens.RePicCamera.route){
             val viewModel: RePicCameraViewModel = viewModel()
+            var context = LocalContext.current
 
             CameraScreen(
                 onClickBackButton = {onClickBackButton()},
                 getImageUri = { uri ->
-                    viewModel.submitImage(currentRepicRoom,currentUser,uri)
+                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context)
 //                    navController.navigate(Screens.RepicRoomScreen.route)
                 }
             )
@@ -338,7 +348,26 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val viewModel: SubmitPhotoDescriptionViewModel = viewModel()
             val timerViewModel: TimerViewModel = viewModel()
 
-            if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
+            var didSeeWinnerScreen = false
+
+            var dailyWinnerViewModel: DailyWinnerViewModel = viewModel()
+
+            for (user in currentPicDescRoom.leaderboard) {
+                if (user.userId == currentUser.id)
+                    didSeeWinnerScreen = user.didSeeWinnerScreen
+            }
+
+            if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)
+                || didSeeWinnerScreen) {
+
+                if (checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
+                    dailyWinnerViewModel.setUserWinnerScreenVisibility(
+                        currentPicDescRoom,
+                        currentUser.id,
+                        false
+                    )
+                }
+
                 if(currentUserIsLeader){
                     SubmitPhotoDescription(
                         onClickBackButton = { onClickBackButton() },
@@ -348,7 +377,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
                 else{
                     WaitingPhotoDescriptionScreen(
-                        onClickBackButton = { onClickBackButton() },
+                        onClickBackButton = { onClickGoToMainScreen() },
                         onClickLeaderboardButton = {/*TODO*/},
                         roomName = currentPicDescRoom.name,
                         endingTime = currentPicDescRoom.photoSubmissionOpeningTime,
@@ -415,6 +444,63 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
             // show winner
             else{
+
+                var dailyWinnerViewModel: DailyWinnerViewModel = viewModel()
+                var roomPhotos = currentPicDescRoom.photosSubmitted
+
+                var fastestWinnerPhoto = PicDescPhoto()
+                var mostVotedWinnerPhoto = PicDescPhoto()
+
+                if (roomPhotos.isNotEmpty()) {
+                    fastestWinnerPhoto = roomPhotos[0]
+                    mostVotedWinnerPhoto = roomPhotos[0]
+                }
+
+                var currentMaxRating = 0.0
+
+                for (photo in roomPhotos) {
+                    if (photo.leaderVote) {
+                        fastestWinnerPhoto = photo
+                        break
+                    }
+
+                    var currentPhotoRating = photo.ratingSum / (photo.usersThatVoted.size - 1.0)
+
+                    if (currentPhotoRating > currentMaxRating) {
+                        currentMaxRating = currentPhotoRating
+                        mostVotedWinnerPhoto = photo
+                    }
+                }
+
+                dailyWinnerViewModel.setPicDescDesc(currentPicDescRoom.photoDescription)
+                dailyWinnerViewModel.setFastestWinnerPhoto(fastestWinnerPhoto)
+                dailyWinnerViewModel.setMostVotedWinnerPhoto(mostVotedWinnerPhoto)
+                dailyWinnerViewModel.setCurrentAward(Award.FASTEST)
+
+                DailyWinnerScreen(
+                    gameType = GameType.PICDESC,
+                    viewModel = dailyWinnerViewModel,
+                    onClickRoom = {
+                        if (currentPicDescRoom.currentNumOfChallengesDone < currentPicDescRoom.maxNumOfChallenges) {
+                            dailyWinnerViewModel.incrementPlayersScores(currentPicDescRoom)
+
+                            dailyWinnerViewModel.incrementDailyChallenges(currentPicDescRoom)
+
+                            dailyWinnerViewModel.setUserWinnerScreenVisibility(currentPicDescRoom, currentUser.id, true)
+
+                            if(currentPicDescRoom.id != null) {
+                                navController.navigate(Screens.PicDescRoomScreen.route.replace("{room_id}", currentPicDescRoom.id!!))
+                            }
+                        }
+                        else {
+                            dailyWinnerViewModel.setUserWinnerScreenVisibility(currentPicDescRoom, currentUser.id, true)
+
+                            navController.navigate(Screens.Home.route)
+                        }
+                    },
+                    dailyChallenges = currentPicDescRoom.currentNumOfChallengesDone,
+                    maxDailyChallenges = currentPicDescRoom.maxNumOfChallenges
+                )
 
             }
 

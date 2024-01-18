@@ -20,5 +20,7 @@ data class PicDescRoom(
     val currentLeader: String = "", // user id
 
     val privacy: Boolean = false,
-    val privacyCode: String = ""
+    val privacyCode: String = "",
+
+    val isFinished: Boolean = false
 )
