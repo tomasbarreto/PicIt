@@ -114,12 +114,21 @@ fun PromptRoomVoteUserScreen(
                             .fillMaxHeight(0.45f)
                             .fillMaxWidth(0.8f)
                     )
-                    Row (modifier = Modifier.height(25.dp)) {
-                        Icon(Icons.Filled.LocationOn, contentDescription = null, modifier = Modifier
-                            .fillMaxWidth(0.1F))
-                        Text(text = photo.location, modifier = Modifier
-                            .height(22.dp)
-                            .fillMaxWidth(0.55F))
+
+                    if (photo.location.isNotEmpty()) {
+                        Row(modifier = Modifier.height(25.dp)) {
+                            Icon(
+                                Icons.Filled.LocationOn,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth(0.1F)
+                            )
+                            Text(
+                                text = photo.location, modifier = Modifier
+                                    .height(22.dp)
+                                    .fillMaxWidth(0.55F)
+                            )
+                        }
                     }
 
                     var myRating by remember { mutableStateOf(0) }

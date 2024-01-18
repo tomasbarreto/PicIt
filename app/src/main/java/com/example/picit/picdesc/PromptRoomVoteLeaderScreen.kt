@@ -125,7 +125,7 @@ fun PromptRoomVoteLeader(
                         ValidButton(clickValidButton)
                     }
                 }
-                else{
+                else {
                     Spacer(modifier = Modifier.height(60.dp))
                     Text("There's no images for you to vote!", fontSize = 28.sp,
                         textAlign = TextAlign.Center)

@@ -17,6 +17,7 @@ class DBUtils() {
     private var db = Firebase.database
     private lateinit var picDescRoomEventListener: ValueEventListener
     private lateinit var userEventListener: ValueEventListener
+    private lateinit var rePicRoomEventListener: ValueEventListener
 
     fun findRepicRoomById(roomId: String, onRoomFound: (RePicRoom) -> Unit) {
         val roomsRef = db.getReference("repicRooms")
@@ -95,9 +96,35 @@ class DBUtils() {
         roomRef.removeEventListener(picDescRoomEventListener)
     }
 
-    fun removeCurrentUserListener(userId:String){
+    fun removeCurrentUserListener(userId:String) {
         val userRef = db.getReference("picDescRooms/$userId")
 
         userRef.removeEventListener(userEventListener)
+    }
+
+    fun removeRePicListener(roomId:String){
+        val roomRef = db.getReference("repicRooms/$roomId")
+
+        roomRef.removeEventListener(rePicRoomEventListener)
+    }
+
+    fun setRePicRoomListener(roomId: String,onUpdate: (RePicRoom) -> Unit) {
+        val roomRef = db.getReference("repicRooms/$roomId")
+
+        val eventListener = object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val room = snapshot.getValue<RePicRoom>()
+
+                if(room != null){
+                    onUpdate(room)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("firebase", "Error getting data $error")
+            }
+        }
+        roomRef.addValueEventListener(eventListener)
+        rePicRoomEventListener = eventListener
     }
 }
