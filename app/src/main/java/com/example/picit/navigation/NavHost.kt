@@ -44,6 +44,7 @@ import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.PromptRoomVoteUserViewModel
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
+import com.example.picit.picdesc.WaitPictureScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
@@ -53,6 +54,7 @@ import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
 import com.example.picit.repic.RepicRoomWinnerScreen
+import com.example.picit.repic.WaitPictureViewModel
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
 import com.example.picit.timer.TimerViewModel
@@ -434,8 +436,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
 
                 if(currentUserIsLeader){
-
-                    // TODO: meter um TOAST a dizer que a descricao foi submetida
                     SubmitPhotoDescription(
                         onClickBackButton = { onClickGoToMainScreen() },
                         onClickLeaderboard,
@@ -639,7 +639,25 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val picReleaseTime = currentRepicRoom.pictureReleaseTime
             val winnerTime = currentRepicRoom.winnerAnnouncementTime
 
-            if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
+            val userSawWinScreen = currentRepicRoom.leaderboard.any{it.userId == currentUser.id} &&
+                    currentRepicRoom.leaderboard.filter { it.userId == currentUser.id }[0].didSeeWinnerScreen
+
+
+            if(userSawWinScreen || checkInterval(currentTime,Time(0,0), picReleaseTime)){
+                val viewModel: WaitPictureViewModel = viewModel()
+
+                var reseted = remember{ mutableStateOf(false) }
+                if(!reseted.value && checkInterval(currentTime,Time(0,0), picReleaseTime)){
+                    viewModel.resetInfo(currentRepicRoom, currentUser.id){
+                        reseted.value = true
+                    }
+                }
+
+                //TODO
+                WaitPictureScreen()
+            }
+
+            else if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
                 Log.d("TIME", "SUBMIT PHOTO ")
 
                 if(currentRepicRoom.imageUrl.isNullOrEmpty() && !imageGenerated){
