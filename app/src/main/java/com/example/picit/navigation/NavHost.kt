@@ -386,7 +386,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val timerViewModel: TimerViewModel = viewModel()
 
             if (userSawWinScreen || checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
-                Log.d(TAG, "Submit desc: $currentTime,$descriptionSubmissionOpeningTime,$photoSubmissionOpeningTime)}")
 
                 if(checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
                     // reset info from previous challenge, seenWinScreen
@@ -548,8 +547,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             )
                             onClickGoToMainScreen()
                         }
-
-
                     }
                 }
 
