@@ -25,8 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.picit.utils.ScreenHeader
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun RoomInviteNotificationsScreen(

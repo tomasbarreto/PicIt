@@ -164,7 +164,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
             }
             if (gameType != null && roomId != null) {
-                FriendsListAddRoomScreen(onClickBackButton = { onClickBackButton() }, viewModel, GameType.valueOf(gameType), roomId, currentUser.id)
+                FriendsListAddRoomScreen(onClickBackButton = { onClickBackButton() }, viewModel, GameType.valueOf(gameType), roomId, currentUser.username)
             }
         }
         composable(route = Screens.Profile.route){
