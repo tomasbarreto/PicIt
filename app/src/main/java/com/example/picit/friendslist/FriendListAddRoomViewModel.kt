@@ -2,6 +2,8 @@ package com.example.picit.friendslist
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.picit.entities.GameType
+import com.example.picit.entities.JoinRoomRequest
 import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
@@ -31,6 +33,22 @@ class FriendListAddRoomViewModel: ViewModel() {
 
         }.addOnFailureListener{
             Log.e("firebase", "Error getting data", it)
+        }
+    }
+
+    fun sendJoinRoomRequests(gameType: GameType, roomId: String, currentUserId: String) {
+        var db = Firebase.database
+        val requestsRef = db.getReference("roomJoinRequests")
+        friendsSelectedToAdd.forEach { user ->
+            val newRoomRequest = JoinRoomRequest(currentUserId, roomId, gameType)
+            requestsRef.push().setValue(newRoomRequest)
+
+            val updatedRoomRequests = user.requestsToJoin.toMutableList()
+            updatedRoomRequests.add(newRoomRequest)
+            val updatedUser = user.copy(requestsToJoin = updatedRoomRequests)
+
+            val userRef = db.getReference("users/${user.id}")
+            userRef.setValue(updatedUser)
         }
     }
 }

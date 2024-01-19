@@ -59,7 +59,6 @@ import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
-import com.example.picit.winner.Award
 import com.example.picit.winner.DailyWinnerScreen
 import com.example.picit.winner.DailyWinnerViewModel
 import java.util.Calendar
@@ -164,8 +163,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                 }
             }
-
-            FriendsListAddRoomScreen(onClickBackButton = { onClickBackButton() }, viewModel)
+            if (gameType != null && roomId != null) {
+                FriendsListAddRoomScreen(onClickBackButton = { onClickBackButton() }, viewModel, GameType.valueOf(gameType), roomId, currentUser.id)
+            }
         }
         composable(route = Screens.Profile.route){
 

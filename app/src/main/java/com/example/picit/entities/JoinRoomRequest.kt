@@ -1,7 +1,10 @@
 package com.example.picit.entities
 
-data class JoinRoomRequest(
-    val userIdThatSentRequest: Int, // id of the user that sent the request
-    val roomId: Int, // id of the room to join
+import kotlinx.serialization.Serializable
 
+@Serializable
+data class JoinRoomRequest(
+    val userIdThatSentRequest: String = "", // id of the user that sent the request
+    val roomId: String = "", // id of the room to join
+    val gameType: GameType = GameType.REPIC
 )

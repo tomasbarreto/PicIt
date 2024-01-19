@@ -25,11 +25,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.picit.entities.GameType
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
 @Composable
-fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}, viewModel: FriendListAddRoomViewModel){
+fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}, viewModel: FriendListAddRoomViewModel,
+                             gameType: GameType, roomId: String = "", currentUserId: String = "") {
     Column (
         modifier = Modifier
             .fillMaxSize(),
@@ -48,7 +50,9 @@ fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}, viewModel: Friend
             }
         }
 
-        Button(onClick = { /*TODO: send friend requeset*/ }) {
+        Button(onClick = { viewModel.sendJoinRoomRequests(gameType, roomId, currentUserId)
+                    onClickBackButton() }
+        ) {
             Text(text = "Invite Friend", fontSize = 24.sp)
         }
     }
@@ -73,6 +77,6 @@ fun addButton(selectFriend: () -> Unit = {}, deselectFriend: () -> Unit = {}) {
 @Composable
 fun FriendsListAddRoomScreenPreview() {
     PicItTheme {
-        FriendsListAddRoomScreen(viewModel = viewModel())
+        FriendsListAddRoomScreen(viewModel = viewModel(), gameType = GameType.REPIC)
     }
 }
