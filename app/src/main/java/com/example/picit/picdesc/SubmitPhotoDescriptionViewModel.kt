@@ -19,7 +19,7 @@ class SubmitPhotoDescriptionViewModel: ViewModel() {
         picDescRoomRef.setValue(updatedRoom)
     }
 
-    fun resetInfo(room: PicDescRoom, userId: String) {
+    fun resetInfo(room: PicDescRoom, userId: String, callback: ()->Unit={}) {
         val roomsRef = database.getReference("picDescRooms/${room.id}")
 
         val updatedLeaderboard = mutableListOf<UserInLeaderboard>()
@@ -34,8 +34,10 @@ class SubmitPhotoDescriptionViewModel: ViewModel() {
             }
         }
 
-        val updatedRoom = room.copy(leaderboard = updatedLeaderboard)
-        roomsRef.setValue(updatedRoom)
+        val updatedRoom = room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList())
+        roomsRef.setValue(updatedRoom).addOnSuccessListener {
+            callback()
+        }
     }
 
 

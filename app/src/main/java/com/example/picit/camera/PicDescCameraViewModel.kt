@@ -52,10 +52,10 @@ class PicDescCameraViewModel: ViewModel() {
 
         var location = ""
 
-        if (locationClient.isLocationPermGranted(context)) {
-            locationClient.startLocationClient(context)
-            location = locationClient.getLocation(context)
-        }
+//        if (locationClient.isLocationPermGranted(context)) {
+//            locationClient.startLocationClient(context)
+//            location = locationClient.getLocation(context)
+//        }
 
         // Create PicDescPhoto with the image URL
         val photo = PicDescPhoto(

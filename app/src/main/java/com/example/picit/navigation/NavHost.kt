@@ -60,6 +60,8 @@ import com.example.picit.utils.DBUtils
 import com.example.picit.winner.Award
 import com.example.picit.winner.DailyWinnerScreen
 import com.example.picit.winner.DailyWinnerViewModel
+import com.example.picit.winner.RoomWinnerScreen
+import com.example.picit.winner.RoomWinnerViewModel
 import java.util.Calendar
 
 private val TAG = "NavHost"
@@ -91,8 +93,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
         fun checkInterval(currentTime: Time, startTime: Time, endTime: Time): Boolean {
             return ((startTime.hours<currentTime.hours && currentTime.hours<endTime.hours) ||
-                    (startTime.hours == currentTime.hours && startTime.minutes<currentTime.minutes)||
-                    (currentTime.hours == endTime.hours && currentTime.minutes < endTime.minutes))
+
+                    (startTime.hours==currentTime.hours && currentTime.hours==endTime.hours &&
+                            startTime.minutes<currentTime.minutes && currentTime.minutes < endTime.minutes) ||
+
+                    (startTime.hours == currentTime.hours && startTime.minutes<currentTime.minutes && currentTime.hours < endTime.hours)||
+
+                    (currentTime.hours == endTime.hours && currentTime.minutes < endTime.minutes && startTime.hours < currentTime.hours))
         }
 
         composable(route= Screens.Login.route) {
@@ -216,7 +223,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             val onClickJoinRoom = {
                 joinPicDescRoomViewModel.updateUserPicDescRooms(currentUser)
-                joinPicDescRoomViewModel.userJoinRoom(currentUser.id, currentUser.name)
+                joinPicDescRoomViewModel.userJoinRoom(currentUser.id, currentUser.username)
                 navController.navigate(Screens.Home.route)
             }
 
@@ -376,7 +383,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             Log.d(TAG, "current time: $currentTime")
             val currentUserIsLeader = currentUser.id == currentPicDescRoom.currentLeader
 
-            val userSawWinScreen = currentPicDescRoom.leaderboard.filter { it.userId == currentUser.id }[0].didSeeWinnerScreen
+            val userSawWinScreen = currentPicDescRoom.leaderboard.any{it.userId == currentUser.id} &&
+                    currentPicDescRoom.leaderboard.filter { it.userId == currentUser.id }[0].didSeeWinnerScreen
+
 
             val descriptionSubmissionOpeningTime = currentPicDescRoom.descriptionSubmissionOpeningTime
             val photoSubmissionOpeningTime = currentPicDescRoom.photoSubmissionOpeningTime
@@ -385,24 +394,42 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val viewModel: SubmitPhotoDescriptionViewModel = viewModel()
             val timerViewModel: TimerViewModel = viewModel()
 
-            //TODO: verificar se ja se fizeram os challenges todos
+            //check if all challenges have been done
             val isFinished =currentPicDescRoom.currentNumOfChallengesDone ==
                             currentPicDescRoom.maxNumOfChallenges
 
             if (isFinished){
+                val winnerUser = currentPicDescRoom.leaderboard.maxBy { it.points }
+                val roomWinnerViewModel : RoomWinnerViewModel = viewModel()
 
+                RoomWinnerScreen(
+                    roomName = currentPicDescRoom.name,
+                    username = winnerUser.userName,
+                    winnerPoints = winnerUser.points,
+                    onClickBackButton = onClickGoToMainScreen,
+                    onClickLeaveButton = {
+                        roomWinnerViewModel.leaveRoom(currentPicDescRoom,currentUser){
+                            onClickGoToMainScreen()
+                        }
+                    },
+                    onClickLeaderboardButton = onClickLeaderboard
+                )
             }
 
 
-            if (userSawWinScreen || checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
-
-                if(checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
-                    // reset info from previous challenge, seenWinScreen
-                    viewModel.resetInfo(currentPicDescRoom, currentUser.id)
+            else if (userSawWinScreen || checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
+                val reseted = remember{ mutableStateOf(false) }
+                //TODO: intervalo ate ao winnerAnnouncement, caso o user esta etapa,para ter o reset à mesma
+                if(!reseted.value && checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
+                    // reset info from previous challenge, seenWinScreen,  photos submitted
+                    viewModel.resetInfo(currentPicDescRoom, currentUser.id){
+                        reseted.value=true
+                    }
                 }
 
                 if(currentUserIsLeader){
 
+                    // TODO: meter um TOAST a dizer que a descricao foi submetida
                     SubmitPhotoDescription(
                         onClickBackButton = { onClickBackButton() },
                         onClickLeaderboard,
@@ -422,6 +449,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
             // time to submit photo
             else if (checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)){
+                Log.d(TAG,"${checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)}")
+                Log.d(TAG, "$photoSubmissionOpeningTime, $currentTime, $winnerAnnouncementTime")
                 Log.d(TAG, "Submit Photo Times: $photoSubmissionOpeningTime; $currentTime; $winnerAnnouncementTime")
                 val photosSubmitted = currentPicDescRoom.photosSubmitted
                 val photosUserDidntVote = photosSubmitted.filter{
@@ -520,8 +549,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     rating = dailyWinnerViewModel.getPhotoRating(bestRatedPhoto).toString()
                     onClickContinue = {
                         // check if no one awarded the users, to avoid awarding users multiple times
+                        //UPDATE ROOM/USER IN THIS IF
                         if(currentPicDescRoom.leaderboard.none {  it.didSeeWinnerScreen }){
-
                             if(fastestValidPhoto.userId == bestRatedPhoto.userId){
                                 dailyWinnerViewModel.awardUser(fastestValidPhoto.userId, currentPicDescRoom,2) {
                                     dailyWinnerViewModel.userSawWinnerScreen(
@@ -529,7 +558,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                         currentPicDescRoom
                                     ){
                                         dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
-                                            onClickGoToMainScreen()
+                                            dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+                                                onClickGoToMainScreen()
+                                            }
                                         }
                                     }
                                 }
@@ -543,7 +574,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                             currentPicDescRoom
                                         ){
                                             dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
-                                                onClickGoToMainScreen()
+                                                dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+                                                    onClickGoToMainScreen()
+                                                }
                                             }
                                         }
                                     }
