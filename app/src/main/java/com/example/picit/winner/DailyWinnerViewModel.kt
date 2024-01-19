@@ -1,8 +1,6 @@
 package com.example.picit.winner
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
@@ -13,120 +11,108 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 
+private val TAG = "DailyWinnerViewModel"
 class DailyWinnerViewModel: ViewModel() {
+    fun findFastestValidPhoto(photos: List<PicDescPhoto>) : PicDescPhoto {
+        var res = photos[0]
 
-    var shownRepoicWinnerPhoto: RePicPhoto by mutableStateOf(RePicPhoto())
-    var shownPicDescWinnerPhoto: PicDescPhoto by mutableStateOf(PicDescPhoto())
-    var screenTitle: String by mutableStateOf("")
-    var picDescDescription: String by mutableStateOf("")
-    private lateinit var award: Award
-    private lateinit var fastestWinnerPhoto: PicDescPhoto
-    private lateinit var mostVotedWinnerPhoto: PicDescPhoto
-
-    fun setFastestWinnerPhoto(winnerPhoto: PicDescPhoto) {
-        this.fastestWinnerPhoto = winnerPhoto
-    }
-
-    fun setMostVotedWinnerPhoto(winnerPhoto: PicDescPhoto) {
-        this.mostVotedWinnerPhoto = winnerPhoto
-    }
-
-    fun setPicDescDesc(description: String) {
-        this.picDescDescription = description
-    }
-
-    fun setRePicWinnerPhoto(winnerPhoto: RePicPhoto) {
-        this.shownRepoicWinnerPhoto = winnerPhoto
-    }
-
-    fun setCurrentAward(award: Award) {
-        this.award = award
-
-        shownPicDescWinnerPhoto = if (this.award == Award.FASTEST) {
-            this.fastestWinnerPhoto
-        } else {
-            this.mostVotedWinnerPhoto
-        }
-
-        screenTitle = if (this.award == Award.FASTEST) {
-            "Fastest Award"
-        } else if (this.award == Award.MOST_VOTED) {
-            "Most Voted Award"
-        }
-        else {
-            "WINNER"
-        }
-    }
-
-    fun getCurrentAward(): Award {
-        return this.award
-    }
-
-    fun setUserWinnerScreenVisibility(currentPicDescRoom: PicDescRoom, userID: String, visibility: Boolean) {
-        val database = Firebase.database
-
-        val currentLeaderboard = currentPicDescRoom.leaderboard
-        val updatedLeaderboard = mutableListOf<UserInLeaderboard>()
-
-        for (user in currentLeaderboard) {
-            if (user.userId == userID) {
-                updatedLeaderboard.add(user.copy(didSeeWinnerScreen = visibility))
-            }
-            else {
-                updatedLeaderboard.add(user)
+        for (photo in photos){
+            if (photo.submissionTime.hours < res.submissionTime.hours ||
+                (photo.submissionTime.hours == res.submissionTime.hours &&
+                        photo.submissionTime.minutes < res.submissionTime.minutes) ){
+                res = photo
             }
         }
 
-        val updatedPicDescRoom = currentPicDescRoom.copy(leaderboard = updatedLeaderboard)
-
-        val roomRef = database.getReference("picDescRooms/${currentPicDescRoom.id}")
-        roomRef.setValue(updatedPicDescRoom)
+        return res
     }
 
-    fun incrementPlayersScores(currentPicDescRoom: PicDescRoom) {
-        val database = Firebase.database
+    fun findBestRatedPhoto(photos: List<PicDescPhoto>): PicDescPhoto {
+        var res = photos[0]
 
-        val currentLeaderboard = currentPicDescRoom.leaderboard
-        val updatedLeaderboard = mutableListOf<UserInLeaderboard>()
+        for(photo in photos){
+            val photoRating = getPhotoRating(photo)
 
-        for (user in currentLeaderboard) {
-            if (user.userId == fastestWinnerPhoto.userId || user.userId == mostVotedWinnerPhoto.userId) {
-                val newPoints = user.points + 1
-                val newStreak = user.winStreak + 1
-                updatedLeaderboard.add(user.copy(points = newPoints, winStreak = newStreak))
-                updateUserAchievements(user.userId,newPoints,newStreak)
-            }
-            else {
-                updatedLeaderboard.add(user.copy(winStreak = 0))
-            }
+            val winnerRating = getPhotoRating(res)
+            res = if (photoRating > winnerRating) photo else res
         }
 
-        val updatedPicDescRoom = currentPicDescRoom.copy(leaderboard = updatedLeaderboard)
+        return res
 
-        val roomRef = database.getReference("picDescRooms/${currentPicDescRoom.id}")
-        roomRef.setValue(updatedPicDescRoom)
     }
 
-    private fun updateUserAchievements(userId: String, newPoints: Int, newStreak: Int) {
+    fun awardUser(userId: String, room: PicDescRoom, points:Int =1, callback: ()->Unit = {}) {
         val db = Firebase.database
+        val roomRef = db.getReference("picDescRooms/${room.id}")
+
+        var userInLeaderboard = UserInLeaderboard()
+        val updatedLeaderboard = room.leaderboard.toMutableList()
+
+        for(user in updatedLeaderboard){
+            if(user.userId == userId){
+                userInLeaderboard = user
+
+            }
+        }
+        updatedLeaderboard.remove(userInLeaderboard)
+
+        val updatedPoints = userInLeaderboard.points+points
+        val updatedStreak = userInLeaderboard.winStreak+points
+        val updatedUserInLeaderboard = userInLeaderboard.copy(points = updatedPoints, winStreak = updatedStreak)
+        updatedLeaderboard.add(updatedUserInLeaderboard)
+
+        val updatedRoom = room.copy(leaderboard = updatedLeaderboard)
+        roomRef.setValue(updatedRoom)
+        Log.d(TAG, "room udpated! $updatedRoom ")
+
+        //Update user achievements
         val userRef = db.getReference("users/$userId")
         userRef.get().addOnSuccessListener {
-            val user = it.getValue<User>()!!
+            val savedUser = it.getValue<User>()!!
+            val currentMaxPoints = savedUser.maxPoints
+            val currentMaxWinStreak = savedUser.maxWinStreak
 
-            val updatedMaxPoints = if ( newPoints > user.maxPoints) newPoints else newPoints
-            val updatedMaxStreak = if ( newStreak > user.maxWinStreak) newStreak else newStreak
-            val updatedUser = user.copy(maxPoints = updatedMaxPoints, maxWinStreak = updatedMaxStreak)
+            val updatedMaxPoints = if (updatedPoints > currentMaxPoints) updatedPoints else currentMaxPoints
+            val updatedMaxWinStreak = if(updatedStreak > currentMaxWinStreak) updatedStreak else currentMaxWinStreak
 
-            userRef.setValue(user)
+            val updatedUser = savedUser.copy(maxPoints = updatedMaxPoints, maxWinStreak = updatedMaxWinStreak)
+            userRef.setValue(updatedUser)
+            callback()
+
         }
     }
 
-    fun incrementDailyChallenges(currentPicDescRoom: PicDescRoom) {
-        val database = Firebase.database
-
-        val updatedPicDescRoom = currentPicDescRoom.copy(currentNumOfChallengesDone = currentPicDescRoom.currentNumOfChallengesDone + 1)
-
-        val roomRef = database.getReference("picDescRooms/${currentPicDescRoom.id}")
-        roomRef.setValue(updatedPicDescRoom)
+    fun getPhotoRating(photo: PicDescPhoto): Double{
+        return photo.ratingSum / (photo.usersThatVoted.size -1.0)
     }
+
+    fun leaveAwardScreen(room: PicDescRoom, user:User) {
+        val db = Firebase.database
+        val roomRef = db.getReference("picDescRooms/${room.id}")
+
+
+    }
+
+    fun userSawWinnerScreen(userId: String, room: PicDescRoom) {
+        val db = Firebase.database
+        val roomRef = db.getReference("picDescRooms/${room.id}")
+
+        var userInLeaderboard = UserInLeaderboard()
+        val updatedLeaderboard = room.leaderboard.toMutableList()
+        for(user in updatedLeaderboard){
+            if(user.userId == userId){
+                userInLeaderboard = user
+            }
+        }
+        updatedLeaderboard.remove(userInLeaderboard)
+
+        val updateUserInLeaderboard = userInLeaderboard.copy(didSeeWinnerScreen = true)
+        updatedLeaderboard.add(updateUserInLeaderboard)
+
+        val updatedRoom = room.copy(leaderboard = updatedLeaderboard)
+        roomRef.setValue(updatedRoom)
+
+    }
+
+
 }

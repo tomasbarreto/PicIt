@@ -39,29 +39,24 @@ import com.example.picit.utils.ScreenHeader
 fun DailyWinnerScreen(
     gameType: GameType = GameType.PICDESC,
     modifier: Modifier = Modifier,
-    viewModel: DailyWinnerViewModel = viewModel(),
-    onClickRoom: () -> Unit = {},
-    dailyChallenges: Int = 0,
-    maxDailyChallenges: Int = 0
+    screenTitle: String  = "Title",
+    username: String = "username",
+    photoUrl: String = "",
+    timestamp: String = "00:00",
+    location: String = "location",
+    photoDescription: String = "description",
+    rating: String = "4.5",
+    onClickContinue: ()->Unit = {}
 ) {
 
-    var timestamp = viewModel.shownPicDescWinnerPhoto.submissionTime.hours.toString() + ":" + viewModel.shownPicDescWinnerPhoto.submissionTime.minutes.toString()
-
-    var rating = if (viewModel.shownPicDescWinnerPhoto.usersThatVoted.size - 1 > 1) {
-        String.format("%.1f",
-                viewModel.shownPicDescWinnerPhoto.ratingSum / (viewModel.shownPicDescWinnerPhoto.usersThatVoted.size - 1.0)
-        )
-    } else {
-        "0.0"
-    }
-
+    
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         ScreenHeader(
             withBackButton = false,
-            text = viewModel.screenTitle,
+            text = screenTitle,
         )
 
         Spacer(modifier = Modifier.height(25.dp))
@@ -76,7 +71,7 @@ fun DailyWinnerScreen(
             )
 
             Text(
-                text = viewModel.shownPicDescWinnerPhoto.username.uppercase(),
+                text = username.uppercase(),
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold
@@ -84,22 +79,12 @@ fun DailyWinnerScreen(
 
             Spacer(modifier = modifier.height(30.dp))
 
-            if (viewModel.getCurrentAward() == Award.FASTEST || viewModel.getCurrentAward() == Award.MOST_VOTED) {
-
-                var hasLocation = viewModel.shownPicDescWinnerPhoto.location.isNotEmpty()
-
-                var arrangement = Arrangement.End
-
-                if (hasLocation) {
-                    arrangement = Arrangement.SpaceBetween
-                }
-
                 Row(
                     modifier = modifier.width(270.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = arrangement
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    if (hasLocation) {
+                    if (location.isNotEmpty()) {
                         Row {
                             Icon(
                                 Icons.Filled.LocationOn,
@@ -111,7 +96,7 @@ fun DailyWinnerScreen(
 
                             Column {
                                 Text(
-                                    text = viewModel.shownPicDescWinnerPhoto.location,
+                                    text = location,
                                     textAlign = TextAlign.Center,
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Bold
@@ -146,8 +131,8 @@ fun DailyWinnerScreen(
 
                 // TO DO COLOCAR A IMAGEM
                 AsyncImage(
-                    model = viewModel.shownPicDescWinnerPhoto.photoUrl,
-                    contentDescription = viewModel.picDescDescription,
+                    model = photoUrl,
+                    contentDescription = photoDescription,
                     modifier = Modifier
                         .fillMaxHeight(0.45f)
                         .fillMaxWidth(0.8f)
@@ -157,7 +142,7 @@ fun DailyWinnerScreen(
                 Spacer(modifier = modifier.height(10.dp))
 
                 Text(
-                    text = viewModel.picDescDescription,
+                    text = photoDescription,
                     textAlign = TextAlign.Center,
                     fontSize = 25.sp,
                     modifier = modifier.width(300.dp)
@@ -188,25 +173,10 @@ fun DailyWinnerScreen(
                         }
                     }
                 }
-            }
-            else {
-
-            }
 
             Spacer(modifier = Modifier.height(45.dp))
 
-            Button(onClick = {
-                when (viewModel.getCurrentAward()) {
-                    Award.FASTEST -> viewModel.setCurrentAward(Award.MOST_VOTED)
-                    Award.MOST_VOTED -> {
-                        if (dailyChallenges < maxDailyChallenges)
-                            onClickRoom()
-                        else
-                            viewModel.setCurrentAward(Award.ROOM_WINNER)
-                    }
-                    Award.ROOM_WINNER -> onClickRoom()
-                }
-            }) {
+            Button(onClick = {onClickContinue()}) {
                 Text(text = "Continue", fontSize = 22.sp)
             }
         }

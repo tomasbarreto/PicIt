@@ -21,4 +21,5 @@ sealed class Screens(val route:String){
     object PicDescRoomScreen: Screens("picdesc_room/{room_id}")
     object RepicRoomScreen: Screens("repic_room/{room_id}")
     object LeaderboardScreen: Screens("leaderboard/{game_type}/{room_id}")
+    object PicDescWinnersScreen: Screens("picdesc_winners")
 }
