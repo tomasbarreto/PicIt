@@ -62,6 +62,7 @@ class RePicCameraViewModel: ViewModel() {
 
         // Create RePicPhoto with the image URL
         val photo = RePicPhoto(
+            username = user.username,
             photoUrl = imageUrl,
             userId = user.id,
             submissionTime = currentTime,
