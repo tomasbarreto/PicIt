@@ -25,14 +25,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.entities.JoinRoomRequest
+import com.example.picit.entities.User
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun RoomInviteNotificationsScreen(
     onClickBackButton: ()->Unit = {},
-    joinRoomRequests: List<JoinRoomRequest> = emptyList()
+    viewModel: RoomInviteNotificationsViewModel,
+    currentUser: User = User()
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -43,8 +46,8 @@ fun RoomInviteNotificationsScreen(
             text = "Requests",
             onClickBackButton = onClickBackButton
         )
-        joinRoomRequests.forEach { req ->
-            RequestPanel(true, req)
+        currentUser.requestsToJoin.forEach { req ->
+            RequestPanel(true, req, { viewModel.removeJoinRoomRequests(currentUser, req) })
         }
 
 //        RequestPanel(true)
@@ -54,7 +57,8 @@ fun RoomInviteNotificationsScreen(
 }
 
 @Composable
-fun RequestPanel(roomRequest:Boolean, joinRoomRequest: JoinRoomRequest) {
+fun RequestPanel(roomRequest:Boolean, joinRoomRequest: JoinRoomRequest,
+                 rejectFunction: () -> Unit = {}) {
     Box(
         modifier = Modifier
             .padding(bottom = 10.dp, top = 10.dp, start = 30.dp, end = 30.dp)
@@ -96,7 +100,7 @@ fun RequestPanel(roomRequest:Boolean, joinRoomRequest: JoinRoomRequest) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                RejectAcceptButton("Reject")
+                RejectAcceptButton("Reject", rejectFunction)
                 RejectAcceptButton("Accept")
             }
         }
@@ -105,9 +109,9 @@ fun RequestPanel(roomRequest:Boolean, joinRoomRequest: JoinRoomRequest) {
 
 
 @Composable
-fun RejectAcceptButton(decision: String){
+fun RejectAcceptButton(decision: String, rejectAcceptFunction: () -> Unit = {}){
     Button(
-        onClick = { /*TODO*/ }
+        onClick = { rejectAcceptFunction() }
     ) {
         Text(text = decision)
     }
@@ -120,6 +124,6 @@ fun RejectAcceptButton(decision: String){
 @Composable
 fun RoomInviteNotificationsScreenPreview() {
     PicItTheme {
-        RoomInviteNotificationsScreen()
+        RoomInviteNotificationsScreen(viewModel = viewModel())
     }
 }

@@ -39,6 +39,7 @@ import com.example.picit.leaderboard.LeaderboardViewModel
 import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
+import com.example.picit.notifications.RoomInviteNotificationsViewModel
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
 import com.example.picit.picdesc.PromptRoomVoteLeaderViewModel
@@ -339,9 +340,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
         }
         composable(route = Screens.InvitesNotifications.route){
+            val viewModel: RoomInviteNotificationsViewModel = viewModel()
+
+
             RoomInviteNotificationsScreen(
                 onClickBackButton = {onClickBackButton()},
-                currentUser.requestsToJoin
+                viewModel,
+                currentUser
             )
         }
         composable(route = Screens.Settings.route){
