@@ -31,7 +31,7 @@ import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}, viewModel: FriendListAddRoomViewModel,
-                             gameType: GameType, roomId: String = "", currentUsername: String = "") {
+                             gameType: GameType, roomId: String = "", roomName: String = "", currentUsername: String = "") {
     Column (
         modifier = Modifier
             .fillMaxSize(),
@@ -50,7 +50,7 @@ fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}, viewModel: Friend
             }
         }
 
-        Button(onClick = { viewModel.sendJoinRoomRequests(gameType, roomId, currentUsername)
+        Button(onClick = { viewModel.sendJoinRoomRequests(gameType, roomId, roomName, currentUsername)
                     onClickBackButton() }
         ) {
             Text(text = "Invite Friend", fontSize = 24.sp)
