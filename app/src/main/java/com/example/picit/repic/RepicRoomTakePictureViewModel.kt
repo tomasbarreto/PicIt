@@ -4,7 +4,6 @@ import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.picit.entities.RePicPhoto
 import com.example.picit.entities.RePicRoom
 import com.example.picit.network.RequestModel
 import com.example.picit.network.StableDiffusionApi

@@ -21,7 +21,8 @@ class PicDescTimeSettingsViewModel: ViewModel() {
         timeWinner:Time,
         onClickGoHomeScreen: ()->Unit = {},
         currentUserRooms: List<String>,
-        currentUserId: String
+        currentUserId: String,
+        currentUserName: String
     ) {
         val database = Firebase.database
         val roomRef = database.getReference("picDescRooms").push()
@@ -30,7 +31,7 @@ class PicDescTimeSettingsViewModel: ViewModel() {
             maxCapacity = roomCapacity.toInt(), maxNumOfChallenges = roomNumChallenges.toInt(),
             winnerAnnouncementTime = timeWinner, photoSubmissionOpeningTime = timePictureSubmissionStart,
             descriptionSubmissionOpeningTime = timeDescSubmissionStart, currentLeader = currentUserId,
-            privacy = privacy, privacyCode = privacyCode, leaderboard = listOf(UserInLeaderboard(currentUserId,0))
+            privacy = privacy, privacyCode = privacyCode, leaderboard = listOf(UserInLeaderboard(currentUserId, currentUserName, 0))
         )
         roomRef.setValue(newPicDescRoom)
 

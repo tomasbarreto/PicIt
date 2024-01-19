@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
@@ -23,13 +25,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.entities.UserInLeaderboard
+import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.BackButton
 import com.example.picit.utils.RoomHeader
-import com.example.picit.ui.theme.PicItTheme
 
 
 @Composable
-fun LeaderboardScreen(){
+fun LeaderboardScreen(
+    roomName: String = "Room Name",
+    leaderboard: List<UserInLeaderboard> = emptyList(),
+    onClickBackButton: () -> Unit = {}
+){
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -38,7 +45,7 @@ fun LeaderboardScreen(){
         Box(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            BackButton(onButtonClick={/*TODO: go to UserRoomsScreen*/})
+            BackButton(onButtonClick= onClickBackButton)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -48,7 +55,7 @@ fun LeaderboardScreen(){
             }
         }
 
-        RoomHeader()
+        RoomHeader(roomName)
 
         Row(
             modifier = Modifier
@@ -57,7 +64,7 @@ fun LeaderboardScreen(){
                 .fillMaxHeight(0.90F),
             horizontalArrangement = Arrangement.Center
         ) {
-            LeaderboardPanel()
+            LeaderboardPanel(leaderboard = leaderboard)
         }
 
 
@@ -65,18 +72,20 @@ fun LeaderboardScreen(){
 }
 
 @Composable
-fun LeaderboardPanel(modifier : Modifier = Modifier) {
+fun LeaderboardPanel(modifier : Modifier = Modifier, leaderboard: List<UserInLeaderboard>) {
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxWidth()
             .fillMaxHeight(0.95F)
             .background(Color.LightGray)
             .padding(30.dp)
     ) {
-        LeaderboardRow("1.", "Participant Name", "1002pts")
-        LeaderboardRow("2.", "Participant Name", "130pts")
-        LeaderboardRow("3.", "Participant Name", "50pts")
-        LeaderboardRow("4.", "Participant Name", "2pts")
+        var position = 1;
+        leaderboard.forEach { user ->
+            LeaderboardRow(position.toString(), user.userName, user.points.toString())
+            position = position+1;
+        }
     }
 }
 

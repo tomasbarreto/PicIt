@@ -36,6 +36,7 @@ import com.example.picit.utils.TimeLeftDisplay
 @Composable
 fun SubmitPhotoDescription(
     onClickBackButton: ()->Unit = {},
+    onClickLeaderboardButton: ()->Unit = {},
     viewModel: SubmitPhotoDescriptionViewModel = viewModel(),
     picDescRoom: PicDescRoom
 ) {
@@ -120,7 +121,7 @@ fun SubmitPhotoDescription(
             Box(modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 32.dp, bottom = 32.dp)){
-                LeaderboardButton()
+                LeaderboardButton(onClickLeaderboardButton)
             }
 
         }

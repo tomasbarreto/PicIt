@@ -1,10 +1,8 @@
 package com.example.picit.picdesccreateroom
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -34,6 +32,7 @@ fun RoomTimeSettingsRepicScreen(
     privacyCode: String = "",
     onClickGoHomeScreen: ()->Unit = {},
     currentUserId: String = "",
+    currentUserName: String = "",
     currentUserRooms: List<String> = emptyList()
 
 ) {
@@ -82,7 +81,7 @@ fun RoomTimeSettingsRepicScreen(
             viewModel.registerRepicRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
                 Time(hoursPictureRelease.value.toInt(), minutesPictureRelease.value.toInt()),
                 Time(hoursWinner.value.toInt(), minutesWinner.value.toInt()),
-                onClickGoHomeScreen, currentUserRooms, currentUserId)
+                onClickGoHomeScreen, currentUserRooms, currentUserId, currentUserName)
 
         }) {
             Text(text = "Next", fontSize = 22.sp)

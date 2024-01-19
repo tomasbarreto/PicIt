@@ -30,6 +30,7 @@ import com.example.picit.utils.TakePhotoButton
 fun PromptRoomTakePicture(
     onClickBackButton: ()->Unit = {},
     onClickCameraButton: ()->Unit = {},
+    onClickLeaderboardButton: ()->Unit = {},
     room: PicDescRoom = PicDescRoom(),
     viewModel: TimerViewModel
 ){
@@ -76,7 +77,7 @@ fun PromptRoomTakePicture(
             .padding(start = 20.dp, end = 20.dp, bottom = 10.dp, top = 30.dp),
             horizontalArrangement = Arrangement.End) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                LeaderboardButton()
+                LeaderboardButton(onClickLeaderboardButton)
             }
         }
     }

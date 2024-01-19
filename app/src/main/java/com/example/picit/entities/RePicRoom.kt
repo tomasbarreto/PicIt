@@ -13,7 +13,6 @@ data class RePicRoom(
     val currentNumOfChallengesDone: Int = 0,
     val winnerAnnouncementTime: Time = Time(),
     val leaderboard: List<UserInLeaderboard> = emptyList(),
-    val picturesSubmitted: List<RePicPhoto> = emptyList(),
     val pictureReleaseTime: Time = Time(),
 
     val privacy: Boolean = false,

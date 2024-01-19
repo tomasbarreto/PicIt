@@ -29,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.R
 import com.example.picit.entities.User
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.DBUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +38,7 @@ fun LoginScreen(
     onClickGoToMainScreen: () -> Unit ={},
     currentUserUpdate: (User) -> Unit={},
     viewModel: LoginViewModel = viewModel(),
+    dbutils: DBUtils,
     modifier: Modifier = Modifier
 ) {
     var email by remember { mutableStateOf("") }
@@ -86,7 +88,7 @@ fun LoginScreen(
             ) {
 
                 Button(onClick = {
-                    viewModel.loginAccount(email, password, baseContext, onClickGoToMainScreen, currentUserUpdate)
+                    viewModel.loginAccount(email, password, baseContext, dbutils, onClickGoToMainScreen, currentUserUpdate)
                 }) {
                     Text(text = "Login", fontSize = 22.sp)
                 }
@@ -121,6 +123,6 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     PicItTheme {
-        LoginScreen()
+        LoginScreen(dbutils = DBUtils())
     }
 }

@@ -35,6 +35,7 @@ import com.example.picit.utils.TakePhotoButton
 fun RepicRoomTakePicture(
     onClickBackButton: ()->Unit = {},
     onClickCameraButton: ()->Unit = {},
+    onClickLeaderboardButton: () -> Unit = {},
     viewModel: TimerViewModel,
     room: RePicRoom = RePicRoom()
 ){
@@ -90,7 +91,7 @@ fun RepicRoomTakePicture(
             .padding(12.dp),
             horizontalArrangement = Arrangement.End) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                LeaderboardButton()
+                LeaderboardButton(onClickLeaderboardButton)
             }
         }
     }

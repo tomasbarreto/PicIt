@@ -56,12 +56,12 @@ class JoinPicDescRoomViewModel : ViewModel() {
     /**
      * @requires loadPicDescRoom(roomId)
      */
-    fun userJoinRoom(userId : String) {
+    fun userJoinRoom(userId : String, userName: String) {
         val database = Firebase.database
 
         val updatedCapacity = picDescRoom.currentCapacity +1
         val updatedLeaderboard = picDescRoom.leaderboard.toMutableList()
-        updatedLeaderboard.add(UserInLeaderboard(userId,0))
+        updatedLeaderboard.add(UserInLeaderboard(userId,userName, 0))
         val updatedRoom = picDescRoom.copy(currentCapacity = updatedCapacity,
             leaderboard = updatedLeaderboard)
 
