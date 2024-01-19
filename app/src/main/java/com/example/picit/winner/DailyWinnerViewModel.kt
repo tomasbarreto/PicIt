@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicPhoto
+import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.User
 import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
@@ -81,11 +82,50 @@ class DailyWinnerViewModel: ViewModel() {
                 userRef.setValue(updatedUser).addOnSuccessListener {
                     callback()
                 }
+            }
+        }
+    }
+
+
+    fun awardUser(userId: String, room: RePicRoom, points:Int =1, callback: ()->Unit = {}) {
+        val db = Firebase.database
+        val roomRef = db.getReference("repicRooms/${room.id}")
+
+        var userInLeaderboard = UserInLeaderboard()
+        val updatedLeaderboard = room.leaderboard.toMutableList()
+
+        for(user in updatedLeaderboard){
+            if(user.userId == userId){
+                userInLeaderboard = user
 
             }
         }
+        updatedLeaderboard.remove(userInLeaderboard)
 
+        val updatedPoints = userInLeaderboard.points+points
+        val updatedStreak = userInLeaderboard.winStreak+points
+        val updatedUserInLeaderboard = userInLeaderboard.copy(points = updatedPoints, winStreak = updatedStreak)
+        updatedLeaderboard.add(updatedUserInLeaderboard)
 
+        val updatedRoom = room.copy(leaderboard = updatedLeaderboard)
+        roomRef.setValue(updatedRoom).addOnSuccessListener {
+            Log.d(TAG, "room udpated! $updatedRoom ")
+            //Update user achievements
+            val userRef = db.getReference("users/$userId")
+            userRef.get().addOnSuccessListener {
+                val savedUser = it.getValue<User>()!!
+                val currentMaxPoints = savedUser.maxPoints
+                val currentMaxWinStreak = savedUser.maxWinStreak
+
+                val updatedMaxPoints = if (updatedPoints > currentMaxPoints) updatedPoints else currentMaxPoints
+                val updatedMaxWinStreak = if(updatedStreak > currentMaxWinStreak) updatedStreak else currentMaxWinStreak
+
+                val updatedUser = savedUser.copy(maxPoints = updatedMaxPoints, maxWinStreak = updatedMaxWinStreak)
+                userRef.setValue(updatedUser).addOnSuccessListener {
+                    callback()
+                }
+            }
+        }
     }
 
     fun getPhotoRating(photo: PicDescPhoto): Double{
@@ -104,9 +144,44 @@ class DailyWinnerViewModel: ViewModel() {
 
     }
 
+    fun increaseChallengeCount(room: RePicRoom, callback: () -> Unit = {}) {
+        val db = Firebase.database
+        val roomsRef = db.getReference("repicRooms/${room.id}")
+
+        val updatedNumberOfChallengesDone = room.currentNumOfChallengesDone+1
+        val updatedRoom = room.copy(currentNumOfChallengesDone = updatedNumberOfChallengesDone)
+        roomsRef.setValue(updatedRoom).addOnSuccessListener {
+            callback()
+        }
+
+    }
+
     fun userSawWinnerScreen(userId: String, room: PicDescRoom, callback: () -> Unit = {}) {
         val db = Firebase.database
         val roomRef = db.getReference("picDescRooms/${room.id}")
+
+        var userInLeaderboard = UserInLeaderboard()
+        val updatedLeaderboard = room.leaderboard.toMutableList()
+        for(user in updatedLeaderboard){
+            if(user.userId == userId){
+                userInLeaderboard = user
+            }
+        }
+        updatedLeaderboard.remove(userInLeaderboard)
+
+        val updateUserInLeaderboard = userInLeaderboard.copy(didSeeWinnerScreen = true)
+        updatedLeaderboard.add(updateUserInLeaderboard)
+
+        val updatedRoom = room.copy(leaderboard = updatedLeaderboard)
+        roomRef.setValue(updatedRoom).addOnSuccessListener {
+            callback()
+        }
+
+    }
+
+    fun userSawWinnerScreen(userId: String, room: RePicRoom, callback: () -> Unit = {}) {
+        val db = Firebase.database
+        val roomRef = db.getReference("repicRomms/${room.id}")
 
         var userInLeaderboard = UserInLeaderboard()
         val updatedLeaderboard = room.leaderboard.toMutableList()

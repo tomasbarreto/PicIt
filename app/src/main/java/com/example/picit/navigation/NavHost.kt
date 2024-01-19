@@ -697,7 +697,27 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     photoDescription = "",
                     rating = "",
                     onClickContinue = {
-
+                        //UPDATE ROOM/USER IN THIS IF
+                        if(currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen }){
+                            viewModel.awardUser(winnerPhoto.userId, currentRepicRoom,2) {
+                                viewModel.userSawWinnerScreen(
+                                    currentUser.id,
+                                    currentRepicRoom
+                                ){
+                                    viewModel.increaseChallengeCount(currentRepicRoom){
+                                        onClickGoToMainScreen()
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            viewModel.userSawWinnerScreen(
+                                currentUser.id,
+                                currentRepicRoom
+                            ){
+                                onClickGoToMainScreen()
+                            }
+                        }
                     }
 
                 )
