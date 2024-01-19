@@ -547,7 +547,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                 viewModel.setRePicImageUrls(currentRepicRoom.imageUrl, currentRepicRoom.photosSubmitted)
                 
-                viewModel.comparesImages(currentRepicRoom.photosSubmitted, context)
+                viewModel.compareImages(currentRepicRoom.photosSubmitted, context)
 
                 DailyWinnerScreen(
                     gameType = GameType.REPIC,

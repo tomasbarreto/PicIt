@@ -146,7 +146,7 @@ class DailyWinnerViewModel: ViewModel() {
             this.photoUrlsToCompare.add(photo.photoUrl)
     }
 
-    fun comparesImages(rePicSubmittedPhotos: List<RePicPhoto>, context: Context) {
+    fun compareImages(rePicSubmittedPhotos: List<RePicPhoto>, context: Context) {
 
         var photoComparator = PhotoComparator()
 
