@@ -25,12 +25,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.entities.JoinRoomRequest
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun RoomInviteNotificationsScreen(
-    onClickBackButton: ()->Unit = {}
+    onClickBackButton: ()->Unit = {},
+    joinRoomRequests: List<JoinRoomRequest> = emptyList()
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -41,14 +43,18 @@ fun RoomInviteNotificationsScreen(
             text = "Requests",
             onClickBackButton = onClickBackButton
         )
-        RequestPanel(true)
-        RequestPanel(false)
-        RequestPanel(true)
+        joinRoomRequests.forEach { req ->
+            RequestPanel(true, req)
+        }
+
+//        RequestPanel(true)
+//        RequestPanel(false)
+//        RequestPanel(true)
     }
 }
 
 @Composable
-fun RequestPanel(roomRequest:Boolean) {
+fun RequestPanel(roomRequest:Boolean, joinRoomRequest: JoinRoomRequest) {
     Box(
         modifier = Modifier
             .padding(bottom = 10.dp, top = 10.dp, start = 30.dp, end = 30.dp)
@@ -69,7 +75,7 @@ fun RequestPanel(roomRequest:Boolean) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 if (roomRequest) {
-                    Text(text = "Room Request", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "${joinRoomRequest.gameType} Room Request", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 } else {
                     Text(text = "Friend Request", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 }
@@ -79,7 +85,7 @@ fun RequestPanel(roomRequest:Boolean) {
                     Icons.Filled.Person, contentDescription = null
                 )
                 if (roomRequest) {
-                    Text(text = "User name is asking you to join his room.", modifier = Modifier.width(230.dp), textAlign = TextAlign.Center)
+                    Text(text = "${joinRoomRequest.usernameThatSentRequest} is asking you to join room ${joinRoomRequest.roomName}.", modifier = Modifier.width(230.dp), textAlign = TextAlign.Center)
                 } else {
                     Text(text = "User name is asking you to be your friend.", modifier = Modifier.width(230.dp), textAlign = TextAlign.Center)
                 }

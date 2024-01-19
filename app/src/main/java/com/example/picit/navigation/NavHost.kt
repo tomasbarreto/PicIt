@@ -340,7 +340,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.InvitesNotifications.route){
             RoomInviteNotificationsScreen(
-                onClickBackButton = {onClickBackButton()}
+                onClickBackButton = {onClickBackButton()},
+                currentUser.requestsToJoin
             )
         }
         composable(route = Screens.Settings.route){
