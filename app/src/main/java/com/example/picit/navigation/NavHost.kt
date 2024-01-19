@@ -349,8 +349,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             CameraScreen(
                 onClickBackButton = {onClickBackButton()},
                 getImageUri = { uri ->
-                    viewModel.submitImage(currentPicDescRoom,currentUser,uri, context)
-//                    navController.navigate(Screens.PicDescRoomScreen.route)
+                    viewModel.submitImage(currentPicDescRoom,currentUser,uri, context){
+                        navController.navigate(Screens.PicDescRoomScreen.route)
+                    }
+
                 }
             )
         }
@@ -435,7 +437,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                     // TODO: meter um TOAST a dizer que a descricao foi submetida
                     SubmitPhotoDescription(
-                        onClickBackButton = { onClickBackButton() },
+                        onClickBackButton = { onClickGoToMainScreen() },
                         onClickLeaderboard,
                         viewModel,
                         currentPicDescRoom
@@ -465,7 +467,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val viewModel: PromptRoomVoteLeaderViewModel = viewModel()
                 if(currentUserIsLeader){
                     PromptRoomVoteLeader(
-                        onClickBackButton = {onClickBackButton()},
+                        onClickBackButton = {onClickGoToMainScreen()},
                         onClickLeaderboardButton = onClickLeaderboard,
                         roomName = currentPicDescRoom.name,
                         photoDescription = currentPicDescRoom.photoDescription,
@@ -489,7 +491,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     // check if user already submitted photo
                     if(userAlreadySubmitted){
                         PromptRoomVoteUserScreen(
-                            onClickBackButton = {onClickBackButton()},
+                            onClickBackButton = {onClickGoToMainScreen()},
                             onClickLeaderboardButton = onClickLeaderboard,
                             roomName = currentPicDescRoom.name,
                             photoDescription = currentPicDescRoom.photoDescription,
@@ -503,7 +505,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                     else{
                         PromptRoomTakePicture(
-                            onClickBackButton = {onClickBackButton()},
+                            onClickBackButton = {onClickGoToMainScreen()},
                             onClickLeaderboardButton = onClickLeaderboard,
                             room = currentPicDescRoom,
                             viewModel = timerViewModel,

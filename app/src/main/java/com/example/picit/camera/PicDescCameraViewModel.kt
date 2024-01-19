@@ -18,7 +18,7 @@ import java.util.Calendar
 private val TAG = "PicDescCameraViewModel"
 class PicDescCameraViewModel: ViewModel() {
 
-    fun submitImage(room: PicDescRoom, user: User, uri: Uri, context: Context){
+    fun submitImage(room: PicDescRoom, user: User, uri: Uri, context: Context, navigationFunction:()->Unit={}){
         val storage = Firebase.storage
 
 
@@ -34,7 +34,9 @@ class PicDescCameraViewModel: ViewModel() {
                 val imageUrl = uri.toString()
 
                 // Now that you have the image URL, update the Realtime Database
-                updateDatabase(room, user, imageUrl, context)
+                updateDatabase(room, user, imageUrl, context){
+                    navigationFunction()
+                }
             }
         }.addOnFailureListener { exception ->
             // Handle unsuccessful uploads
@@ -44,9 +46,9 @@ class PicDescCameraViewModel: ViewModel() {
     }
 
 
-    private fun updateDatabase(room: PicDescRoom, user: User, imageUrl: String, context: Context) {
+    private fun updateDatabase(room: PicDescRoom, user: User, imageUrl: String, context: Context,
+                               navigationFunction: () -> Unit) {
         val locationClient = LocationClient()
-
 
         val currentCalendar = Calendar.getInstance()
         val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(
@@ -58,18 +60,22 @@ class PicDescCameraViewModel: ViewModel() {
             locationClient.getLocation(context){location->
                 Log.d(TAG,"Location $location")
 
-                insertPhoto(imageUrl,user.id, user.username, location, currentTime, room,context)
+                insertPhoto(imageUrl,user.id, user.username, location, currentTime, room,context){
+                    navigationFunction()
+                }
             }
         }
         else{
-            insertPhoto(imageUrl,user.id, user.username, "", currentTime, room,context)
+            insertPhoto(imageUrl,user.id, user.username, "", currentTime, room,context){
+                navigationFunction()
+            }
         }
 
 
     }
 
     private fun insertPhoto(imageUrl:String, userId:String,username:String ,location:String,
-                            time:Time, room:PicDescRoom,context:Context){
+                            time:Time, room:PicDescRoom,context:Context,navigationFunction: () -> Unit){
         val db = Firebase.database
         val roomRef = db.getReference("picDescRooms/${room.id}")
 
@@ -95,11 +101,7 @@ class PicDescCameraViewModel: ViewModel() {
         // Update the room object in the Realtime Database
         val updatedRoom = room.copy(photosSubmitted = updatedSubmittedPhotos)
         roomRef.setValue(updatedRoom).addOnSuccessListener {
-            Toast.makeText(
-                context,
-                "Photo Submitted!",
-                Toast.LENGTH_SHORT,
-            ).show()
+            navigationFunction()
         }
     }
 
