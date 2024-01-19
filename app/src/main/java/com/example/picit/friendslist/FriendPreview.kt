@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun FriendPreview(f: String, addFriendToRoom: Boolean = false) {
+fun FriendPreview(f: String, addFriendToRoom: Boolean = false,
+                  selectFriend: () -> Unit = {}, deselectFriend: () -> Unit = {}) {
     Row (
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -33,7 +34,7 @@ fun FriendPreview(f: String, addFriendToRoom: Boolean = false) {
             .weight(1f),
             horizontalArrangement = Arrangement.End){
             if(addFriendToRoom) {
-                addButton()
+                addButton(selectFriend, deselectFriend)
             } else {
                 Icon(
                     Icons.Filled.Email,

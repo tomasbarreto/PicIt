@@ -8,7 +8,8 @@ import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 
 class FriendListAddRoomViewModel: ViewModel() {
-    val friendsToAdd = mutableListOf<User>()
+    val friendsShownToAdd = mutableListOf<User>()
+    val friendsSelectedToAdd = mutableListOf<User>()
 
     fun getFriendsToAdd(membersOfRoomIds: List<String>) {
         var db = Firebase.database
@@ -21,16 +22,15 @@ class FriendListAddRoomViewModel: ViewModel() {
                     val userId = userSnapshtop.key.toString()
                     user.id = userId
                     if (!membersOfRoomIds.contains(user.id)) {
-                        friendsToAdd.add(user)
+                        friendsShownToAdd.add(user)
                     }
                 }
 
             }
-            Log.d("firebase", "ALL USERS TO ADD: $friendsToAdd")
+            Log.d("firebase", "ALL USERS TO ADD: $friendsShownToAdd")
 
         }.addOnFailureListener{
             Log.e("firebase", "Error getting data", it)
         }
     }
-
 }

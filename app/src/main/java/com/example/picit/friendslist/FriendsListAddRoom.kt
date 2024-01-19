@@ -38,12 +38,13 @@ fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}, viewModel: Friend
         ScreenHeader(withBackButton = true, text = "Friends", onClickBackButton = onClickBackButton)
         Spacer(modifier = Modifier.height(60.dp))
 
-        var friends = viewModel.friendsToAdd // user objects
+        var friends = viewModel.friendsShownToAdd // user objects
         Column(modifier = Modifier
             .verticalScroll(rememberScrollState())
             .height(600.dp)) {
             for (f in friends){
-                FriendPreview(f.username, true)
+                FriendPreview(f.username, true,
+                    { viewModel.friendsSelectedToAdd.add(f) }, { viewModel.friendsSelectedToAdd.remove(f) })
             }
         }
 
@@ -54,7 +55,7 @@ fun FriendsListAddRoomScreen(onClickBackButton: () -> Unit={}, viewModel: Friend
 }
 
 @Composable
-fun addButton() {
+fun addButton(selectFriend: () -> Unit = {}, deselectFriend: () -> Unit = {}) {
     var selected by remember { mutableStateOf(false) }
 
     Icon(
@@ -62,7 +63,9 @@ fun addButton() {
         contentDescription = null,
         modifier = Modifier
             .size(44.dp)
-            .clickable { selected = !selected }
+            .clickable { selected = !selected
+                if (selected) { selectFriend() } else { deselectFriend() }
+            }
     )
 }
 
