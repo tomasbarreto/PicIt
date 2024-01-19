@@ -21,6 +21,4 @@ data class PicDescRoom(
 
     val privacy: Boolean = false,
     val privacyCode: String = "",
-
-    val isFinished: Boolean = false
 )

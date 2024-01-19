@@ -385,6 +385,15 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val viewModel: SubmitPhotoDescriptionViewModel = viewModel()
             val timerViewModel: TimerViewModel = viewModel()
 
+            //TODO: verificar se ja se fizeram os challenges todos
+            val isFinished =currentPicDescRoom.currentNumOfChallengesDone ==
+                            currentPicDescRoom.maxNumOfChallenges
+
+            if (isFinished){
+
+            }
+
+
             if (userSawWinScreen || checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
 
                 if(checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
