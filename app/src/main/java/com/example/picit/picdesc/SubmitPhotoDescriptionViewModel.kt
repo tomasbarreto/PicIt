@@ -38,14 +38,6 @@ class SubmitPhotoDescriptionViewModel: ViewModel() {
         roomsRef.setValue(updatedRoom)
     }
 
-    fun increaseChallengeCount(room: PicDescRoom) {
-        val roomsRef = database.getReference("picDescRooms/${room.id}")
 
-        val updatedNumberOfChallengesDone = room.currentNumOfChallengesDone+1
-        val updatedRoom = room.copy(currentNumOfChallengesDone = updatedNumberOfChallengesDone)
-        roomsRef.setValue(updatedRoom)
-
-
-    }
 
 }

@@ -393,8 +393,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
 
                 if(currentUserIsLeader){
-                    // increase challenge count
-                    viewModel.increaseChallengeCount(currentPicDescRoom)
 
                     SubmitPhotoDescription(
                         onClickBackButton = { onClickBackButton() },
@@ -516,14 +514,15 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         if(currentPicDescRoom.leaderboard.none {  it.didSeeWinnerScreen }){
 
                             if(fastestValidPhoto.userId == bestRatedPhoto.userId){
-                                dailyWinnerViewModel.awardUser(fastestValidPhoto.userId,
-                                    currentPicDescRoom,2
-                                ) {
+                                dailyWinnerViewModel.awardUser(fastestValidPhoto.userId, currentPicDescRoom,2) {
                                     dailyWinnerViewModel.userSawWinnerScreen(
                                         currentUser.id,
                                         currentPicDescRoom
-                                    )
-                                    onClickGoToMainScreen()
+                                    ){
+                                        dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
+                                            onClickGoToMainScreen()
+                                        }
+                                    }
                                 }
                             }
                             else{
@@ -533,8 +532,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                         dailyWinnerViewModel.userSawWinnerScreen(
                                             currentUser.id,
                                             currentPicDescRoom
-                                        )
-                                        onClickGoToMainScreen()
+                                        ){
+                                            dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
+                                                onClickGoToMainScreen()
+                                            }
+                                        }
                                     }
 
                                 }
@@ -544,8 +546,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             dailyWinnerViewModel.userSawWinnerScreen(
                                 currentUser.id,
                                 currentPicDescRoom
-                            )
-                            onClickGoToMainScreen()
+                            ){
+                                onClickGoToMainScreen()
+                            }
                         }
                     }
                 }

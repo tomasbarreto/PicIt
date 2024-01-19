@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
-import com.example.picit.entities.RePicPhoto
 import com.example.picit.entities.User
 import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
@@ -76,8 +75,9 @@ class DailyWinnerViewModel: ViewModel() {
             val updatedMaxWinStreak = if(updatedStreak > currentMaxWinStreak) updatedStreak else currentMaxWinStreak
 
             val updatedUser = savedUser.copy(maxPoints = updatedMaxPoints, maxWinStreak = updatedMaxWinStreak)
-            userRef.setValue(updatedUser)
-            callback()
+            userRef.setValue(updatedUser).addOnSuccessListener {
+                callback()
+            }
 
         }
     }
@@ -86,14 +86,19 @@ class DailyWinnerViewModel: ViewModel() {
         return photo.ratingSum / (photo.usersThatVoted.size -1.0)
     }
 
-    fun leaveAwardScreen(room: PicDescRoom, user:User) {
+    fun increaseChallengeCount(room: PicDescRoom, callback: () -> Unit = {}) {
         val db = Firebase.database
-        val roomRef = db.getReference("picDescRooms/${room.id}")
+        val roomsRef = db.getReference("picDescRooms/${room.id}")
 
+        val updatedNumberOfChallengesDone = room.currentNumOfChallengesDone+1
+        val updatedRoom = room.copy(currentNumOfChallengesDone = updatedNumberOfChallengesDone)
+        roomsRef.setValue(updatedRoom).addOnSuccessListener {
+            callback()
+        }
 
     }
 
-    fun userSawWinnerScreen(userId: String, room: PicDescRoom) {
+    fun userSawWinnerScreen(userId: String, room: PicDescRoom, callback: () -> Unit = {}) {
         val db = Firebase.database
         val roomRef = db.getReference("picDescRooms/${room.id}")
 
@@ -110,7 +115,9 @@ class DailyWinnerViewModel: ViewModel() {
         updatedLeaderboard.add(updateUserInLeaderboard)
 
         val updatedRoom = room.copy(leaderboard = updatedLeaderboard)
-        roomRef.setValue(updatedRoom)
+        roomRef.setValue(updatedRoom).addOnSuccessListener {
+            callback()
+        }
 
     }
 
