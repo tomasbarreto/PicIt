@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.RePicPhoto
 import com.example.picit.entities.User
 import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
@@ -134,6 +135,11 @@ class DailyWinnerViewModel: ViewModel() {
         roomRef.setValue(updatedRoom).addOnSuccessListener {
             callback()
         }
+    }
+
+    //TODO
+    fun findMostSimilarPhoto(photosSubmitted: List<RePicPhoto>, imageUrl: String): RePicPhoto {
+        return RePicPhoto()
     }
 
 

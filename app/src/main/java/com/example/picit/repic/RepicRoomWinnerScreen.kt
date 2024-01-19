@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +34,11 @@ import com.example.picit.utils.TimeLeftDisplay
 fun RepicRoomWinnerScreen(
     onClickBackButton: ()->Unit = {},
     onClickLeaderboardButton: () -> Unit = {},
-    room: RePicRoom
+    roomName:String = "Room name",
+    userName:String= "Username",
+    timestamp: String = "00:00",
+    location:String = "",
+    onClickContinueButton:()->Unit={}
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -41,7 +46,7 @@ fun RepicRoomWinnerScreen(
     ){
         ScreenHeader(
             withBackButton = true,
-            text = room.name,
+            text = roomName,
             onClickBackButton = onClickBackButton
         )
 
@@ -67,8 +72,8 @@ fun RepicRoomWinnerScreen(
                     verticalAlignment = Alignment.Bottom){
                     Icon(
                         Icons.Filled.Person, contentDescription = null, modifier = Modifier
-                        .height(25.dp)
-                        .fillMaxWidth(0.1F))
+                            .height(25.dp)
+                            .fillMaxWidth(0.1F))
                     Text(text = "User name", modifier = Modifier
                         .height(22.dp)
                         .fillMaxWidth(0.50F))
@@ -96,10 +101,12 @@ fun RepicRoomWinnerScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
-        TimeLeftDisplay("Next Picture",1,24,32)
-        Spacer(modifier = Modifier.height(90.dp))
+        Button(onClick = {onClickContinueButton()}) {
+            Text(text = "Continue", fontSize = 16.sp)
+        }
+        Spacer(modifier = Modifier.weight(1f))
 
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -116,6 +123,6 @@ fun RepicRoomWinnerScreen(
 @Composable
 fun RepicRoomWinnerPreview() {
     PicItTheme {
-        RepicRoomWinnerScreen(room = RePicRoom())
+        RepicRoomWinnerScreen()
     }
 }
