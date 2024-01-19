@@ -8,11 +8,13 @@ import android.location.Geocoder
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
+import okhttp3.internal.wait
 
 
 class LocationClient {
@@ -25,7 +27,7 @@ class LocationClient {
 
     @SuppressLint("MissingPermission")
     @Suppress("DEPRECATION")
-    fun getLocation(context: Context): String {
+    fun getLocation(context: Context,getLocation: (String)->Unit={}): String {
         fusedLocationProviderClient.flushLocations()
 
         var result = ""
@@ -49,6 +51,8 @@ class LocationClient {
                         geoCoder.getFromLocation(lat, lon, 1)
 
                     if (currentLocation != null) {
+                        result = currentLocation[0].locality + ", " + currentLocation[0].countryName
+                        getLocation(result)
                         Log.d(
                             "Location",
                             currentLocation[0].locality + ", " + currentLocation[0].countryName
