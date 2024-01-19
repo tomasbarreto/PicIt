@@ -18,7 +18,8 @@ import java.util.Calendar
 private val TAG = "PicDescCameraViewModel"
 class PicDescCameraViewModel: ViewModel() {
 
-    fun submitImage(room: PicDescRoom, user: User, uri: Uri, context: Context, navigationFunction:()->Unit={}){
+    fun submitImage(room: PicDescRoom, user: User, uri: Uri, context: Context,
+                    navigationFunction:()->Unit={}){
         val storage = Firebase.storage
 
 
@@ -60,13 +61,13 @@ class PicDescCameraViewModel: ViewModel() {
             locationClient.getLocation(context){location->
                 Log.d(TAG,"Location $location")
 
-                insertPhoto(imageUrl,user.id, user.username, location, currentTime, room,context){
+                insertPhoto(imageUrl,user.id, user.username, location, currentTime, room){
                     navigationFunction()
                 }
             }
         }
         else{
-            insertPhoto(imageUrl,user.id, user.username, "", currentTime, room,context){
+            insertPhoto(imageUrl,user.id, user.username, "", currentTime, room){
                 navigationFunction()
             }
         }
@@ -75,7 +76,7 @@ class PicDescCameraViewModel: ViewModel() {
     }
 
     private fun insertPhoto(imageUrl:String, userId:String,username:String ,location:String,
-                            time:Time, room:PicDescRoom,context:Context,navigationFunction: () -> Unit){
+                            time:Time, room:PicDescRoom,navigationFunction: () -> Unit){
         val db = Firebase.database
         val roomRef = db.getReference("picDescRooms/${room.id}")
 
