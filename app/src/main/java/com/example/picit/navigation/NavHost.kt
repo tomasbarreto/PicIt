@@ -2,7 +2,6 @@ package com.example.picit.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,7 +49,6 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
-import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
 import com.example.picit.timer.TimerViewModel
@@ -540,7 +538,23 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 )
             } else {
                 Log.d("TIME", "WINNER ANNOUNCED")
-                RepicRoomWinnerScreen(onClickBackButton = { onClickBackButton() }, currentRepicRoom)
+
+                var context = LocalContext.current
+
+                var viewModel: DailyWinnerViewModel = viewModel()
+
+                viewModel.setRePicDesc("Most Accurate")
+
+                viewModel.setRePicImageUrls(currentRepicRoom.imageUrl, currentRepicRoom.photosSubmitted)
+                
+                viewModel.comparesImages(currentRepicRoom.photosSubmitted, context)
+
+                DailyWinnerScreen(
+                    gameType = GameType.REPIC,
+                    viewModel = viewModel,
+                    dailyChallenges = currentRepicRoom.currentNumOfChallengesDone,
+                    maxDailyChallenges = currentRepicRoom.maxNumOfChallenges
+                )
             }
         }
     }
