@@ -19,7 +19,8 @@ private val TAG = "RePicCameraViewModel"
 class RePicCameraViewModel: ViewModel() {
 
 
-    fun submitImage(room: RePicRoom, user: User, uri: Uri, context: Context){
+    fun submitImage(room: RePicRoom, user: User, uri: Uri, context: Context,
+                    navigationFunction:()->Unit={}){
         val storage = Firebase.storage
 
         val roomImageStorageRef = storage.getReference("rePic/${room.id}/" +
@@ -34,7 +35,9 @@ class RePicCameraViewModel: ViewModel() {
                 val imageUrl = uri.toString()
 
                 // Now that you have the image URL, update the Realtime Database
-                updateDatabase(room, user, imageUrl, context)
+                updateDatabase(room, user, imageUrl, context){
+                    navigationFunction()
+                }
             }
         }.addOnFailureListener { exception ->
             // Handle unsuccessful uploads
@@ -44,39 +47,54 @@ class RePicCameraViewModel: ViewModel() {
     }
 
 
-    private fun updateDatabase(room: RePicRoom, user: User, imageUrl: String, context: Context) {
+    private fun updateDatabase(room: RePicRoom, user: User, imageUrl: String, context: Context,
+                               navigationFunction: () -> Unit) {
         val locationClient = LocationClient()
-        val db = Firebase.database
-        val roomRef = db.getReference("repicRooms/${room.id}")
 
         val currentCalendar = Calendar.getInstance()
         val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(
             Calendar.MINUTE))
 
-        var location = ""
-
         if (locationClient.isLocationPermGranted(context)) {
             locationClient.startLocationClient(context)
-            location = locationClient.getLocation(context)
+            locationClient.getLocation(context){location->
+                insertPhoto(imageUrl, user.id, user.username, location, currentTime, room){
+                    navigationFunction()
+                }
+            }
         }
+        else{
+            insertPhoto(imageUrl, user.id, user.username, "", currentTime, room){
+                navigationFunction()
+            }
+        }
+
+
+    }
+    private fun insertPhoto(imageUrl:String, userId:String, username:String, location:String,
+                            time:Time, room: RePicRoom, navigationFunction: () -> Unit){
+        val db = Firebase.database
+        val roomRef = db.getReference("repicRooms/${room.id}")
 
         // Create RePicPhoto with the image URL
         val photo = RePicPhoto(
-            username = user.username,
+            username = username,
             photoUrl = imageUrl,
-            userId = user.id,
-            submissionTime = currentTime,
+            userId = userId,
+            submissionTime = time,
             location = location
         )
 
-        // Update the list of submitted photos in the room
-        var updatedSubmittedPhotos = room.photosSubmitted.toMutableList()
-        // remove previous photo submitted by the user
-        updatedSubmittedPhotos = updatedSubmittedPhotos.filter { it.userId != user.id }.toMutableList()
+        val updatedSubmittedPhotos = room.photosSubmitted.filter{
+            it.userId != userId
+        }.toMutableList()
         updatedSubmittedPhotos.add(photo)
+
 
         // Update the room object in the Realtime Database
         val updatedRoom = room.copy(photosSubmitted = updatedSubmittedPhotos)
-        roomRef.setValue(updatedRoom)
+        roomRef.setValue(updatedRoom).addOnSuccessListener {
+            navigationFunction()
+         }
     }
 }

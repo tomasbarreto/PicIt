@@ -60,7 +60,7 @@ fun PromptRoomTakePicture(
         {
             Column (horizontalAlignment = Alignment.CenterHorizontally){
                 Text(text = "Prompt:", fontSize = 35.sp, fontWeight = FontWeight.Bold)
-                Text(text = "Pose with the sunset", fontSize = 30.sp)
+                Text(text = room.photoDescription, fontSize = 30.sp)
             }
         }
 

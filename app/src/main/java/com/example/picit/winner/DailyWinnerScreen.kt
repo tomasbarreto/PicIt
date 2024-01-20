@@ -37,7 +37,7 @@ import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun DailyWinnerScreen(
-    gameType: GameType = GameType.PICDESC,
+    gameType: GameType = GameType.REPIC,
     modifier: Modifier = Modifier,
     screenTitle: String  = "Title",
     username: String = "username",
@@ -142,16 +142,17 @@ fun DailyWinnerScreen(
                         .clip(shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 20.dp))
                 )
 
-                Spacer(modifier = modifier.height(10.dp))
+                Spacer(modifier = modifier.weight(1f))
 
-                Text(
-                    text = photoDescription,
-                    textAlign = TextAlign.Center,
-                    fontSize = 25.sp,
-                    modifier = modifier.width(300.dp)
-                )
 
                 if (gameType == GameType.PICDESC) {
+                    Text(
+                        text = photoDescription,
+                        textAlign = TextAlign.Center,
+                        fontSize = 25.sp,
+                        modifier = modifier.width(300.dp)
+                    )
+
                     Spacer(modifier = modifier.height(10.dp))
 
                     Row(
@@ -177,11 +178,13 @@ fun DailyWinnerScreen(
                     }
                 }
 
-            Spacer(modifier = Modifier.height(45.dp))
+            Spacer(modifier = modifier.weight(1f))
 
             Button(onClick = {onClickContinue()}) {
                 Text(text = "Continue", fontSize = 22.sp)
             }
+
+            Spacer(modifier = modifier.weight(1f))
         }
     }
 }

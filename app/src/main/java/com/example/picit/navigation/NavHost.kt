@@ -36,6 +36,7 @@ import com.example.picit.joinroom.UserRoomsScreen
 import com.example.picit.joinroom.UserRoomsViewModel
 import com.example.picit.leaderboard.LeaderboardScreen
 import com.example.picit.leaderboard.LeaderboardViewModel
+import com.example.picit.location.LocationClient
 import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
@@ -47,6 +48,7 @@ import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.PromptRoomVoteUserViewModel
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
+import com.example.picit.picdesc.WaitPictureScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
@@ -56,12 +58,15 @@ import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
 import com.example.picit.repic.RepicRoomWinnerScreen
+import com.example.picit.repic.WaitPictureViewModel
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
 import com.example.picit.winner.DailyWinnerScreen
 import com.example.picit.winner.DailyWinnerViewModel
+import com.example.picit.winner.RoomWinnerScreen
+import com.example.picit.winner.RoomWinnerViewModel
 import java.util.Calendar
 
 private val TAG = "NavHost"
@@ -99,8 +104,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
         fun checkInterval(currentTime: Time, startTime: Time, endTime: Time): Boolean {
             return ((startTime.hours<currentTime.hours && currentTime.hours<endTime.hours) ||
-                    (startTime.hours == currentTime.hours && startTime.minutes<currentTime.minutes)||
-                    (currentTime.hours == endTime.hours && currentTime.minutes < endTime.minutes))
+
+                    (startTime.hours==currentTime.hours && currentTime.hours==endTime.hours &&
+                            startTime.minutes<currentTime.minutes && currentTime.minutes < endTime.minutes) ||
+
+                    (startTime.hours == currentTime.hours && startTime.minutes<currentTime.minutes && currentTime.hours < endTime.hours)||
+
+                    (currentTime.hours == endTime.hours && currentTime.minutes < endTime.minutes && startTime.hours < currentTime.hours))
         }
 
         composable(route= Screens.Login.route) {
@@ -171,9 +181,14 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.Profile.route){
 
+            var context = LocalContext.current
+            val client = LocationClient()
+            client.startLocationClient(context)
+            client.getLocation(context)
+
             UserProfileScreen(
                 bottomNavigationsList = bottomNavigationsList,
-                name=currentUser.name,
+                name=currentUser.username,
                 maxPoints = currentUser.maxPoints.toString(),
                 numberOfWins = currentUser.totalWins.toString(),
                 maxChallengeWinStreak = currentUser.maxWinStreak.toString(),
@@ -245,7 +260,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             val onClickJoinRoom = {
                 joinPicDescRoomViewModel.updateUserPicDescRooms(currentUser)
-                joinPicDescRoomViewModel.userJoinRoom(currentUser.id, currentUser.name)
+                joinPicDescRoomViewModel.userJoinRoom(currentUser.id, currentUser.username)
                 navController.navigate(Screens.Home.route)
             }
 
@@ -372,8 +387,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             CameraScreen(
                 onClickBackButton = {onClickBackButton()},
                 getImageUri = { uri ->
-                    viewModel.submitImage(currentPicDescRoom,currentUser,uri, context)
-//                    navController.navigate(Screens.PicDescRoomScreen.route)
+                    viewModel.submitImage(currentPicDescRoom,currentUser,uri, context){
+                        navController.navigate(Screens.PicDescRoomScreen.route)
+                    }
+
                 }
             )
         }
@@ -384,8 +401,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             CameraScreen(
                 onClickBackButton = {onClickBackButton()},
                 getImageUri = { uri ->
-                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context)
-//                    navController.navigate(Screens.RepicRoomScreen.route)
+                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
+                        navController.navigate(Screens.RepicRoomScreen.route)
+                    }
                 }
             )
         }
@@ -410,7 +428,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             Log.d(TAG, "current time: $currentTime")
             val currentUserIsLeader = currentUser.id == currentPicDescRoom.currentLeader
 
-            val userSawWinScreen = currentPicDescRoom.leaderboard.filter { it.userId == currentUser.id }[0].didSeeWinnerScreen
+            val userSawWinScreen = currentPicDescRoom.leaderboard.any{it.userId == currentUser.id} &&
+                    currentPicDescRoom.leaderboard.filter { it.userId == currentUser.id }[0].didSeeWinnerScreen
+
 
             val descriptionSubmissionOpeningTime = currentPicDescRoom.descriptionSubmissionOpeningTime
             val photoSubmissionOpeningTime = currentPicDescRoom.photoSubmissionOpeningTime
@@ -419,19 +439,42 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val viewModel: SubmitPhotoDescriptionViewModel = viewModel()
             val timerViewModel: TimerViewModel = viewModel()
 
-            if (userSawWinScreen || checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
+            //check if all challenges have been done
+            val isFinished =currentPicDescRoom.currentNumOfChallengesDone ==
+                            currentPicDescRoom.maxNumOfChallenges
 
-                if(checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
-                    // reset info from previous challenge, seenWinScreen
-                    viewModel.resetInfo(currentPicDescRoom, currentUser.id)
+            if (isFinished){
+                val winnerUser = currentPicDescRoom.leaderboard.maxBy { it.points }
+                val roomWinnerViewModel : RoomWinnerViewModel = viewModel()
+
+                RoomWinnerScreen(
+                    roomName = currentPicDescRoom.name,
+                    username = winnerUser.userName,
+                    winnerPoints = winnerUser.points,
+                    onClickBackButton = onClickGoToMainScreen,
+                    onClickLeaveButton = {
+                        roomWinnerViewModel.leaveRoom(currentPicDescRoom,currentUser){
+                            onClickGoToMainScreen()
+                        }
+                    },
+                    onClickLeaderboardButton = onClickLeaderboard
+                )
+            }
+
+
+            else if (userSawWinScreen || checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
+                val reseted = remember{ mutableStateOf(false) }
+                //TODO: intervalo ate ao winnerAnnouncement, caso o user esta etapa,para ter o reset à mesma
+                if(!reseted.value && checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
+                    // reset info from previous challenge, seenWinScreen,  photos submitted
+                    viewModel.resetInfo(currentPicDescRoom, currentUser.id){
+                        reseted.value=true
+                    }
                 }
 
                 if(currentUserIsLeader){
-                    // increase challenge count
-                    viewModel.increaseChallengeCount(currentPicDescRoom)
-
                     SubmitPhotoDescription(
-                        onClickBackButton = { onClickBackButton() },
+                        onClickBackButton = { onClickGoToMainScreen() },
                         onClickLeaderboard,
                         { onClickGoToAddFriendsToRoom(GameType.PICDESC.toString(), roomId) },
                         viewModel,
@@ -451,6 +494,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
             // time to submit photo
             else if (checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)){
+                Log.d(TAG,"${checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)}")
+                Log.d(TAG, "$photoSubmissionOpeningTime, $currentTime, $winnerAnnouncementTime")
                 Log.d(TAG, "Submit Photo Times: $photoSubmissionOpeningTime; $currentTime; $winnerAnnouncementTime")
                 val photosSubmitted = currentPicDescRoom.photosSubmitted
                 val photosUserDidntVote = photosSubmitted.filter{
@@ -461,7 +506,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val viewModel: PromptRoomVoteLeaderViewModel = viewModel()
                 if(currentUserIsLeader){
                     PromptRoomVoteLeader(
-                        onClickBackButton = {onClickBackButton()},
+                        onClickBackButton = {onClickGoToMainScreen()},
                         onClickLeaderboardButton = onClickLeaderboard,
                         onClickAddFriends = { onClickGoToAddFriendsToRoom(GameType.PICDESC.toString(), roomId) },
                         roomName = currentPicDescRoom.name,
@@ -486,7 +531,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     // check if user already submitted photo
                     if(userAlreadySubmitted){
                         PromptRoomVoteUserScreen(
-                            onClickBackButton = {onClickBackButton()},
+                            onClickBackButton = {onClickGoToMainScreen()},
                             onClickLeaderboardButton = onClickLeaderboard,
                             onClickAddFriends = { onClickGoToAddFriendsToRoom(GameType.PICDESC.toString(), roomId) },
                             roomName = currentPicDescRoom.name,
@@ -501,7 +546,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                     else{
                         PromptRoomTakePicture(
-                            onClickBackButton = {onClickBackButton()},
+                            onClickBackButton = {onClickGoToMainScreen()},
                             onClickLeaderboardButton = onClickLeaderboard,
                             onClickAddFriends = { onClickGoToAddFriendsToRoom(GameType.PICDESC.toString(), roomId) },
                             room = currentPicDescRoom,
@@ -552,17 +597,20 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     rating = dailyWinnerViewModel.getPhotoRating(bestRatedPhoto).toString()
                     onClickContinue = {
                         // check if no one awarded the users, to avoid awarding users multiple times
+                        //UPDATE ROOM/USER IN THIS IF
                         if(currentPicDescRoom.leaderboard.none {  it.didSeeWinnerScreen }){
-
                             if(fastestValidPhoto.userId == bestRatedPhoto.userId){
-                                dailyWinnerViewModel.awardUser(fastestValidPhoto.userId,
-                                    currentPicDescRoom,2
-                                ) {
+                                dailyWinnerViewModel.awardUser(fastestValidPhoto.userId, currentPicDescRoom,2) {
                                     dailyWinnerViewModel.userSawWinnerScreen(
                                         currentUser.id,
                                         currentPicDescRoom
-                                    )
-                                    onClickGoToMainScreen()
+                                    ){
+                                        dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
+                                            dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+                                                onClickGoToMainScreen()
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             else{
@@ -572,8 +620,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                         dailyWinnerViewModel.userSawWinnerScreen(
                                             currentUser.id,
                                             currentPicDescRoom
-                                        )
-                                        onClickGoToMainScreen()
+                                        ){
+                                            dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
+                                                dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+                                                    onClickGoToMainScreen()
+                                                }
+                                            }
+                                        }
                                     }
 
                                 }
@@ -583,8 +636,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             dailyWinnerViewModel.userSawWinnerScreen(
                                 currentUser.id,
                                 currentPicDescRoom
-                            )
-                            onClickGoToMainScreen()
+                            ){
+                                onClickGoToMainScreen()
+                            }
                         }
                     }
                 }
@@ -607,12 +661,14 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.RepicRoomScreen.route){ backStackEntry ->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
-            var imageGenerated by remember { mutableStateOf(false) }
 
             if (!currentRepicRoom.id.isNullOrEmpty()){
                 dbutils.removeRePicListener(currentRepicRoom.id!!)
             }
             dbutils.setRePicRoomListener(roomId, {room -> currentRepicRoom = room})
+            if(currentRepicRoom.id.isNullOrEmpty()) return@composable
+
+            var imageGenerated by remember { mutableStateOf(false) }
 
             val currentCalendar = Calendar.getInstance()
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
@@ -627,8 +683,27 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             val picReleaseTime = currentRepicRoom.pictureReleaseTime
             val winnerTime = currentRepicRoom.winnerAnnouncementTime
+            Log.d(TAG, "${Time(0, 0)}, $currentTime, $picReleaseTime")
 
-            if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
+            val userSawWinScreen = currentRepicRoom.leaderboard.any{it.userId == currentUser.id} &&
+                    currentRepicRoom.leaderboard.filter { it.userId == currentUser.id }[0].didSeeWinnerScreen
+
+
+            if(userSawWinScreen || checkInterval(currentTime,Time(0,0), picReleaseTime)){
+                val viewModel: WaitPictureViewModel = viewModel()
+
+                var reseted = remember{ mutableStateOf(false) }
+                if(!reseted.value && checkInterval(currentTime,Time(0,0), picReleaseTime)){
+                    viewModel.resetInfo(currentRepicRoom, currentUser.id){
+                        reseted.value = true
+                    }
+                }
+
+                //TODO implement screen
+                WaitPictureScreen()
+            }
+
+            else if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
                 Log.d("TIME", "SUBMIT PHOTO ")
 
                 if(currentRepicRoom.imageUrl.isNullOrEmpty() && !imageGenerated){
@@ -648,8 +723,46 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 )
             } else {
                 Log.d("TIME", "WINNER ANNOUNCED")
-                RepicRoomWinnerScreen(onClickBackButton = { onClickBackButton() },
-                    onClickLeaderboard, { onClickGoToAddFriendsToRoom(GameType.REPIC.toString(), roomId) }, currentRepicRoom)
+                val viewModel: DailyWinnerViewModel = viewModel()
+
+                //TODO: implement comparison
+                val winnerPhoto = viewModel.findMostSimilarPhoto(currentRepicRoom.photosSubmitted,
+                                                                currentRepicRoom.imageUrl)
+                DailyWinnerScreen(
+                    gameType = GameType.REPIC,
+                    screenTitle = "Most Similar Photo",
+                    username = winnerPhoto.username,
+                    photoUrl = winnerPhoto.photoUrl,
+                    timestamp = String.format("%02d", winnerPhoto.submissionTime.hours) + ":" +
+                            String.format("%02d", winnerPhoto.submissionTime.minutes),
+                    location = winnerPhoto.location,
+                    photoDescription = "",
+                    rating = "",
+                    onClickContinue = {
+                        //UPDATE ROOM/USER IN THIS IF
+                        if(currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen }){
+                            viewModel.awardUser(winnerPhoto.userId, currentRepicRoom,2) {
+                                viewModel.userSawWinnerScreen(
+                                    currentUser.id,
+                                    currentRepicRoom
+                                ){
+                                    viewModel.increaseChallengeCount(currentRepicRoom){
+                                        onClickGoToMainScreen()
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            viewModel.userSawWinnerScreen(
+                                currentUser.id,
+                                currentRepicRoom
+                            ){
+                                onClickGoToMainScreen()
+                            }
+                        }
+                    }
+
+                )
             }
         }
 

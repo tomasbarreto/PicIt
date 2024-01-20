@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserInLeaderboard(
     val userId: String = "",
-    val userName: String = "",
+    val userName: String = "username",
     val points:Int = 0,
     val didSeeWinnerScreen: Boolean = false,
     val winStreak: Int = 0,
