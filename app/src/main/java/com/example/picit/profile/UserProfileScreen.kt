@@ -64,7 +64,7 @@ fun UserProfileScreen(
             Spacer(modifier = Modifier.height(52.dp))
 
             //Achievements
-            // TODO: theses stats just count in pulbic rooms?
+            // TODO isto no telemovel fica desformatado
             Box(
                 modifier = Modifier
                     .background(Color(215, 215, 215))
