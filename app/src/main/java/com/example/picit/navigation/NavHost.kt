@@ -407,16 +407,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             currentPicDescRoom.maxNumOfChallenges
 
 
-            // Reset user see screen
-            val reseted = remember{ mutableStateOf(false) }
-            if(!reseted.value && checkInterval(currentTime,descriptionSubmissionOpeningTime,winnerAnnouncementTime)){
-                // reset info from previous challenge, seenWinScreen,  photos submitted
-                viewModel.resetInfo(currentPicDescRoom, currentUser.id){
-                    reseted.value=true
-                }
-            }
+
 
             if (isFinished){
+
+
                 val winnerUser = currentPicDescRoom.leaderboard.maxBy { it.points }
                 val roomWinnerViewModel : RoomWinnerViewModel = viewModel()
 
@@ -426,6 +421,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     winnerPoints = winnerUser.points,
                     onClickBackButton = onClickGoToMainScreen,
                     onClickLeaveButton = {
+                        //TODO nao tirar da leaderboard?
                         roomWinnerViewModel.leaveRoom(currentPicDescRoom,currentUser){
                             onClickGoToMainScreen()
                         }
@@ -435,7 +431,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
 
 
-            else if (userSawWinScreen || checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
+            else if (userSawWinScreen||
+                checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
+
+                // Reset user see screen
+                val reseted = remember{ mutableStateOf(false) }
+                if(userSawWinScreen && !reseted.value && checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
+                    // reset info from previous challenge, seenWinScreen,  photos submitted
+                    viewModel.resetInfo(currentPicDescRoom, currentUser.id){
+                        reseted.value=true
+                    }
+                }
+
                 if(currentUserIsLeader){
                     if(userSawWinScreen){
                         WaitingPhotoDescriptionScreen(
@@ -661,13 +668,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     currentRepicRoom.leaderboard.filter { it.userId == currentUser.id }[0].didSeeWinnerScreen
 
 
-            val waitPictureViewModel: WaitPictureViewModel = viewModel()
-            var reseted = remember{ mutableStateOf(false) }
-            if(!reseted.value && checkInterval(currentTime,Time(0,0), winnerTime)){
-                waitPictureViewModel.resetInfo(currentRepicRoom, currentUser.id){
-                    reseted.value = true
-                }
-            }
+
             //check if all challenges have been done
             val isFinished =currentRepicRoom.currentNumOfChallengesDone ==
                     currentRepicRoom.maxNumOfChallenges
@@ -692,6 +693,15 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
 
             else if(userSawWinScreen || checkInterval(currentTime,Time(0,0), picReleaseTime)){
+                val waitPictureViewModel: WaitPictureViewModel = viewModel()
+                var reseted = remember{ mutableStateOf(false) }
+                if(!reseted.value && checkInterval(currentTime,Time(0,0), winnerTime)){
+                    waitPictureViewModel.resetInfo(currentRepicRoom, currentUser.id){
+                        reseted.value = true
+                    }
+                }
+
+
                 WaitPictureScreen(
                     onClickBackButton = onClickGoToMainScreen,
                     onClickLeaderboardButton = onClickLeaderboard,
@@ -738,7 +748,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     onClickContinue = {
                         //UPDATE ROOM/USER IN THIS IF
                         if(currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen }){
-                            viewModel.awardUser(winnerPhoto.userId, currentRepicRoom,2) {
+                            viewModel.awardUser(winnerPhoto.userId, currentRepicRoom,1) {
                                 viewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentRepicRoom
