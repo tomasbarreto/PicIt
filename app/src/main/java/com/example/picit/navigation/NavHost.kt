@@ -53,7 +53,6 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
-import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.repic.WaitPictureViewModel
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
@@ -680,10 +679,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             } else {
                 Log.d("TIME", "WINNER ANNOUNCED")
                 val viewModel: DailyWinnerViewModel = viewModel()
+                var context = LocalContext.current
 
                 //TODO: implement comparison
                 val winnerPhoto = viewModel.findMostSimilarPhoto(currentRepicRoom.photosSubmitted,
-                                                                currentRepicRoom.imageUrl)
+                                                                currentRepicRoom.imageUrl,
+                                                                context)
 
 
                 DailyWinnerScreen(
