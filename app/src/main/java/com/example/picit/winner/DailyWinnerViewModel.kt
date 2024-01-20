@@ -231,16 +231,15 @@ class DailyWinnerViewModel: ViewModel() {
 
             // Get the bitmap of the model photo to repic
             val modelPhotoBitmap = getBitmap(imageUrl, context)
-            photoComparator.setModelPhoto(modelPhotoBitmap)
 
             // Get the classification of the first submitted photo
             val firstSubmittedPhotoBitmap = getBitmap(submittedPhotoUrls[0], context)
-            maxPhotoClassification = photoComparator.comparePhoto(firstSubmittedPhotoBitmap)
+            maxPhotoClassification = photoComparator.comparePhoto(modelPhotoBitmap, firstSubmittedPhotoBitmap)
 
             // Loop through the rest of the submitted photos to find the maximum classification
             for (index in 1..(submittedPhotoUrls.size - 1)) {
                 val currentPhotoBitmap = getBitmap(submittedPhotoUrls[index], context)
-                val currentPhotoClassification = photoComparator.comparePhoto(currentPhotoBitmap)
+                val currentPhotoClassification = photoComparator.comparePhoto(modelPhotoBitmap, currentPhotoBitmap)
 
                 if (currentPhotoClassification > maxPhotoClassification) {
                     maxPhotoClassification = currentPhotoClassification
