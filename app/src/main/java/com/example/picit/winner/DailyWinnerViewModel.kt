@@ -219,7 +219,6 @@ class DailyWinnerViewModel: ViewModel() {
         }
     }
 
-    //TODO
     fun findMostSimilarPhoto(photosSubmitted: List<RePicPhoto>, imageUrl: String, context: Context): RePicPhoto {
         var photoComparator = PhotoComparator()
         var submittedPhotoUrls = getSubmittedPhotoUrls(photosSubmitted)
