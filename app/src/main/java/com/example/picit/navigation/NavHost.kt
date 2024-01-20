@@ -44,7 +44,7 @@ import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.PromptRoomVoteUserViewModel
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
-import com.example.picit.picdesc.WaitPictureScreen
+import com.example.picit.repic.WaitPictureScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
@@ -53,7 +53,6 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
-import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.repic.WaitPictureViewModel
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
@@ -693,11 +692,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
 
             else if(userSawWinScreen || checkInterval(currentTime,Time(0,0), picReleaseTime)){
-
-
-
-                //TODO implement screen
-                WaitPictureScreen()
+                WaitPictureScreen(
+                    onClickBackButton = onClickGoToMainScreen,
+                    onClickLeaderboardButton = onClickLeaderboard,
+                    roomName = currentRepicRoom.name,
+                    endingTime = currentRepicRoom.pictureReleaseTime,
+                    viewModel = viewModel()
+                )
             }
 
             else if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
