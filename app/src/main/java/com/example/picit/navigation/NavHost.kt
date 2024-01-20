@@ -656,7 +656,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         reseted.value = true
                     }
                 }
-
                 //TODO implement screen
                 WaitPictureScreen()
             }

@@ -181,7 +181,7 @@ class DailyWinnerViewModel: ViewModel() {
 
     fun userSawWinnerScreen(userId: String, room: RePicRoom, callback: () -> Unit = {}) {
         val db = Firebase.database
-        val roomRef = db.getReference("repicRomms/${room.id}")
+        val roomRef = db.getReference("repicRooms/${room.id}")
 
         var userInLeaderboard = UserInLeaderboard()
         val updatedLeaderboard = room.leaderboard.toMutableList()
