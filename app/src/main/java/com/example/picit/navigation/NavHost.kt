@@ -646,6 +646,29 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val userSawWinScreen = currentRepicRoom.leaderboard.any{it.userId == currentUser.id} &&
                     currentRepicRoom.leaderboard.filter { it.userId == currentUser.id }[0].didSeeWinnerScreen
 
+            //TODO: final winner
+            //check if all challenges have been done
+            val isFinished =currentPicDescRoom.currentNumOfChallengesDone ==
+                    currentPicDescRoom.maxNumOfChallenges
+
+            if (isFinished){
+                val winnerUser = currentRepicRoom.leaderboard.maxBy { it.points }
+                val roomWinnerViewModel : RoomWinnerViewModel = viewModel()
+
+                RoomWinnerScreen(
+                    roomName = currentRepicRoom.name,
+                    username = winnerUser.userName,
+                    winnerPoints = winnerUser.points,
+                    onClickBackButton = onClickGoToMainScreen,
+                    onClickLeaveButton = {
+                        roomWinnerViewModel.leaveRoom(currentRepicRoom,currentUser){
+                            onClickGoToMainScreen()
+                        }
+                    },
+                    onClickLeaderboardButton = onClickLeaderboard
+                )
+            }
+
 
             if(userSawWinScreen || checkInterval(currentTime,Time(0,0), picReleaseTime)){
                 val viewModel: WaitPictureViewModel = viewModel()
@@ -671,7 +694,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
 
                 RepicRoomTakePicture(
-                    onClickBackButton = { onClickBackButton() },
+                    onClickBackButton = { onClickGoToMainScreen() },
                     onClickCameraButton = {navController.navigate(Screens.RePicCamera.route)},
                     onClickLeaderboard,
                     viewModel = viewModel(),
