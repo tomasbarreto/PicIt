@@ -661,10 +661,17 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val userSawWinScreen = currentRepicRoom.leaderboard.any{it.userId == currentUser.id} &&
                     currentRepicRoom.leaderboard.filter { it.userId == currentUser.id }[0].didSeeWinnerScreen
 
-            //TODO: final winner
+
+            val waitPictureViewModel: WaitPictureViewModel = viewModel()
+            var reseted = remember{ mutableStateOf(false) }
+            if(!reseted.value && checkInterval(currentTime,Time(0,0), winnerTime)){
+                waitPictureViewModel.resetInfo(currentRepicRoom, currentUser.id){
+                    reseted.value = true
+                }
+            }
             //check if all challenges have been done
-            val isFinished =currentPicDescRoom.currentNumOfChallengesDone ==
-                    currentPicDescRoom.maxNumOfChallenges
+            val isFinished =currentRepicRoom.currentNumOfChallengesDone ==
+                    currentRepicRoom.maxNumOfChallenges
 
             if (isFinished){
                 val winnerUser = currentRepicRoom.leaderboard.maxBy { it.points }
@@ -685,15 +692,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
 
 
-            if(userSawWinScreen || checkInterval(currentTime,Time(0,0), picReleaseTime)){
-                val viewModel: WaitPictureViewModel = viewModel()
+            else if(userSawWinScreen || checkInterval(currentTime,Time(0,0), picReleaseTime)){
 
-                var reseted = remember{ mutableStateOf(false) }
-                if(!reseted.value && checkInterval(currentTime,Time(0,0), picReleaseTime)){
-                    viewModel.resetInfo(currentRepicRoom, currentUser.id){
-                        reseted.value = true
-                    }
-                }
+
+
                 //TODO implement screen
                 WaitPictureScreen()
             }
