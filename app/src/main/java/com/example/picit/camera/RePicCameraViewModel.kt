@@ -51,18 +51,21 @@ class RePicCameraViewModel: ViewModel() {
                                navigationFunction: () -> Unit) {
         val locationClient = LocationClient()
 
-
         val currentCalendar = Calendar.getInstance()
         val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(
             Calendar.MINUTE))
 
-        var location = ""
-
         if (locationClient.isLocationPermGranted(context)) {
             locationClient.startLocationClient(context)
             locationClient.getLocation(context){location->
-
-
+                insertPhoto(imageUrl, user.id, user.username, location, currentTime, room){
+                    navigationFunction()
+                }
+            }
+        }
+        else{
+            insertPhoto(imageUrl, user.id, user.username, "", currentTime, room){
+                navigationFunction()
             }
         }
 
