@@ -407,6 +407,16 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val isFinished =currentPicDescRoom.currentNumOfChallengesDone ==
                             currentPicDescRoom.maxNumOfChallenges
 
+
+            // Reset user see screen
+            val reseted = remember{ mutableStateOf(false) }
+            if(!reseted.value && checkInterval(currentTime,descriptionSubmissionOpeningTime,winnerAnnouncementTime)){
+                // reset info from previous challenge, seenWinScreen,  photos submitted
+                viewModel.resetInfo(currentPicDescRoom, currentUser.id){
+                    reseted.value=true
+                }
+            }
+
             if (isFinished){
                 val winnerUser = currentPicDescRoom.leaderboard.maxBy { it.points }
                 val roomWinnerViewModel : RoomWinnerViewModel = viewModel()
@@ -427,22 +437,26 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
 
             else if (userSawWinScreen || checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
-                val reseted = remember{ mutableStateOf(false) }
-                //TODO: intervalo ate ao winnerAnnouncement, caso o user esta etapa,para ter o reset à mesma
-                if(!reseted.value && checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
-                    // reset info from previous challenge, seenWinScreen,  photos submitted
-                    viewModel.resetInfo(currentPicDescRoom, currentUser.id){
-                        reseted.value=true
-                    }
-                }
-
                 if(currentUserIsLeader){
-                    SubmitPhotoDescription(
-                        onClickBackButton = { onClickGoToMainScreen() },
-                        onClickLeaderboard,
-                        viewModel,
-                        currentPicDescRoom
-                    )
+                    if(userSawWinScreen){
+                        WaitingPhotoDescriptionScreen(
+                            onClickBackButton = { onClickGoToMainScreen() },
+                            onClickLeaderboardButton = onClickLeaderboard,
+                            roomName = currentPicDescRoom.name,
+                            endingTime = currentPicDescRoom.descriptionSubmissionOpeningTime,
+                            viewModel = timerViewModel,
+                            isLeader = true
+                        )
+                    }
+                    else{
+                        SubmitPhotoDescription(
+                            onClickBackButton = { onClickGoToMainScreen() },
+                            onClickLeaderboard,
+                            viewModel,
+                            currentPicDescRoom
+                        )
+                    }
+
                 }
                 else{
                     WaitingPhotoDescriptionScreen(
@@ -450,7 +464,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         onClickLeaderboardButton = onClickLeaderboard,
                         roomName = currentPicDescRoom.name,
                         endingTime = currentPicDescRoom.photoSubmissionOpeningTime,
-                        viewModel = timerViewModel
+                        viewModel = timerViewModel,
+                        isLeader =false
                     )
                 }
             }

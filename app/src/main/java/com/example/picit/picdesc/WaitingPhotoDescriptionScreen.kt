@@ -26,7 +26,8 @@ fun WaitingPhotoDescriptionScreen(
     onClickLeaderboardButton: () -> Unit = {},
     roomName: String = "Room name",
     endingTime: Time = Time(),
-    viewModel: TimerViewModel
+    viewModel: TimerViewModel,
+    isLeader: Boolean = false
 ){
     Column (
         modifier = Modifier
@@ -44,7 +45,8 @@ fun WaitingPhotoDescriptionScreen(
             verticalArrangement = Arrangement.Center
         )
         {
-            Timer(timeFor = "Come back later for the \ndescription release!\n", viewModel = viewModel, endingTime = endingTime)
+            val step = if (isLeader) "submission" else "release"
+            Timer(timeFor = "Come back later for the \ndescription $step!\n", viewModel = viewModel, endingTime = endingTime)
         }
 
         Spacer(modifier = Modifier.weight(1f))
