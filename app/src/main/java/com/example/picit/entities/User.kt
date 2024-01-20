@@ -4,7 +4,6 @@ package com.example.picit.entities
 data class User (
     var id: String = "",
     val username:String = "",
-    val name:String = "",
     val picDescRooms: List<String> = emptyList(), // id das salas picdesc
     val repicRooms: List<String> = emptyList(), // id das salas repic
     val friends: List<Int> = emptyList(), // id dos users

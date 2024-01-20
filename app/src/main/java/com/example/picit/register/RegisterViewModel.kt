@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.JoinRoomRequest
+import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -19,7 +20,6 @@ class RegisterViewModel: ViewModel() {
         context: Context,
         onClickGoBackToLogin: () -> Unit={},
         username: String,
-        name: String
     ) {
         auth = Firebase.auth
 
@@ -32,7 +32,7 @@ class RegisterViewModel: ViewModel() {
 
                         val user = auth.currentUser
                         if (user != null) {
-                            registerUser(user.uid, username, name)
+                            registerUser(user.uid, username)
                         }
                         onClickGoBackToLogin()
                     } else {
@@ -51,32 +51,11 @@ class RegisterViewModel: ViewModel() {
     private fun registerUser(
         userID: String,
         username: String,
-        name: String
     ) {
-        val database = Firebase.database
+        val db = Firebase.database
+        val usersRef = db.getReference("users/$userID")
 
-        val usernameRef = database.getReference("users/" + userID + "/username")
-        val nameRef = database.getReference("users/" + userID + "/name")
-        val maxPointsRef = database.getReference("users/" + userID + "/maxPoints")
-        val totalWinsRef = database.getReference("users/" + userID + "/totalWins")
-        val maxWinStreakRef = database.getReference("users/" + userID + "/maxWinStreak")
-        val nrPhotosTakenRef = database.getReference("users/" + userID + "/nrPhotosTaken")
-        val repicRoomsRef = database.getReference("users/" + userID + "/repicRooms")
-        val picDescRoomsRef = database.getReference("users/" + userID + "/picDescRooms")
-        val friendsRef = database.getReference("users/" + userID + "/friends")
-        val requestsToJoinRef = database.getReference("users/" + userID + "/requestsToJoin")
-        val friendRequestsRef = database.getReference("users/" + userID + "/friendRequests")
-
-        usernameRef.setValue(username)
-        nameRef.setValue(name)
-        maxPointsRef.setValue(0)
-        totalWinsRef.setValue(0)
-        maxWinStreakRef.setValue(0)
-        nrPhotosTakenRef.setValue(0)
-        repicRoomsRef.setValue(emptyList<String>())
-        picDescRoomsRef.setValue(emptyList<String>())
-        friendsRef.setValue(emptyList<Int>())
-        requestsToJoinRef.setValue(emptyList<JoinRoomRequest>())
-        friendRequestsRef.setValue(emptyList<Int>())
+        val user = User(id=userID, username=username)
+        usersRef.setValue(user)
     }
 }

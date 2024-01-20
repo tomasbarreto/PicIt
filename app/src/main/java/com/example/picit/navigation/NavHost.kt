@@ -684,8 +684,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 //TODO: implement comparison
                 val winnerPhoto = viewModel.findMostSimilarPhoto(currentRepicRoom.photosSubmitted,
                                                                 currentRepicRoom.imageUrl)
-
-
                 DailyWinnerScreen(
                     gameType = GameType.REPIC,
                     screenTitle = "Most Similar Photo",
