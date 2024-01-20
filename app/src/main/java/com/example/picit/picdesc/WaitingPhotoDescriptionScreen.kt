@@ -18,6 +18,7 @@ import com.example.picit.utils.ScreenHeader
 fun WaitingPhotoDescriptionScreen(
     onClickBackButton: ()->Unit = {},
     onClickLeaderboardButton: () -> Unit = {},
+    onClickAddToRoomButton: () -> Unit = {},
     roomName: String = "Room name",
     endingTime: Time = Time(),
     viewModel: TimerViewModel
@@ -30,7 +31,9 @@ fun WaitingPhotoDescriptionScreen(
         ScreenHeader(
             withBackButton = true,
             text = roomName,
-            onClickBackButton = onClickBackButton
+            onClickBackButton = onClickBackButton,
+            withAddUsers = true,
+            onClickAddUsers = onClickAddToRoomButton
         )
 
         Column(modifier = Modifier.fillMaxSize(),

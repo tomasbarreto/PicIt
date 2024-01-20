@@ -40,6 +40,7 @@ import com.example.picit.utils.ValidButton
 fun PromptRoomVoteLeader(
     onClickBackButton: ()->Unit = {},
     onClickLeaderboardButton: ()->Unit = {},
+    onClickAddToRoomButton: () -> Unit = {},
     roomName: String = "Room name",
     photoDescription:String = "photo description",
     photo: PicDescPhoto = PicDescPhoto(),
@@ -55,7 +56,9 @@ fun PromptRoomVoteLeader(
         ScreenHeader(
             withBackButton = true,
             text = roomName,
-            onClickBackButton = onClickBackButton
+            onClickBackButton = onClickBackButton,
+            withAddUsers = true,
+            onClickAddUsers = onClickAddToRoomButton
         )
 
         Spacer(modifier = Modifier.height(15.dp))

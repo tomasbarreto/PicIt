@@ -37,6 +37,7 @@ import com.example.picit.utils.TimeLeftDisplay
 fun SubmitPhotoDescription(
     onClickBackButton: ()->Unit = {},
     onClickLeaderboardButton: ()->Unit = {},
+    onClickAddToRoomButton: () -> Unit = {},
     viewModel: SubmitPhotoDescriptionViewModel = viewModel(),
     picDescRoom: PicDescRoom
 ) {
@@ -52,7 +53,9 @@ fun SubmitPhotoDescription(
         ScreenHeader(
             withBackButton = true,
             text = roomName,
-            onClickBackButton = onClickBackButton
+            onClickBackButton = onClickBackButton,
+            withAddUsers = true,
+            onClickAddUsers = onClickAddToRoomButton
         )
         Spacer(modifier = Modifier.height(80.dp))
 

@@ -1,7 +1,6 @@
 package com.example.picit.repic
 
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,16 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.picit.R
 import com.example.picit.entities.RePicRoom
 import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.timer.Timer
@@ -36,6 +32,7 @@ fun RepicRoomTakePicture(
     onClickBackButton: ()->Unit = {},
     onClickCameraButton: ()->Unit = {},
     onClickLeaderboardButton: () -> Unit = {},
+    onClickAddToRoomButton: () -> Unit = {},
     viewModel: TimerViewModel,
     room: RePicRoom = RePicRoom()
 ){
@@ -47,7 +44,9 @@ fun RepicRoomTakePicture(
         ScreenHeader(
             withBackButton = true,
             text = room.name,
-            onClickBackButton = onClickBackButton
+            onClickBackButton = onClickBackButton,
+            withAddUsers = true,
+            onClickAddUsers = onClickAddToRoomButton
         )
 
         Spacer(modifier = Modifier.height(40.dp))
