@@ -2,13 +2,19 @@ package com.example.picit.picdesc
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.entities.Time
+import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.timer.Timer
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.ui.theme.PicItTheme
@@ -32,8 +38,8 @@ fun WaitingPhotoDescriptionScreen(
             text = roomName,
             onClickBackButton = onClickBackButton
         )
-
-        Column(modifier = Modifier.fillMaxSize(),
+        Spacer(modifier = Modifier.weight(1f))
+        Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         )
@@ -42,6 +48,12 @@ fun WaitingPhotoDescriptionScreen(
         }
 
         Spacer(modifier = Modifier.weight(1f))
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        ){ LeaderboardButton(onClickButton = onClickLeaderboardButton)
+        }
+
     }
 }
 
@@ -49,6 +61,6 @@ fun WaitingPhotoDescriptionScreen(
 @Composable
 fun PreviewWaitingPhotoDescriptionScreen() {
     PicItTheme {
-        //WaitingPhotoDescriptionScreen()
+        WaitingPhotoDescriptionScreen(viewModel=viewModel())
     }
 }
