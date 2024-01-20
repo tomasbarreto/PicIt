@@ -57,7 +57,6 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
-import com.example.picit.repic.RepicRoomWinnerScreen
 import com.example.picit.repic.WaitPictureViewModel
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
@@ -356,7 +355,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.InvitesNotifications.route){
             val viewModel: RoomInviteNotificationsViewModel = viewModel()
-
 
             RoomInviteNotificationsScreen(
                 onClickBackButton = {onClickBackButton()},

@@ -47,7 +47,7 @@ fun RoomInviteNotificationsScreen(
             onClickBackButton = onClickBackButton
         )
         currentUser.requestsToJoin.forEach { req ->
-            RequestPanel(true, req, { viewModel.removeJoinRoomRequests(currentUser, req) })
+            RequestPanel(true, req, { viewModel.removeJoinRoomRequest(currentUser, req) }, {viewModel.accept(req.roomId, currentUser) })
         }
 
 //        RequestPanel(true)
@@ -58,7 +58,7 @@ fun RoomInviteNotificationsScreen(
 
 @Composable
 fun RequestPanel(roomRequest:Boolean, joinRoomRequest: JoinRoomRequest,
-                 rejectFunction: () -> Unit = {}) {
+                 rejectFunction: () -> Unit = {}, acceptFunction: () -> Unit = {}) {
     Box(
         modifier = Modifier
             .padding(bottom = 10.dp, top = 10.dp, start = 30.dp, end = 30.dp)
@@ -101,7 +101,7 @@ fun RequestPanel(roomRequest:Boolean, joinRoomRequest: JoinRoomRequest,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 RejectAcceptButton("Reject", rejectFunction)
-                RejectAcceptButton("Accept")
+                RejectAcceptButton("Accept", acceptFunction)
             }
         }
     }
