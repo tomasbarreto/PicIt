@@ -214,7 +214,7 @@ class DailyWinnerViewModel: ViewModel() {
 
     //TODO
     fun findMostSimilarPhoto(photosSubmitted: List<RePicPhoto>, imageUrl: String): RePicPhoto {
-        return RePicPhoto()
+        return photosSubmitted[0]
     }
 
 
