@@ -409,9 +409,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
 
 
-            if (isFinished){
-
-
+            if (userSawWinScreen && isFinished){
                 val winnerUser = currentPicDescRoom.leaderboard.maxBy { it.points }
                 val roomWinnerViewModel : RoomWinnerViewModel = viewModel()
 
@@ -421,8 +419,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     winnerPoints = winnerUser.points,
                     onClickBackButton = onClickGoToMainScreen,
                     onClickLeaveButton = {
-                        //TODO nao tirar da leaderboard?
-                        roomWinnerViewModel.leaveRoom(currentPicDescRoom,currentUser){
+                        roomWinnerViewModel.removeRoomForUserRooms(currentPicDescRoom,currentUser){
                             onClickGoToMainScreen()
                         }
                     },
@@ -683,7 +680,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     winnerPoints = winnerUser.points,
                     onClickBackButton = onClickGoToMainScreen,
                     onClickLeaveButton = {
-                        roomWinnerViewModel.leaveRoom(currentRepicRoom,currentUser){
+                        roomWinnerViewModel.removeRoomForUserRooms(currentRepicRoom,currentUser){
                             onClickGoToMainScreen()
                         }
                     },
