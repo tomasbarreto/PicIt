@@ -5,7 +5,7 @@ sealed class Screens(val route:String){
     object Register: Screens("register")
     object Home: Screens("home")
     object Friends: Screens("friends")
-    object AddFriendsToRoom: Screens("add_friends_to_room")
+    object AddFriendsToRoom: Screens("add_friends_to_room/{game_type}/{room_id}")
     object Profile: Screens("profile")
     object RoomsToJoin: Screens("rooms_to_join")
     object JoinRepicRoom : Screens("join_repic_room/{room_id}")

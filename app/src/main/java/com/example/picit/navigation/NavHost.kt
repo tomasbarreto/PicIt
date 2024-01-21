@@ -82,7 +82,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         val onClickGoToRegistry = {navController.navigate(Screens.Register.route)}
         val onClickGoBackToLogin = {navController.navigate(Screens.Login.route)}
         val onClickGoToMainScreen = {navController.navigate(Screens.Home.route)}
-        val onClickGoAddToRoomFriendScreen = {navController.navigate(Screens.AddFriendsToRoom.route)}
+        val onClickGoAddToRoomFriendScreen = { gameType: GameType, roomId: String ->
+            navController.navigate(Screens.AddFriendsToRoom.route
+            .replace("{game_type}", gameType.toString())
+            .replace("{room_id}", roomId))}
 
         // done with id instead of the user, because updates with the user needed to be done with
         // listeners and that would have very complex logic
@@ -149,7 +152,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             FriendsListScreen(bottomNavigationsList= bottomNavigationsList)
         }
 
-        composable(route= Screens.AddFriendsToRoom.route) {
+        composable(route= Screens.AddFriendsToRoom.route) { backStackEntry->
+            val gameType = backStackEntry.arguments?.getString("game_type")
+            val roomId = backStackEntry.arguments?.getString("room_id")
+
             FriendsListScreen(addToRoom = true, onClickBackButton = { onClickBackButton() })
         }
 
@@ -426,7 +432,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         }
                     },
                     onClickLeaderboardButton = onClickLeaderboard,
-                    onClickAddToRoomButton = onClickGoAddToRoomFriendScreen
+                    onClickAddToRoomButton = { onClickGoAddToRoomFriendScreen(GameType.PICDESC, roomId) }
                 )
             }
 
@@ -447,7 +453,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         onClickLeaderboardButton = onClickLeaderboard,
                         viewModel = viewModel,
                         picDescRoom = currentPicDescRoom,
-                        onClickAddToRoomButton = onClickGoAddToRoomFriendScreen
+                        onClickAddToRoomButton = { onClickGoAddToRoomFriendScreen(GameType.PICDESC, roomId) }
                     )
                 }
                 else{
@@ -457,7 +463,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         roomName = currentPicDescRoom.name,
                         endingTime = currentPicDescRoom.photoSubmissionOpeningTime,
                         viewModel = timerViewModel,
-                        onClickAddToRoomButton = onClickGoAddToRoomFriendScreen
+                        onClickAddToRoomButton = { onClickGoAddToRoomFriendScreen(GameType.PICDESC, roomId) }
                     )
                 }
             }
@@ -488,7 +494,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                              },
                         endingTime = currentPicDescRoom.winnerAnnouncementTime,
                         viewModel = timerViewModel,
-                        onClickAddToRoomButton = onClickGoAddToRoomFriendScreen
+                        onClickAddToRoomButton = { onClickGoAddToRoomFriendScreen(GameType.PICDESC, roomId) }
                     )
                 }
                 else{
@@ -510,7 +516,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             onClickRaitingStars = {raiting:Int ->
                                 viewModel.userVote(currentUser,currentPicDescRoom,photoDisplayed,raiting)
                             },
-                            onClickAddToRoomButton = onClickGoAddToRoomFriendScreen
+                            onClickAddToRoomButton = { onClickGoAddToRoomFriendScreen(GameType.PICDESC, roomId) }
                         )
                     }
                     else{
@@ -520,7 +526,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             room = currentPicDescRoom,
                             viewModel = timerViewModel,
                             onClickCameraButton = {navController.navigate(Screens.PicDescCamera.route)},
-                            onClickAddToRoomButton = onClickGoAddToRoomFriendScreen
+                            onClickAddToRoomButton = { onClickGoAddToRoomFriendScreen(GameType.PICDESC, roomId) }
                         )
                     }
                 }
@@ -686,7 +692,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     onClickLeaderboardButton = onClickLeaderboard,
                     viewModel = viewModel(),
                     room = currentRepicRoom,
-                    onClickAddToRoomButton = onClickGoAddToRoomFriendScreen
+                    onClickAddToRoomButton = { onClickGoAddToRoomFriendScreen(GameType.REPIC, roomId) }
                 )
             } else {
                 Log.d("TIME", "WINNER ANNOUNCED")
