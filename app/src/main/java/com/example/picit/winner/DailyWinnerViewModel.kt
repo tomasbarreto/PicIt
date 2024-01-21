@@ -129,6 +129,7 @@ class DailyWinnerViewModel: ViewModel() {
     }
 
     fun getPhotoRating(photo: PicDescPhoto): Double{
+        if (photo.ratingSum == 0) return 0.0
         return photo.ratingSum / (photo.usersThatVoted.size -1.0)
     }
 
@@ -136,7 +137,11 @@ class DailyWinnerViewModel: ViewModel() {
         val db = Firebase.database
         val roomsRef = db.getReference("picDescRooms/${room.id}")
 
-        val updatedNumberOfChallengesDone = room.currentNumOfChallengesDone+1
+        val updatedNumberOfChallengesDone =
+            if (room.currentNumOfChallengesDone<room.maxNumOfChallenges)
+                room.currentNumOfChallengesDone+1
+            else
+                room.maxNumOfChallenges
         val updatedRoom = room.copy(currentNumOfChallengesDone = updatedNumberOfChallengesDone)
         roomsRef.setValue(updatedRoom).addOnSuccessListener {
             callback()
