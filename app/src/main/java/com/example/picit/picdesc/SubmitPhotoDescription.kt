@@ -28,9 +28,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.leaderboard.LeaderboardButton
+import com.example.picit.timer.Timer
+import com.example.picit.timer.TimerViewModel
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
-import com.example.picit.utils.TimeLeftDisplay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +39,8 @@ fun SubmitPhotoDescription(
     onClickBackButton: ()->Unit = {},
     onClickLeaderboardButton: ()->Unit = {},
     viewModel: SubmitPhotoDescriptionViewModel = viewModel(),
-    picDescRoom: PicDescRoom
+    picDescRoom: PicDescRoom,
+    timerViewModel: TimerViewModel = viewModel()
 ) {
     var context = LocalContext.current
     var photoDescription by remember { mutableStateOf(picDescRoom.photoDescription) } // TODO: check if its this
@@ -70,7 +72,7 @@ fun SubmitPhotoDescription(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
-                TimeLeftDisplay(timeFor = "Submit Description\n",1,32,24)
+                Timer(timeFor = "Submit Description\n", viewModel = timerViewModel, endingTime = picDescRoom.photoSubmissionOpeningTime)
                 Spacer(modifier = Modifier.height(8.dp))
 
                 TextField(
