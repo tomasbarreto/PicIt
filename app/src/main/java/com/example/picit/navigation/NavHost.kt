@@ -158,23 +158,31 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val gameType = backStackEntry.arguments?.getString("game_type")
             val roomId = backStackEntry.arguments?.getString("room_id")
             val viewModel: FriendsListViewModel = viewModel()
+            var roomName = ""
+
 
             LaunchedEffect(roomId, gameType) {
                 if (roomId != null) {
                     if( gameType.equals(GameType.REPIC.toString())) {
                         dbutils.findRepicRoomById(roomId) { repicRoom ->
                             viewModel.getFriendsToAdd(repicRoom.leaderboard.map { userInLeaderboard -> userInLeaderboard.userId })
+                            roomName = repicRoom.name
                         }
+
                     } else {
                         dbutils.findPicDescRoomById(roomId) { picDescRoom ->
                             viewModel.getFriendsToAdd(picDescRoom.leaderboard.map { userInLeaderboard -> userInLeaderboard.userId })
+                            roomName = picDescRoom.name
                         }
                     }
                 }
             }
 
-            FriendsListScreen(addToRoom = true, onClickBackButton = { onClickBackButton() },
-                usersToInvite = viewModel.friendsToAdd, viewModel = viewModel)
+            if(roomId != null && gameType != null) {
+                val inviteToRoom = { viewModel.inviteToRoom(roomId, roomName, GameType.valueOf(gameType), currentUser.username) }
+                FriendsListScreen(addToRoom = true, onClickBackButton = { onClickBackButton() },
+                    usersToInvite = viewModel.friendsToAdd, viewModel = viewModel, onClickInviteButton = inviteToRoom)
+            }
         }
 
         composable(route = Screens.Profile.route) {

@@ -1,6 +1,5 @@
 package com.example.picit.friendslist
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,6 +40,7 @@ fun FriendsListScreen(
     addToRoom: Boolean = false,
     bottomNavigationsList: List<() -> Unit> = listOf({},{},{}),
     onClickBackButton: () -> Unit={},
+    onClickInviteButton: () -> Unit={},
     viewModel: FriendsListViewModel,
     usersToInvite: List<User> = emptyList()
 ) {
@@ -62,7 +62,7 @@ fun FriendsListScreen(
         if (!addToRoom) {
             Spacer(modifier = Modifier.weight(1f))
         }
-        Button(onClick = { Log.w("dvsfdfvf", viewModel.friendsSelected.toString()) }) {
+        Button(onClick = { onClickInviteButton() }) {
             Text(text = "Add friend", fontSize = 24.sp)
         }
         if (!addToRoom) {
