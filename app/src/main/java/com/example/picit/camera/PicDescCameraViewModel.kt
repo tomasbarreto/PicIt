@@ -3,15 +3,13 @@ package com.example.picit.camera
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.Time
 import com.example.picit.entities.User
 import com.example.picit.location.LocationClient
+import com.example.picit.utils.DBUtils
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.storage.storage
@@ -19,6 +17,7 @@ import java.util.Calendar
 
 private val TAG = "PicDescCameraViewModel"
 class PicDescCameraViewModel: ViewModel() {
+    val dbUtils = DBUtils()
 
     fun submitImage(room: PicDescRoom, user: User, uri: Uri, context: Context,
                     navigationFunction:()->Unit={}){
@@ -74,7 +73,7 @@ class PicDescCameraViewModel: ViewModel() {
             }
         }
 
-        incrementUserNumPhotosSubmited(user)
+        dbUtils.incrementUserNumPhotosSubmited(user)
     }
 
     private fun insertPhoto(imageUrl:String, userId:String,username:String ,location:String,
@@ -105,17 +104,6 @@ class PicDescCameraViewModel: ViewModel() {
         roomRef.setValue(updatedRoom).addOnSuccessListener {
             navigationFunction()
         }
-    }
-
-    private fun incrementUserNumPhotosSubmited(user: User){
-        val db = Firebase.database
-        val userRef = db.getReference("users/${user.id}")
-
-        var updatedNumPhotos by mutableStateOf(user.nrPhotosTaken)
-        updatedNumPhotos += 1
-        val updatedUser = user.copy(nrPhotosTaken = updatedNumPhotos)
-
-        userRef.setValue(updatedUser)
     }
 
 
