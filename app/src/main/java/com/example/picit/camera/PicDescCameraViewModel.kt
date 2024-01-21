@@ -3,7 +3,9 @@ package com.example.picit.camera
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
@@ -35,7 +37,7 @@ class PicDescCameraViewModel: ViewModel() {
                 val imageUrl = uri.toString()
 
                 // Now that you have the image URL, update the Realtime Database
-                updateDatabase(room, user, imageUrl, context){
+                updateDatabase(room, user, imageUrl, context) {
                     navigationFunction()
                 }
             }
@@ -72,14 +74,13 @@ class PicDescCameraViewModel: ViewModel() {
             }
         }
 
-
+        incrementUserNumPhotosSubmited(user)
     }
 
     private fun insertPhoto(imageUrl:String, userId:String,username:String ,location:String,
                             time:Time, room:PicDescRoom,navigationFunction: () -> Unit){
         val db = Firebase.database
         val roomRef = db.getReference("picDescRooms/${room.id}")
-
 
         // Create PicDescPhoto with the image URL
         val photo = PicDescPhoto(
@@ -104,6 +105,17 @@ class PicDescCameraViewModel: ViewModel() {
         roomRef.setValue(updatedRoom).addOnSuccessListener {
             navigationFunction()
         }
+    }
+
+    private fun incrementUserNumPhotosSubmited(user: User){
+        val db = Firebase.database
+        val userRef = db.getReference("users/${user.id}")
+
+        var updatedNumPhotos by mutableStateOf(user.nrPhotosTaken)
+        updatedNumPhotos += 1
+        val updatedUser = user.copy(nrPhotosTaken = updatedNumPhotos)
+
+        userRef.setValue(updatedUser)
     }
 
 
