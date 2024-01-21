@@ -1,4 +1,4 @@
-package com.example.picit.picdesc
+package com.example.picit.repic
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,13 +21,12 @@ import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.ScreenHeader
 
 @Composable
-fun WaitingPhotoDescriptionScreen(
+fun WaitPictureScreen(
     onClickBackButton: ()->Unit = {},
     onClickLeaderboardButton: () -> Unit = {},
     roomName: String = "Room name",
     endingTime: Time = Time(),
     viewModel: TimerViewModel,
-    isLeader: Boolean = false
 ){
     Column (
         modifier = Modifier
@@ -45,8 +44,7 @@ fun WaitingPhotoDescriptionScreen(
             verticalArrangement = Arrangement.Center
         )
         {
-            val step = if (isLeader) "submission" else "release"
-            Timer(timeFor = "Come back later for the \ndescription $step!\n", viewModel = viewModel, endingTime = endingTime)
+            Timer(timeFor = "Come back later for the \nphoto release!\n", viewModel = viewModel, endingTime = endingTime)
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -61,8 +59,8 @@ fun WaitingPhotoDescriptionScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewWaitingPhotoDescriptionScreen() {
+fun WaitPictureScreenPreview() {
     PicItTheme {
-        WaitingPhotoDescriptionScreen(viewModel=viewModel())
+        WaitPictureScreen(viewModel=viewModel())
     }
 }

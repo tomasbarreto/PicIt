@@ -90,7 +90,7 @@ fun RegisterScreen(onClickBackButton: ()->Unit={}, onClickGoBackToLogin: () -> U
         Spacer(modifier = Modifier.height(60.dp))
 
         Button(onClick = {
-            viewModel.registerAccount(email, password, baseContext, onClickGoBackToLogin, username, "tomas")
+            viewModel.registerAccount(email, password, baseContext, onClickGoBackToLogin, username)
         }) {
             Text(text = "Register", fontSize = 22.sp)
         }
