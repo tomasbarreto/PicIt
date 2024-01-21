@@ -670,7 +670,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val isFinished =currentRepicRoom.currentNumOfChallengesDone ==
                     currentRepicRoom.maxNumOfChallenges
 
-            if (isFinished){
+            if (userSawWinScreen && isFinished){
                 val winnerUser = currentRepicRoom.leaderboard.maxBy { it.points }
                 val roomWinnerViewModel : RoomWinnerViewModel = viewModel()
 
