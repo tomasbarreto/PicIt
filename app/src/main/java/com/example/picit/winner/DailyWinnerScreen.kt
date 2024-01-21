@@ -85,7 +85,10 @@ fun DailyWinnerScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     if (location.isNotEmpty()) {
-                        Row {
+                        Row (
+                            Modifier.fillMaxWidth(0.5f),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
                             Icon(
                                 Icons.Filled.LocationOn,
                                 contentDescription = null,
