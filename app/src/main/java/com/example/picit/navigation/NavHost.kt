@@ -33,7 +33,6 @@ import com.example.picit.joinroom.UserRoomsScreen
 import com.example.picit.joinroom.UserRoomsViewModel
 import com.example.picit.leaderboard.LeaderboardScreen
 import com.example.picit.leaderboard.LeaderboardViewModel
-import com.example.picit.location.LocationClient
 import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
@@ -148,12 +147,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             FriendsListScreen(bottomNavigationsList= bottomNavigationsList)
         }
         composable(route = Screens.Profile.route){
-
-            var context = LocalContext.current
-            val client = LocationClient()
-            client.startLocationClient(context)
-            client.getLocation(context)
-
             UserProfileScreen(
                 bottomNavigationsList = bottomNavigationsList,
                 name=currentUser.username,
@@ -728,10 +721,14 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             } else {
                 Log.d("TIME", "WINNER ANNOUNCED")
                 val viewModel: DailyWinnerViewModel = viewModel()
+                var context = LocalContext.current
 
                 //TODO: implement comparison
                 val winnerPhoto = viewModel.findMostSimilarPhoto(currentRepicRoom.photosSubmitted,
-                                                                currentRepicRoom.imageUrl)
+                                                                currentRepicRoom.imageUrl,
+                                                                context)
+
+
                 DailyWinnerScreen(
                     gameType = GameType.REPIC,
                     screenTitle = "Most Similar Photo",
