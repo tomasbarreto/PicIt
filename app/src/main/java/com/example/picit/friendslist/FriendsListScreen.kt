@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.picit.entities.User
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.AppBottomMenu
 import com.example.picit.utils.ScreenHeader
@@ -38,7 +39,9 @@ import com.example.picit.utils.ScreenHeader
 fun FriendsListScreen(
     addToRoom: Boolean = false,
     bottomNavigationsList: List<() -> Unit> = listOf({},{},{}),
-    onClickBackButton: () -> Unit={}) {
+    onClickBackButton: () -> Unit={},
+    usersToInvite: List<User> = emptyList()
+) {
     Column (
         modifier = Modifier
             .fillMaxSize(),
@@ -47,10 +50,11 @@ fun FriendsListScreen(
         ScreenHeader(withBackButton = addToRoom, withAddUsers = addToRoom, text = "Friends", onClickBackButton = onClickBackButton)
         Spacer(modifier = Modifier.height(60.dp))
 
-        var friends = arrayOf("FriendName","FriendName","FriendName") // user objects
-        Column(modifier = Modifier.verticalScroll(rememberScrollState()).height(500.dp)) {
-            for (f in friends){
-                FriendPreview(f)
+        Column(modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .height(500.dp)) {
+            usersToInvite.forEach { user ->
+                FriendPreview(user.username)
             }
         }
         if (!addToRoom) {

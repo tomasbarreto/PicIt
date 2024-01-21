@@ -2,6 +2,7 @@ package com.example.picit.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +24,7 @@ import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.Time
 import com.example.picit.entities.User
 import com.example.picit.friendslist.FriendsListScreen
+import com.example.picit.friendslist.FriendsListViewModel
 import com.example.picit.joinroom.JoinPicDescRoomScreen
 import com.example.picit.joinroom.JoinPicDescRoomViewModel
 import com.example.picit.joinroom.JoinRepicRoomScreen
@@ -44,7 +46,6 @@ import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.PromptRoomVoteUserViewModel
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
-import com.example.picit.repic.WaitPictureScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
@@ -53,6 +54,7 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
+import com.example.picit.repic.WaitPictureScreen
 import com.example.picit.repic.WaitPictureViewModel
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
@@ -155,8 +157,23 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route= Screens.AddFriendsToRoom.route) { backStackEntry->
             val gameType = backStackEntry.arguments?.getString("game_type")
             val roomId = backStackEntry.arguments?.getString("room_id")
+            val viewModel: FriendsListViewModel = viewModel()
 
-            FriendsListScreen(addToRoom = true, onClickBackButton = { onClickBackButton() })
+            LaunchedEffect(roomId, gameType) {
+                if (roomId != null) {
+                    if( gameType.equals(GameType.REPIC.toString())) {
+                        dbutils.findRepicRoomById(roomId) { repicRoom ->
+                            viewModel.getFriendsToAdd(repicRoom.leaderboard.map { userInLeaderboard -> userInLeaderboard.userId })
+                        }
+                    } else {
+                        dbutils.findPicDescRoomById(roomId) { picDescRoom ->
+                            viewModel.getFriendsToAdd(picDescRoom.leaderboard.map { userInLeaderboard -> userInLeaderboard.userId })
+                        }
+                    }
+                }
+            }
+
+            FriendsListScreen(addToRoom = true, onClickBackButton = { onClickBackButton() }, usersToInvite = viewModel.friendsToAdd)
         }
 
         composable(route = Screens.Profile.route) {
