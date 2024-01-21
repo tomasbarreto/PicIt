@@ -92,15 +92,22 @@ class RePicCameraViewModel: ViewModel() {
             submissionTime = time,
             location = location,
         )
+        val index = room.currentNumOfChallengesDone
+        var updatedSubmittedPhotosInChallenge = if(room.photosSubmitted.size==index) mutableListOf()
+                                    else room.photosSubmitted[index].toMutableList()
+        updatedSubmittedPhotosInChallenge.filter{ it.userId == userId }
+        updatedSubmittedPhotosInChallenge.add(photo)
 
-        val updatedSubmittedPhotos = room.photosSubmitted.filter{
-            it.userId != userId
-        }.toMutableList()
-        updatedSubmittedPhotos.add(photo)
-
+        val photosSubmittedUpdated = room.photosSubmitted.toMutableList()
+        if(photosSubmittedUpdated.size == index){
+            photosSubmittedUpdated.add(updatedSubmittedPhotosInChallenge)
+        }
+        else{
+            photosSubmittedUpdated[index] = updatedSubmittedPhotosInChallenge
+        }
 
         // Update the room object in the Realtime Database
-        val updatedRoom = room.copy(photosSubmitted = updatedSubmittedPhotos)
+        val updatedRoom = room.copy(photosSubmitted = photosSubmittedUpdated)
         roomRef.setValue(updatedRoom).addOnSuccessListener {
             navigationFunction()
          }

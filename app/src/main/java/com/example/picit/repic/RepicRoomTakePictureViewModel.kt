@@ -58,10 +58,10 @@ class RepicRoomTakePictureViewModel: ViewModel() {
         val db = Firebase.database
         val roomRef = db.getReference("repicRooms/${room.id}")
 
-        val updatedListOfImages = room.imagesUrls.toMutableList()
+        val updatedListOfImages = room.generatedImagesUrls.toMutableList()
         updatedListOfImages.add(imageUrl)
 
-       val updatedRoom = room.copy(imagesUrls = updatedListOfImages)
+       val updatedRoom = room.copy(generatedImagesUrls = updatedListOfImages)
         roomRef.setValue(updatedRoom)
     }
 }
