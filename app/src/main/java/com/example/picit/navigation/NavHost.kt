@@ -151,7 +151,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             )
         }
         composable(route= Screens.Friends.route) {
-            FriendsListScreen(bottomNavigationsList= bottomNavigationsList)
+            FriendsListScreen(bottomNavigationsList= bottomNavigationsList, viewModel = viewModel())
         }
 
         composable(route= Screens.AddFriendsToRoom.route) { backStackEntry->
@@ -173,7 +173,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
             }
 
-            FriendsListScreen(addToRoom = true, onClickBackButton = { onClickBackButton() }, usersToInvite = viewModel.friendsToAdd)
+            FriendsListScreen(addToRoom = true, onClickBackButton = { onClickBackButton() },
+                usersToInvite = viewModel.friendsToAdd, viewModel = viewModel)
         }
 
         composable(route = Screens.Profile.route) {

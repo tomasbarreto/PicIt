@@ -1,5 +1,6 @@
 package com.example.picit.friendslist
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ fun FriendsListScreen(
     addToRoom: Boolean = false,
     bottomNavigationsList: List<() -> Unit> = listOf({},{},{}),
     onClickBackButton: () -> Unit={},
+    viewModel: FriendsListViewModel,
     usersToInvite: List<User> = emptyList()
 ) {
     Column (
@@ -54,13 +56,13 @@ fun FriendsListScreen(
             .verticalScroll(rememberScrollState())
             .height(500.dp)) {
             usersToInvite.forEach { user ->
-                FriendPreview(user.username)
+                FriendPreview(user.username, { viewModel.friendsSelected.add(user) }, { viewModel.friendsSelected.remove(user) })
             }
         }
         if (!addToRoom) {
             Spacer(modifier = Modifier.weight(1f))
         }
-        Button(onClick = { /*TODO: send friend requeset*/ }) {
+        Button(onClick = { Log.w("dvsfdfvf", viewModel.friendsSelected.toString()) }) {
             Text(text = "Add friend", fontSize = 24.sp)
         }
         if (!addToRoom) {
@@ -71,7 +73,7 @@ fun FriendsListScreen(
 }
 
 @Composable
-fun FriendPreview(f: String) {
+fun FriendPreview(f: String, onClickSelect: () -> Unit = {}, onClickDeselect: () -> Unit = {}) {
     Row (
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -84,13 +86,13 @@ fun FriendPreview(f: String) {
         Row (modifier = Modifier
             .weight(1f),
             horizontalArrangement = Arrangement.End){
-            addButton()
+            addButton(onClickSelect, onClickDeselect)
         }
     }
 }
 
 @Composable
-fun addButton() {
+fun addButton(onClickSelect: () -> Unit = {}, onClickDeselect: () -> Unit = {}) {
     var selected by remember { mutableStateOf(false) }
 
     Icon(
@@ -98,7 +100,9 @@ fun addButton() {
         contentDescription = null,
         modifier = Modifier
             .size(44.dp)
-            .clickable { selected = !selected }
+            .clickable { selected = !selected
+                if(selected) { onClickSelect() } else { onClickDeselect() }
+            }
     )
 }
 
@@ -106,6 +110,6 @@ fun addButton() {
 @Composable
 fun FriendsListScreenPreview() {
     PicItTheme {
-        FriendsListScreen()
+//        FriendsListScreen()
     }
 }

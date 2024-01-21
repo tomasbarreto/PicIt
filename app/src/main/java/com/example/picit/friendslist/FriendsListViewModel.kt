@@ -9,6 +9,7 @@ import com.google.firebase.database.getValue
 
 class FriendsListViewModel: ViewModel() {
     val friendsToAdd = mutableListOf<User>()
+    val friendsSelected = mutableListOf<User>()
 
     fun getFriendsToAdd(membersOfRoomIds: List<String>) {
         var db = Firebase.database
