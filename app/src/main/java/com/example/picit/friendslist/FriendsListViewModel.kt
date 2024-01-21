@@ -33,11 +33,11 @@ class FriendsListViewModel: ViewModel() {
         }
     }
 
-    fun inviteToRoom(roomId: String, roomName: String, gameType: GameType, currentUsername: String) {
+    fun inviteToRoom(roomId: String, gameType: GameType, currentUsername: String) {
         var db = Firebase.database
         friendsSelected.forEach { user ->
             val userRef = db.getReference("users/${user.id}")
-            val request = JoinRoomRequest(currentUsername, roomId, roomName, gameType)
+            val request = JoinRoomRequest(currentUsername, roomId, gameType)
 
             val updatedRequests = user.requestsToJoin.toMutableList()
             updatedRequests.add(request)

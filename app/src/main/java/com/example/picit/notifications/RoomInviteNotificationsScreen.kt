@@ -25,12 +25,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.picit.utils.ScreenHeader
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.picit.entities.GameType
+import com.example.picit.entities.JoinRoomRequest
+import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.RePicRoom
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.ScreenHeader
 
 @Composable
 fun RoomInviteNotificationsScreen(
-    onClickBackButton: ()->Unit = {}
+    onClickBackButton: ()->Unit = {},
+    viewModel: RoomInviteNotificationsViewModel
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -41,14 +47,20 @@ fun RoomInviteNotificationsScreen(
             text = "Requests",
             onClickBackButton = onClickBackButton
         )
-        RequestPanel(true)
-        RequestPanel(false)
-        RequestPanel(true)
+        viewModel.requestsWithRepicRooms.forEach { reqRoom ->
+            RequestPanel(roomRequest = true, request = reqRoom.first, repic = reqRoom.second)
+        }
+        viewModel.requestsWithPicDescRooms.forEach { reqRoom ->
+            RequestPanel(roomRequest = true, request = reqRoom.first, picdesc = reqRoom.second)
+        }
+//        RequestPanel(true)
+//        RequestPanel(false)
+//        RequestPanel(true)
     }
 }
 
 @Composable
-fun RequestPanel(roomRequest:Boolean) {
+fun RequestPanel(roomRequest:Boolean, request: JoinRoomRequest, repic: RePicRoom = RePicRoom(), picdesc: PicDescRoom = PicDescRoom()) {
     Box(
         modifier = Modifier
             .padding(bottom = 10.dp, top = 10.dp, start = 30.dp, end = 30.dp)
@@ -69,7 +81,7 @@ fun RequestPanel(roomRequest:Boolean) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 if (roomRequest) {
-                    Text(text = "Room Request", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "${request.gameType} Room Request", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 } else {
                     Text(text = "Friend Request", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 }
@@ -79,7 +91,8 @@ fun RequestPanel(roomRequest:Boolean) {
                     Icons.Filled.Person, contentDescription = null
                 )
                 if (roomRequest) {
-                    Text(text = "User name is asking you to join his room.", modifier = Modifier.width(230.dp), textAlign = TextAlign.Center)
+                    val roomName = if(request.gameType.equals(GameType.REPIC)) repic.name else picdesc.name
+                    Text(text = "${request.senderName} is asking you to join his room ${roomName}.", modifier = Modifier.width(230.dp), textAlign = TextAlign.Center)
                 } else {
                     Text(text = "User name is asking you to be your friend.", modifier = Modifier.width(230.dp), textAlign = TextAlign.Center)
                 }
@@ -114,6 +127,6 @@ fun RejectAcceptButton(decision: String){
 @Composable
 fun RoomInviteNotificationsScreenPreview() {
     PicItTheme {
-        RoomInviteNotificationsScreen()
+        RoomInviteNotificationsScreen(viewModel = viewModel())
     }
 }

@@ -39,6 +39,7 @@ import com.example.picit.location.LocationClient
 import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
+import com.example.picit.notifications.RoomInviteNotificationsViewModel
 import com.example.picit.picdesc.PromptRoomTakePicture
 import com.example.picit.picdesc.PromptRoomVoteLeader
 import com.example.picit.picdesc.PromptRoomVoteLeaderViewModel
@@ -158,28 +159,24 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val gameType = backStackEntry.arguments?.getString("game_type")
             val roomId = backStackEntry.arguments?.getString("room_id")
             val viewModel: FriendsListViewModel = viewModel()
-            var roomName = ""
-
 
             LaunchedEffect(roomId, gameType) {
                 if (roomId != null) {
                     if( gameType.equals(GameType.REPIC.toString())) {
                         dbutils.findRepicRoomById(roomId) { repicRoom ->
                             viewModel.getFriendsToAdd(repicRoom.leaderboard.map { userInLeaderboard -> userInLeaderboard.userId })
-                            roomName = repicRoom.name
                         }
 
                     } else {
                         dbutils.findPicDescRoomById(roomId) { picDescRoom ->
                             viewModel.getFriendsToAdd(picDescRoom.leaderboard.map { userInLeaderboard -> userInLeaderboard.userId })
-                            roomName = picDescRoom.name
                         }
                     }
                 }
             }
 
             if(roomId != null && gameType != null) {
-                val inviteToRoom = { viewModel.inviteToRoom(roomId, roomName, GameType.valueOf(gameType), currentUser.username) }
+                val inviteToRoom = { viewModel.inviteToRoom(roomId, GameType.valueOf(gameType), currentUser.username) }
                 FriendsListScreen(addToRoom = true, onClickBackButton = { onClickBackButton() },
                     usersToInvite = viewModel.friendsToAdd, viewModel = viewModel, onClickInviteButton = inviteToRoom)
             }
@@ -359,9 +356,16 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 )
             }
         }
-        composable(route = Screens.InvitesNotifications.route){
+        composable(route = Screens.InvitesNotifications.route) {
+            val viewModel: RoomInviteNotificationsViewModel = viewModel()
+            val requests = currentUser.requestsToJoin
+            LaunchedEffect(requests) {
+                viewModel.getRooms(requests)
+            }
+
             RoomInviteNotificationsScreen(
-                onClickBackButton = {onClickBackButton()}
+                onClickBackButton = {onClickBackButton()},
+                viewModel = viewModel
             )
         }
         composable(route = Screens.Settings.route){
