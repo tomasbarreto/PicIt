@@ -2,7 +2,10 @@ package com.example.picit.winner
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.os.StrictMode
+import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +23,11 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 import kotlinx.coroutines.launch
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 private val TAG = "DailyWinnerViewModel"
 class DailyWinnerViewModel: ViewModel() {
@@ -231,24 +239,22 @@ class DailyWinnerViewModel: ViewModel() {
         var bestPhotoIndex = 0
         var maxPhotoClassification = 0.0F
 
-        viewModelScope.launch {
 
-            // Get the bitmap of the model photo to repic
-            val modelPhotoBitmap = getBitmap(imageUrl, context)
+        // Get the bitmap of the model photo to repic
+        val modelPhotoBitmap = imageUrlToBitmap(imageUrl)
 
-            // Get the classification of the first submitted photo
-            val firstSubmittedPhotoBitmap = getBitmap(submittedPhotoUrls[0], context)
-            maxPhotoClassification = photoComparator.comparePhoto(modelPhotoBitmap, firstSubmittedPhotoBitmap)
+        // Get the classification of the first submitted photo
+        val firstSubmittedPhotoBitmap = imageUrlToBitmap(submittedPhotoUrls[0])
+        maxPhotoClassification = photoComparator.comparePhoto(modelPhotoBitmap, firstSubmittedPhotoBitmap)
 
-            // Loop through the rest of the submitted photos to find the maximum classification
-            for (index in 1..(submittedPhotoUrls.size - 1)) {
-                val currentPhotoBitmap = getBitmap(submittedPhotoUrls[index], context)
-                val currentPhotoClassification = photoComparator.comparePhoto(modelPhotoBitmap, currentPhotoBitmap)
+        // Loop through the rest of the submitted photos to find the maximum classification
+        for (index in 1..(submittedPhotoUrls.size - 1)) {
+            val currentPhotoBitmap = imageUrlToBitmap(submittedPhotoUrls[index])
+            val currentPhotoClassification = photoComparator.comparePhoto(modelPhotoBitmap, currentPhotoBitmap)
 
-                if (currentPhotoClassification > maxPhotoClassification) {
-                    maxPhotoClassification = currentPhotoClassification
-                    bestPhotoIndex = index
-                }
+            if (currentPhotoClassification > maxPhotoClassification) {
+                maxPhotoClassification = currentPhotoClassification
+                bestPhotoIndex = index
             }
         }
 
@@ -264,14 +270,30 @@ class DailyWinnerViewModel: ViewModel() {
         return result
     }
 
-    private suspend fun getBitmap(photoUrl: String, context: Context): Bitmap {
-        val loading = ImageLoader(context)
-        val request = ImageRequest.Builder(context)
-            .data(photoUrl)
-            .build()
 
-        val result = (loading.execute(request) as SuccessResult).drawable
+    private fun convertImageToBase64(imageUrl: String): String {
+        val policy = StrictMode.ThreadPolicy.Builder()
+            .permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+        val url = URL(imageUrl)
+        val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+        connection.doInput = true
+        connection.connect()
 
-        return (result as BitmapDrawable).bitmap
+        val inputStream: InputStream = connection.inputStream
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+    }
+
+    private fun imageUrlToBitmap(imageUrl: String): Bitmap {
+        val base64String = convertImageToBase64(imageUrl)
+        val decodedBytes: ByteArray = Base64.decode(base64String, Base64.DEFAULT)
+        val inputStream = ByteArrayInputStream(decodedBytes)
+        return BitmapFactory.decodeStream(inputStream)
     }
 }

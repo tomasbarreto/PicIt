@@ -2,6 +2,9 @@ package com.example.picit.camera
 
 import android.content.Context
 import android.net.Uri
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
+import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.RePicPhoto
@@ -12,7 +15,12 @@ import com.example.picit.location.LocationClient
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.storage.storage
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.Calendar
+
 
 private val TAG = "RePicCameraViewModel"
 
@@ -82,7 +90,7 @@ class RePicCameraViewModel: ViewModel() {
             photoUrl = imageUrl,
             userId = userId,
             submissionTime = time,
-            location = location
+            location = location,
         )
 
         val updatedSubmittedPhotos = room.photosSubmitted.filter{
@@ -97,4 +105,6 @@ class RePicCameraViewModel: ViewModel() {
             navigationFunction()
          }
     }
+
+
 }

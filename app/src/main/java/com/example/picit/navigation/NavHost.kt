@@ -688,9 +688,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 if(!reseted.value && checkInterval(currentTime,Time(0,0), winnerTime)){
                     waitPictureViewModel.resetInfo(currentRepicRoom, currentUser.id){
                         reseted.value = true
+
                     }
                 }
-
 
                 WaitPictureScreen(
                     onClickBackButton = onClickGoToMainScreen,
@@ -724,10 +724,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 var context = LocalContext.current
 
                 //TODO: implement comparison
-                val winnerPhoto = viewModel.findMostSimilarPhoto(currentRepicRoom.photosSubmitted,
+                val winnerPhoto = viewModel.findMostSimilarPhoto(currentRepicRoom.photosSubmitted.reversed(),
                                                                 currentRepicRoom.imageUrl,
                                                                 context)
-
+                Log.d(TAG, "From: ${currentRepicRoom.photosSubmitted}")
+                Log.d(TAG, "Won $winnerPhoto")
 
                 DailyWinnerScreen(
                     gameType = GameType.REPIC,

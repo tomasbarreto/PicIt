@@ -8,5 +8,5 @@ data class RePicPhoto(
     val userId: String = "",
     val username: String = "",
     val submissionTime: Time = Time(),
-    val location: String = "location"
+    val location: String = "location",
 )

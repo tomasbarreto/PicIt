@@ -1,10 +1,15 @@
 package com.example.picit.repic
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import com.google.firebase.storage.storage
+import kotlinx.coroutines.tasks.await
+
+private val TAG = "WaitPictureViewModel"
 
 class WaitPictureViewModel: ViewModel() {
 
@@ -24,9 +29,31 @@ class WaitPictureViewModel: ViewModel() {
             }
         }
 
-        val updatedRoom = room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList(), imageUrl = "")
-        roomsRef.setValue(updatedRoom).addOnSuccessListener {
-            callback()
+        var updatedRoom: RePicRoom
+        pictureWasAlreadyUpdated(room) {
+            Log.d(TAG, "here")
+            updatedRoom = if (it) {
+                room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList())
+            } else {
+                room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList(), imageUrl = "")
+            }
+            roomsRef.setValue(updatedRoom).addOnSuccessListener {
+                callback()
+
+            }
+        }
+    }
+
+    private fun pictureWasAlreadyUpdated(room: RePicRoom, getResult: (Boolean) -> Unit) {
+        val storage = Firebase.storage
+        val picRef= storage.getReference("rePic/${room.id}/Challenge${room.currentNumOfChallengesDone}")
+
+        picRef.downloadUrl.addOnSuccessListener {
+            Log.d(TAG, "Had photo")
+            getResult(true)
+        }.addOnFailureListener {
+            Log.d(TAG, "Didnt have photo")
+            getResult(false)
         }
     }
 }
