@@ -5,7 +5,7 @@ data class RePicRoom(
     var id: String? = null,
     val name:String = "",
     val gameType: GameType = GameType.REPIC,
-    val imageUrl: String = "",
+    val imagesUrls: List<String> = emptyList(),
     val photosSubmitted: List<RePicPhoto> = emptyList(),
     val maxCapacity: Int = 0,
     val currentCapacity: Int = 0,

@@ -18,7 +18,7 @@ private val TAG = "RepicRoomPictureReleasedViewModel"
 class RepicRoomTakePictureViewModel: ViewModel() {
 
 
-    fun getGeneratedImage(room: RePicRoom){
+    fun generateImage(room: RePicRoom){
         val storage = Firebase.storage
         val roomImagesGenerated = storage.getReference("rePic/${room.id}/" +
                 "Challenge${room.currentNumOfChallengesDone}")
@@ -58,7 +58,10 @@ class RepicRoomTakePictureViewModel: ViewModel() {
         val db = Firebase.database
         val roomRef = db.getReference("repicRooms/${room.id}")
 
-       val updatedRoom = room.copy(imageUrl = imageUrl)
+        val updatedListOfImages = room.imagesUrls.toMutableList()
+        updatedListOfImages.add(imageUrl)
+
+       val updatedRoom = room.copy(imagesUrls = updatedListOfImages)
         roomRef.setValue(updatedRoom)
     }
 }

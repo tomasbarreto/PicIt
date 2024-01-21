@@ -700,15 +700,16 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     viewModel = viewModel()
                 )
             }
-
+            // Time to submit photos
             else if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
                 Log.d("TIME", "SUBMIT PHOTO ")
 
-                if(currentRepicRoom.imageUrl.isNullOrEmpty() && !imageGenerated){
+                if(currentRepicRoom.imagesUrls.size <= currentRepicRoom.currentNumOfChallengesDone
+                    && !imageGenerated){
                     Log.d(TAG,"Generating image")
                     val viewModelPicture: RepicRoomTakePictureViewModel = viewModel()
                     imageGenerated=true
-                    viewModelPicture.getGeneratedImage(currentRepicRoom)
+                    viewModelPicture.generateImage(currentRepicRoom)
                 }
 
                 RepicRoomTakePicture(
@@ -723,9 +724,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val viewModel: DailyWinnerViewModel = viewModel()
                 var context = LocalContext.current
 
-                //TODO: implement comparison
                 val winnerPhoto = viewModel.findMostSimilarPhoto(currentRepicRoom.photosSubmitted.reversed(),
-                                                                currentRepicRoom.imageUrl,
+                                                                currentRepicRoom.imagesUrls[currentRepicRoom.currentNumOfChallengesDone],
                                                                 context)
                 Log.d(TAG, "From: ${currentRepicRoom.photosSubmitted}")
                 Log.d(TAG, "Won $winnerPhoto")

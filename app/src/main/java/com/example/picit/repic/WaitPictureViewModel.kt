@@ -29,19 +29,25 @@ class WaitPictureViewModel: ViewModel() {
             }
         }
 
-        var updatedRoom: RePicRoom
-        pictureWasAlreadyUpdated(room) {
-            Log.d(TAG, "here")
-            updatedRoom = if (it) {
-                room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList())
-            } else {
-                room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList(), imageUrl = "")
-            }
-            roomsRef.setValue(updatedRoom).addOnSuccessListener {
+        val updatedRoom = room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList())
+        roomsRef.setValue(updatedRoom).addOnSuccessListener {
                 callback()
 
             }
-        }
+
+//        var updatedRoom: RePicRoom
+//        pictureWasAlreadyUpdated(room) {
+//            Log.d(TAG, "here")
+//            updatedRoom = if (it) {
+//                room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList())
+//            } else {
+//                room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList(), imageUrl = "")
+//            }
+//            roomsRef.setValue(updatedRoom).addOnSuccessListener {
+//                callback()
+//
+//            }
+//        }
     }
 
     private fun pictureWasAlreadyUpdated(room: RePicRoom, getResult: (Boolean) -> Unit) {
