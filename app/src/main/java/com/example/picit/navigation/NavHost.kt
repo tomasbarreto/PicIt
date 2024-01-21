@@ -44,7 +44,6 @@ import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.PromptRoomVoteUserViewModel
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
-import com.example.picit.repic.WaitPictureScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
@@ -53,6 +52,7 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
+import com.example.picit.repic.WaitPictureScreen
 import com.example.picit.repic.WaitPictureViewModel
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
@@ -420,6 +420,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     onClickBackButton = onClickGoToMainScreen,
                     onClickLeaveButton = {
                         roomWinnerViewModel.removeRoomForUserRooms(currentPicDescRoom,currentUser){
+                            if(winnerUser.userId.equals(currentUser.id)) {
+                                dbutils.incrementUserNumWins(currentUser)
+                            }
                             onClickGoToMainScreen()
                         }
                     },
@@ -667,7 +670,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
 
             //check if all challenges have been done
-            val isFinished =currentRepicRoom.currentNumOfChallengesDone ==
+            val isFinished = currentRepicRoom.currentNumOfChallengesDone ==
                     currentRepicRoom.maxNumOfChallenges
 
             if (userSawWinScreen && isFinished){
@@ -680,7 +683,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     winnerPoints = winnerUser.points,
                     onClickBackButton = onClickGoToMainScreen,
                     onClickLeaveButton = {
-                        roomWinnerViewModel.removeRoomForUserRooms(currentRepicRoom,currentUser){
+                        roomWinnerViewModel.removeRoomForUserRooms(currentRepicRoom,currentUser) {
+                            if(winnerUser.userId.equals(currentUser.id)) {
+                                dbutils.incrementUserNumWins(currentUser)
+                            }
                             onClickGoToMainScreen()
                         }
                     },
