@@ -365,7 +365,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             RoomInviteNotificationsScreen(
                 onClickBackButton = {onClickBackButton()},
-                viewModel = viewModel
+                viewModel = viewModel,
+                currentUser = currentUser
             )
         }
         composable(route = Screens.Settings.route){
