@@ -7,13 +7,12 @@ import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.storage.storage
-import kotlinx.coroutines.tasks.await
 
 private val TAG = "WaitPictureViewModel"
 
 class WaitPictureViewModel: ViewModel() {
 
-    fun resetInfo(room: RePicRoom, userId: String, callback: ()->Unit={}) {
+    fun resetDidSeeWinnerScreen(room: RePicRoom, userId: String, callback: ()->Unit={}) {
         val db = Firebase.database
         val roomsRef = db.getReference("repicRooms/${room.id}")
 
@@ -29,7 +28,7 @@ class WaitPictureViewModel: ViewModel() {
             }
         }
 
-        val updatedRoom = room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList())
+        val updatedRoom = room.copy(leaderboard = updatedLeaderboard)
         roomsRef.setValue(updatedRoom).addOnSuccessListener {
                 callback()
 

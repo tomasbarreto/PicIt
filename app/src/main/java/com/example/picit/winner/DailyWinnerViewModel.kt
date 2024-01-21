@@ -102,13 +102,14 @@ class DailyWinnerViewModel: ViewModel() {
     }
 
 
-    fun awardUser(userId: String, room: RePicRoom, points:Int =1, callback: ()->Unit = {}) {
+    fun awardUser(photo: RePicPhoto, room: RePicRoom, points:Int =1, callback: ()->Unit = {}) {
         val db = Firebase.database
         val roomRef = db.getReference("repicRooms/${room.id}")
 
         var userInLeaderboard = UserInLeaderboard()
         val updatedLeaderboard = room.leaderboard.toMutableList()
 
+        val userId = photo.userId
         for(user in updatedLeaderboard){
             if(user.userId == userId){
                 userInLeaderboard = user
@@ -122,7 +123,10 @@ class DailyWinnerViewModel: ViewModel() {
         val updatedUserInLeaderboard = userInLeaderboard.copy(points = updatedPoints, winStreak = updatedStreak)
         updatedLeaderboard.add(updatedUserInLeaderboard)
 
-        val updatedRoom = room.copy(leaderboard = updatedLeaderboard)
+        val updatedWinners = room.winners.toMutableList()
+        updatedWinners.add(photo)
+
+        val updatedRoom = room.copy(leaderboard = updatedLeaderboard, winners = updatedWinners)
         roomRef.setValue(updatedRoom).addOnSuccessListener {
             Log.d(TAG, "room udpated! $updatedRoom ")
             //Update user achievements

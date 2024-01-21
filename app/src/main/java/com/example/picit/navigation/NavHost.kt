@@ -686,7 +686,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val waitPictureViewModel: WaitPictureViewModel = viewModel()
                 var reseted = remember{ mutableStateOf(false) }
                 if(!reseted.value && checkInterval(currentTime,Time(0,0), winnerTime)){
-                    waitPictureViewModel.resetInfo(currentRepicRoom, currentUser.id){
+                    waitPictureViewModel.resetDidSeeWinnerScreen(currentRepicRoom, currentUser.id){
                         reseted.value = true
 
                     }
@@ -722,18 +722,21 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     viewModel = viewModel(),
                     currentRepicRoom
                 )
-            } else {
+            }
+            // Display winner
+            else {
                 Log.d("TIME", "WINNER ANNOUNCED")
                 val viewModel: DailyWinnerViewModel = viewModel()
                 var context = LocalContext.current
 
-                val winnerPhoto = if (currentRepicRoom.winners.size <= currentRepicRoom.currentNumOfChallengesDone)
+                val winnerPhoto = if (currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen })
                     viewModel.findMostSimilarPhoto(
                         currentRepicRoom.photosSubmitted.last(),
                         currentRepicRoom.generatedImagesUrls[currentRepicRoom.currentNumOfChallengesDone],
                         context
                     )
                 else currentRepicRoom.winners.last()
+
                 Log.d(TAG, "From: ${currentRepicRoom.photosSubmitted}")
                 Log.d(TAG, "Won $winnerPhoto")
 
@@ -749,8 +752,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     rating = "",
                     onClickContinue = {
                         //UPDATE ROOM/USER IN THIS IF
-                        if(currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen }){
-                            viewModel.awardUser(winnerPhoto.userId, currentRepicRoom,1) {
+                        if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
+                            viewModel.awardUser(winnerPhoto, currentRepicRoom,1) {
                                 viewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentRepicRoom
