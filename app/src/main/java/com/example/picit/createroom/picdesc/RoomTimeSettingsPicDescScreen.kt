@@ -1,5 +1,6 @@
 package com.example.picit.createroom.picdesc
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +52,7 @@ fun RoomTimeSettingsPicDescScreen(
 
     var maxHours = 23
     var maxMinutes = 59
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -68,7 +71,8 @@ fun RoomTimeSettingsPicDescScreen(
         ){
             Text(text = "*Time is processed as being for the same day.\n" +
                     "*Your current time must be in the interval defined by " +
-                    "Description submission release time and Photo submission time", fontSize = 14.sp)
+                    "Description submission release time and Photo submission time.\n" +
+                    "*Times must be strictly ascending.", fontSize = 14.sp)
         }
 
         Spacer(Modifier.weight(1F))
@@ -110,12 +114,48 @@ fun RoomTimeSettingsPicDescScreen(
         Spacer(modifier = Modifier.weight(1f))
 
         Button(onClick = {
-            viewModel.registerPicDescRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
-                Time(hoursDescReleaseStart.value.toInt(), minutesDescReleaseStart.value.toInt()),
-                Time(hoursPictureSubmissionStart.value.toInt(), minutesPictureSubmissionStart.value.toInt()),
-                Time(hoursWinner.value.toInt(), minutesWinner.value.toInt()),
-                onClickGoHomeScreen, currentUserRooms, currentUserId,currentUserName
-            )
+            hoursDescReleaseStart.value =
+                if (hoursDescReleaseStart.value == "" ) "00"
+                else hoursDescReleaseStart.value
+
+            minutesDescReleaseStart.value =
+                if (minutesDescReleaseStart.value == "" ) "00"
+                else minutesDescReleaseStart.value
+
+            hoursPictureSubmissionStart.value =
+                if (hoursPictureSubmissionStart.value == "" ) "00"
+                else hoursPictureSubmissionStart.value
+
+            minutesPictureSubmissionStart.value =
+                if (minutesPictureSubmissionStart.value == "" ) "00"
+                else minutesPictureSubmissionStart.value
+
+            hoursWinner.value =
+                if (hoursWinner.value == "" ) "00"
+                else hoursWinner.value
+
+            minutesWinner.value =
+                if (minutesWinner.value == "" ) "00"
+                else minutesWinner.value
+
+            if(viewModel.validTimes( Time(hoursDescReleaseStart.value.toInt(), minutesDescReleaseStart.value.toInt()),
+                    Time(hoursPictureSubmissionStart.value.toInt(), minutesPictureSubmissionStart.value.toInt()),
+                    Time(hoursWinner.value.toInt(), minutesWinner.value.toInt()))){
+
+                viewModel.registerPicDescRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
+                    Time(hoursDescReleaseStart.value.toInt(), minutesDescReleaseStart.value.toInt()),
+                    Time(hoursPictureSubmissionStart.value.toInt(), minutesPictureSubmissionStart.value.toInt()),
+                    Time(hoursWinner.value.toInt(), minutesWinner.value.toInt()),
+                    onClickGoHomeScreen, currentUserRooms, currentUserId,currentUserName
+                )
+            }
+            else{
+                Toast.makeText(
+                    context,
+                    "Invalid times",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }) {
             Text(text = "Next", fontSize = 22.sp)
         }

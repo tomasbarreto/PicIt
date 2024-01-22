@@ -7,6 +7,7 @@ import com.example.picit.entities.Time
 import com.example.picit.entities.UserInLeaderboard
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import java.util.Calendar
 
 class RepicRoomTimeSettingsViewModel: ViewModel() {
 
@@ -45,6 +46,30 @@ class RepicRoomTimeSettingsViewModel: ViewModel() {
 
         val roomsRef = database.getReference("users/" + currentUserId + "/repicRooms")
         roomsRef.setValue(userCurrentRooms.value)
+    }
+
+    fun validTimes(time: Time, time1: Time): Boolean {
+        val currentCalendar = Calendar.getInstance()
+        val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(
+            Calendar.MINUTE))
+
+        return timeIsStrictlyGreater(time1,time) && timeIsInInterval(currentTime, time, time1)
+    }
+
+    private fun timeIsInInterval(currentTime: Time, startTime: Time, endTime: Time): Boolean {
+        return ((startTime.hours<currentTime.hours && currentTime.hours<endTime.hours) ||
+
+                (startTime.hours==currentTime.hours && currentTime.hours==endTime.hours &&
+                        startTime.minutes<currentTime.minutes && currentTime.minutes < endTime.minutes) ||
+
+                (startTime.hours == currentTime.hours && startTime.minutes<currentTime.minutes && currentTime.hours < endTime.hours)||
+
+                (currentTime.hours == endTime.hours && currentTime.minutes < endTime.minutes && startTime.hours < currentTime.hours))
+    }
+
+    private fun timeIsStrictlyGreater(time: Time, time1: Time): Boolean {
+        return time.hours>time1.hours ||
+                (time.hours == time1.hours && time.minutes > time1.minutes)
     }
 
 }
