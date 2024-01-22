@@ -92,15 +92,23 @@ class PicDescCameraViewModel: ViewModel() {
             leaderVote = false,
             ratingSum = 0
         )
+        val index = room.currentNumOfChallengesDone
+        val updatedSubmittedPhotosInChallenge = if(room.allPhotosSubmitted.size==index) mutableListOf()
+                                                else room.allPhotosSubmitted[index].toMutableList()
+        updatedSubmittedPhotosInChallenge.filter { it.userId != userId }
+        updatedSubmittedPhotosInChallenge.add(photo)
 
-        // Update the list of submitted photos in the room
-        val updatedSubmittedPhotos = room.photosSubmitted.filter{
-            it.userId != userId
-        }.toMutableList()
-        updatedSubmittedPhotos.add(photo)
+        val updatedSubmittedPhotos = room.allPhotosSubmitted.toMutableList()
+        if(updatedSubmittedPhotos.size == index){
+            updatedSubmittedPhotos.add(updatedSubmittedPhotosInChallenge)
+        }
+        else{
+            updatedSubmittedPhotos[index] = updatedSubmittedPhotosInChallenge
+        }
+
 
         // Update the room object in the Realtime Database
-        val updatedRoom = room.copy(photosSubmitted = updatedSubmittedPhotos)
+        val updatedRoom = room.copy(allPhotosSubmitted = updatedSubmittedPhotos)
         roomRef.setValue(updatedRoom).addOnSuccessListener {
             navigationFunction()
         }
