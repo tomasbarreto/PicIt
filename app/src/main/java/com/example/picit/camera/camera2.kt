@@ -1,24 +1,18 @@
 package com.example.picit.camera
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberAsyncImagePainter
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -34,7 +27,7 @@ import java.util.Objects
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun Camera2() {
+fun Camera2(getImageUri: (Uri, Context) -> Unit = {_,_ ->}) {
     var context = LocalContext.current
 
     val file = context.createImageFile()
@@ -44,13 +37,15 @@ fun Camera2() {
         context.packageName + ".provider", file
     )
 
-    var capturedImageUri by remember {
-        mutableStateOf<Uri>(Uri.EMPTY)
-    }
+//    var capturedImageUri by remember {
+//        mutableStateOf<Uri>(Uri.EMPTY)
+//    }
 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-            capturedImageUri = uri
+//            capturedImageUri = uri
+            getImageUri(uri, context)
+
         }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -84,14 +79,14 @@ fun Camera2() {
         }
     }
 
-    if (capturedImageUri.path?.isNotEmpty() == true) {
-        Image(
-            modifier = Modifier
-                .padding(16.dp, 8.dp),
-            painter = rememberAsyncImagePainter(capturedImageUri),
-            contentDescription = null
-        )
-    }
+//    if (capturedImageUri.path?.isNotEmpty() == true) {
+//        Image(
+//            modifier = Modifier
+//                .padding(16.dp, 8.dp),
+//            painter = rememberAsyncImagePainter(capturedImageUri),
+//            contentDescription = null
+//        )
+//    }
 
 
 }
