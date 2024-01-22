@@ -39,11 +39,19 @@ class RegisterViewModel: ViewModel() {
                         Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
                         Toast.makeText(
                             context,
-                            "Registration failed.",
+                            "Registration failed",
                             Toast.LENGTH_SHORT,
                         ).show()
                     }
                 }
+        }
+        else {
+            Log.w(ContentValues.TAG, "createUserWithEmail:failure")
+            Toast.makeText(
+                context,
+                "Registration failed",
+                Toast.LENGTH_SHORT,
+            ).show()
         }
     }
 
