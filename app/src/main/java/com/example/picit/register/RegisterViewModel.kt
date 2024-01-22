@@ -5,7 +5,6 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import com.example.picit.entities.JoinRoomRequest
 import com.example.picit.entities.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -40,11 +39,19 @@ class RegisterViewModel: ViewModel() {
                         Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
                         Toast.makeText(
                             context,
-                            "Authentication failed.",
+                            "Registration failed",
                             Toast.LENGTH_SHORT,
                         ).show()
                     }
                 }
+        }
+        else {
+            Log.w(ContentValues.TAG, "createUserWithEmail:failure")
+            Toast.makeText(
+                context,
+                "Registration failed",
+                Toast.LENGTH_SHORT,
+            ).show()
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.picit.createroom.picdesc
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -62,6 +63,16 @@ fun RoomTimeSettingsPicDescScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
+        Row(
+            modifier = Modifier.fillMaxWidth(0.85f)
+        ){
+            Text(text = "*All time intervals are processed as being from the same day, so they must " +
+                    "be ascending. Your earliest time interval (Description release time) must contain " +
+                    "your actual current time", fontSize = 14.sp)
+        }
+
+        Spacer(Modifier.weight(1F))
+
         Text(text = "Description submission time", fontSize = 20.sp)
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -96,7 +107,7 @@ fun RoomTimeSettingsPicDescScreen(
 
         InsertTime(hours = hoursWinner, minutes = minutesWinner)
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         Button(onClick = {
             viewModel.registerPicDescRoom(roomName, roomCapacity, numChallenges, privacy, privacyCode,
@@ -108,6 +119,8 @@ fun RoomTimeSettingsPicDescScreen(
         }) {
             Text(text = "Next", fontSize = 22.sp)
         }
+
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
