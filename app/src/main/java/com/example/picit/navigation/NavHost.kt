@@ -612,12 +612,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         }
                     }
                 }
-                val photoDescription =
-                    if(currentPicDescRoom.leaderboard.none {  it.didSeeWinnerScreen })
-                        currentPicDescRoom.photoDescriptions.last()
-                    else
-                        currentPicDescRoom.photoDescriptions[currentPicDescRoom.photoDescriptions.size-2]
-
 
                 DailyWinnerScreen(
                     gameType = gameType,
@@ -626,7 +620,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     photoUrl = photoUrl,
                     timestamp = timestamp,
                     location = location,
-                    photoDescription = photoDescription,
+                    photoDescription = currentPicDescRoom.photoDescriptions.last(),
                     rating = rating,
                     onClickContinue = onClickContinue
                 )
