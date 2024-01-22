@@ -4,7 +4,7 @@ data class PicDescRoom(
     var id: String? = null,
     val name:String = "",
     val gameType: GameType = GameType.PICDESC,
-    val photoDescription: String = "",
+    val photoDescriptions: List<String> = emptyList(),
     val maxCapacity: Int = 0,
     val currentCapacity: Int = 0,
     val maxNumOfChallenges: Int = 0,
@@ -14,7 +14,7 @@ data class PicDescRoom(
     //val photoSubmissionClosingTime: Time = Time(), // winnerAnnouncement
     val leaderboard: List<UserInLeaderboard> = emptyList(),
 
-    val photosSubmitted: List<PicDescPhoto> = emptyList(),
+    val allPhotosSubmitted: List<List<PicDescPhoto>> = emptyList(),
     val descriptionSubmissionOpeningTime : Time = Time(),
     //val descriptionSubmissionClosingTime: Time = Time(), // photoSubmissionOpening
     val currentLeader: String = "", // user id

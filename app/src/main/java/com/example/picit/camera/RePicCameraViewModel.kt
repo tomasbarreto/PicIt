@@ -1,6 +1,7 @@
 package com.example.picit.camera
 
 import android.content.Context
+import android.location.LocationManager
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.storage.storage
 import java.util.Calendar
+
 
 private val TAG = "RePicCameraViewModel"
 
@@ -56,12 +58,14 @@ class RePicCameraViewModel: ViewModel() {
         val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(
             Calendar.MINUTE))
 
-        if (locationClient.isLocationPermGranted(context)) {
+
+        if (locationClient.isLocationPermGranted(context) && isGpsEnabled(context)) {
             locationClient.startLocationClient(context)
             locationClient.getLocation(context){location->
                 insertPhoto(imageUrl, user.id, user.username, location, currentTime, room){
                     navigationFunction()
                 }
+
             }
         }
         else{
@@ -85,19 +89,34 @@ class RePicCameraViewModel: ViewModel() {
             photoUrl = imageUrl,
             userId = userId,
             submissionTime = time,
-            location = location
+            location = location,
         )
+        val index = room.currentNumOfChallengesDone
+        var updatedSubmittedPhotosInChallenge = if(room.photosSubmitted.size==index) mutableListOf()
+                                    else room.photosSubmitted[index].filter{ it.userId != userId }.toMutableList()
+        updatedSubmittedPhotosInChallenge.add(photo)
 
-        val updatedSubmittedPhotos = room.photosSubmitted.filter{
-            it.userId != userId
-        }.toMutableList()
-        updatedSubmittedPhotos.add(photo)
-
+        val photosSubmittedUpdated = room.photosSubmitted.toMutableList()
+        if(photosSubmittedUpdated.size == index){
+            photosSubmittedUpdated.add(updatedSubmittedPhotosInChallenge)
+        }
+        else{
+            photosSubmittedUpdated[index] = updatedSubmittedPhotosInChallenge
+        }
 
         // Update the room object in the Realtime Database
-        val updatedRoom = room.copy(photosSubmitted = updatedSubmittedPhotos)
+        val updatedRoom = room.copy(photosSubmitted = photosSubmittedUpdated)
         roomRef.setValue(updatedRoom).addOnSuccessListener {
             navigationFunction()
          }
     }
+
+    private fun isGpsEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        // Check if GPS is enabled
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+
 }

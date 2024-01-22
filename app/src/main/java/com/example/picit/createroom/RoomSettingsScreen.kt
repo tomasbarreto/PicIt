@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +41,7 @@ fun RoomSettingsScreen(
     var maxCapacity = 50
     var maxChallenges = 20
 
+    var isPublic by remember { mutableStateOf(true) }
     var isPrivate by remember { mutableStateOf(false) }
     var code by remember { mutableStateOf("") }
     var maxCodeDigits = 4
@@ -151,21 +154,44 @@ fun RoomSettingsScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            var publicColor = Color.Black
+            var privateColor = Color.Gray
+
+            if(isPublic) {
+                var publicColor = Color.Black
+                var privateColor = Color.Gray
+            }
+
+            if(isPrivate) {
+                privateColor = Color.Black
+                publicColor = Color.Gray
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(onClick = {
+                    isPublic = true
                     isPrivate = false
                     distanceToPrivacyButtons = 120.dp
-                }) {
+                },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = publicColor
+                    )
+                ) {
                     Text(text = "Public", fontSize = 22.sp)
                 }
 
                 Button(onClick = {
+                    isPublic = false
                     isPrivate = true
                     distanceToPrivacyButtons = 33.5.dp
-                }) {
+                },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = privateColor
+                    )
+                ) {
                     Text(text = "Private", fontSize = 22.sp)
                 }
             }

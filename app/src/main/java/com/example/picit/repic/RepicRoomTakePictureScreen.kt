@@ -68,7 +68,7 @@ fun RepicRoomTakePicture(
             horizontalArrangement = Arrangement.Center
         ) {
             AsyncImage(
-                model = room.imageUrl,
+                model = room.generatedImagesUrls[room.currentNumOfChallengesDone],
                 contentDescription = "",
                 modifier = Modifier
                     .fillMaxHeight(0.45f)

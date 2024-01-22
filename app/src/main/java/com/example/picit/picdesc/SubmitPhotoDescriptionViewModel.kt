@@ -1,5 +1,7 @@
 package com.example.picit.picdesc
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.UserInLeaderboard
@@ -11,12 +13,27 @@ private var database: FirebaseDatabase = Firebase.database
 
 class SubmitPhotoDescriptionViewModel: ViewModel() {
 
-    fun submitPhotoDescription(photoDescription: String, picDescRoom: PicDescRoom) {
-        val picDescRoomRef = database.getReference("picDescRooms/${picDescRoom.id}")
+    fun submitPhotoDescription(photoDescription: String, room: PicDescRoom, context: Context) {
+        val picDescRoomRef = database.getReference("picDescRooms/${room.id}")
 
-        val updatedRoom = picDescRoom.copy(photoDescription = photoDescription)
+        val index = room.currentNumOfChallengesDone
+        val updatedPhotoDescriptions = room.photoDescriptions.toMutableList()
+        if(updatedPhotoDescriptions.size == index){
+            updatedPhotoDescriptions.add(photoDescription)
+        }
+        else{
+            updatedPhotoDescriptions[index] = photoDescription
+        }
 
-        picDescRoomRef.setValue(updatedRoom)
+        val updatedRoom = room.copy(photoDescriptions = updatedPhotoDescriptions)
+
+        picDescRoomRef.setValue(updatedRoom).addOnSuccessListener {
+            Toast.makeText(
+                context,
+                "Description submitted",
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
     }
 
     fun resetInfo(room: PicDescRoom, userId: String, callback: ()->Unit={}) {
@@ -34,7 +51,7 @@ class SubmitPhotoDescriptionViewModel: ViewModel() {
             }
         }
 
-        val updatedRoom = room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList())
+        val updatedRoom = room.copy(leaderboard = updatedLeaderboard)
         roomsRef.setValue(updatedRoom).addOnSuccessListener {
             callback()
         }

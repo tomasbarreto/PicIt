@@ -1,6 +1,13 @@
 package com.example.picit.navigation
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,11 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.picit.camera.CameraScreen
 import com.example.picit.camera.PicDescCameraViewModel
 import com.example.picit.camera.RePicCameraViewModel
 import com.example.picit.createroom.picdesc.RoomTimeSettingsPicDescScreen
@@ -33,7 +41,6 @@ import com.example.picit.joinroom.UserRoomsScreen
 import com.example.picit.joinroom.UserRoomsViewModel
 import com.example.picit.leaderboard.LeaderboardScreen
 import com.example.picit.leaderboard.LeaderboardViewModel
-import com.example.picit.location.LocationClient
 import com.example.picit.login.LoginScreen
 import com.example.picit.login.LoginViewModel
 import com.example.picit.notifications.RoomInviteNotificationsScreen
@@ -44,7 +51,6 @@ import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.PromptRoomVoteUserViewModel
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
-import com.example.picit.repic.WaitPictureScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
@@ -53,6 +59,7 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
+import com.example.picit.repic.WaitPictureScreen
 import com.example.picit.repic.WaitPictureViewModel
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
@@ -62,7 +69,11 @@ import com.example.picit.winner.DailyWinnerScreen
 import com.example.picit.winner.DailyWinnerViewModel
 import com.example.picit.winner.RoomWinnerScreen
 import com.example.picit.winner.RoomWinnerViewModel
+import java.io.File
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Objects
 
 private val TAG = "NavHost"
 
@@ -100,6 +111,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     (startTime.hours == currentTime.hours && startTime.minutes<currentTime.minutes && currentTime.hours < endTime.hours)||
 
                     (currentTime.hours == endTime.hours && currentTime.minutes < endTime.minutes && startTime.hours < currentTime.hours))
+        }
+
+        fun Context.createImageFile(): File {
+            // Create an image file name
+            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+            val imageFileName = "JPEG_" + timeStamp + "_"
+            val image = File.createTempFile(
+                imageFileName, /* prefix */
+                ".jpg", /* suffix */
+                externalCacheDir      /* directory */
+            )
+            return image
         }
 
         composable(route= Screens.Login.route) {
@@ -148,12 +171,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             FriendsListScreen(bottomNavigationsList= bottomNavigationsList)
         }
         composable(route = Screens.Profile.route){
-
-            var context = LocalContext.current
-            val client = LocationClient()
-            client.startLocationClient(context)
-            client.getLocation(context)
-
             UserProfileScreen(
                 bottomNavigationsList = bottomNavigationsList,
                 name=currentUser.username,
@@ -343,33 +360,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 viewModel = viewModel
             )
         }
-        composable(route= Screens.PicDescCamera.route){
-            val viewModel: PicDescCameraViewModel = viewModel()
-            val context = LocalContext.current
-
-            CameraScreen(
-                onClickBackButton = {onClickBackButton()},
-                getImageUri = { uri ->
-                    viewModel.submitImage(currentPicDescRoom,currentUser,uri, context){
-                        navController.navigate(Screens.PicDescRoomScreen.route)
-                    }
-
-                }
-            )
-        }
-        composable(route= Screens.RePicCamera.route){
-            val viewModel: RePicCameraViewModel = viewModel()
-            var context = LocalContext.current
-
-            CameraScreen(
-                onClickBackButton = {onClickBackButton()},
-                getImageUri = { uri ->
-                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
-                        navController.navigate(Screens.RepicRoomScreen.route)
-                    }
-                }
-            )
-        }
         composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
 
@@ -407,8 +397,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             currentPicDescRoom.maxNumOfChallenges
 
 
-
-
             if (userSawWinScreen && isFinished){
                 val winnerUser = currentPicDescRoom.leaderboard.maxBy { it.points }
                 val roomWinnerViewModel : RoomWinnerViewModel = viewModel()
@@ -433,7 +421,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                 // Reset user see screen
                 val reseted = remember{ mutableStateOf(false) }
-                if(userSawWinScreen && !reseted.value && checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
+                if(userSawWinScreen && !reseted.value && checkInterval(currentTime,descriptionSubmissionOpeningTime,winnerAnnouncementTime)){
                     // reset info from previous challenge, seenWinScreen,  photos submitted
                     viewModel.resetInfo(currentPicDescRoom, currentUser.id){
                         reseted.value=true
@@ -477,7 +465,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 Log.d(TAG,"${checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)}")
                 Log.d(TAG, "$photoSubmissionOpeningTime, $currentTime, $winnerAnnouncementTime")
                 Log.d(TAG, "Submit Photo Times: $photoSubmissionOpeningTime; $currentTime; $winnerAnnouncementTime")
-                val photosSubmitted = currentPicDescRoom.photosSubmitted
+                val photosSubmitted =
+                    if(currentPicDescRoom.allPhotosSubmitted.size == currentPicDescRoom.currentNumOfChallengesDone) emptyList()
+                    else currentPicDescRoom.allPhotosSubmitted[currentPicDescRoom.currentNumOfChallengesDone]
                 val photosUserDidntVote = photosSubmitted.filter{
                     it.userId != currentUser.id && !it.usersThatVoted.contains(currentUser.id)
                 }
@@ -489,7 +479,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         onClickBackButton = {onClickGoToMainScreen()},
                         onClickLeaderboardButton = onClickLeaderboard,
                         roomName = currentPicDescRoom.name,
-                        photoDescription = currentPicDescRoom.photoDescription,
+                        photoDescription = currentPicDescRoom.photoDescriptions.last(),
                         photo = photoDisplayed,
                         clickValidButton =  {
                             viewModel.leaderVote(photoDisplayed,currentUser,currentPicDescRoom,true)
@@ -513,7 +503,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             onClickBackButton = {onClickGoToMainScreen()},
                             onClickLeaderboardButton = onClickLeaderboard,
                             roomName = currentPicDescRoom.name,
-                            photoDescription = currentPicDescRoom.photoDescription,
+                            photoDescription = currentPicDescRoom.photoDescriptions.last(),
                             endingTime = currentPicDescRoom.winnerAnnouncementTime,
                             viewModel = timerViewModel,
                             photo = photoDisplayed,
@@ -523,12 +513,53 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         )
                     }
                     else{
+
+                        val viewModel: PicDescCameraViewModel = viewModel()
+
+                        val getImageUri = { uri: Uri, context: Context ->
+                            viewModel.submitImage(currentPicDescRoom,currentUser,uri, context)
+                        }
+
+                        var context = LocalContext.current
+                        val file = context.createImageFile()
+
+                        val uri = FileProvider.getUriForFile(
+                            Objects.requireNonNull(context),
+                            context.packageName + ".provider", file
+                        )
+
+                        val cameraLauncher =
+                            rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+                                getImageUri(uri, context)
+
+                            }
+
+                        val permissionLauncher = rememberLauncherForActivityResult(
+                            ActivityResultContracts.RequestPermission()
+                        ) {
+                            if (it) {
+                                Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+                                cameraLauncher.launch(uri)
+                            } else {
+                                Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+
                         PromptRoomTakePicture(
                             onClickBackButton = {onClickGoToMainScreen()},
                             onClickLeaderboardButton = onClickLeaderboard,
                             room = currentPicDescRoom,
                             viewModel = timerViewModel,
-                            onClickCameraButton = {navController.navigate(Screens.PicDescCamera.route)}
+                            onClickCameraButton = { val permissionCheckResult =
+                                ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                                if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                                    cameraLauncher.launch(uri)
+                                } else {
+                                    // Request a permission
+                                    permissionLauncher.launch(Manifest.permission.CAMERA)
+                                }
+                            }
                         )
                     }
                 }
@@ -539,8 +570,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                 var dailyWinnerViewModel: DailyWinnerViewModel = viewModel()
 
-                val fastestValidPhoto = dailyWinnerViewModel.findFastestValidPhoto(currentPicDescRoom.photosSubmitted)
-                val bestRatedPhoto = dailyWinnerViewModel.findBestRatedPhoto(currentPicDescRoom.photosSubmitted)
+                val fastestValidPhoto = dailyWinnerViewModel.findFastestValidPhoto(currentPicDescRoom.allPhotosSubmitted.last())
+                val bestRatedPhoto = dailyWinnerViewModel.findBestRatedPhoto(currentPicDescRoom.allPhotosSubmitted.last())
 
 
                 // false -> show fastest; true -> show best rated
@@ -627,7 +658,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     photoUrl = photoUrl,
                     timestamp = timestamp,
                     location = location,
-                    photoDescription = currentPicDescRoom.photoDescription,
+                    photoDescription = currentPicDescRoom.photoDescriptions.last(),
                     rating = rating,
                     onClickContinue = onClickContinue
                 )
@@ -638,13 +669,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route = Screens.RepicRoomScreen.route){ backStackEntry ->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
 
-            if (!currentRepicRoom.id.isNullOrEmpty()){
+            if (!currentRepicRoom.id.isNullOrEmpty()) {
                 dbutils.removeRePicListener(currentRepicRoom.id!!)
             }
             dbutils.setRePicRoomListener(roomId, {room -> currentRepicRoom = room})
             if(currentRepicRoom.id.isNullOrEmpty()) return@composable
 
-            var imageGenerated by remember { mutableStateOf(false) }
+
 
             val currentCalendar = Calendar.getInstance()
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
@@ -693,11 +724,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val waitPictureViewModel: WaitPictureViewModel = viewModel()
                 var reseted = remember{ mutableStateOf(false) }
                 if(!reseted.value && checkInterval(currentTime,Time(0,0), winnerTime)){
-                    waitPictureViewModel.resetInfo(currentRepicRoom, currentUser.id){
+                    waitPictureViewModel.resetDidSeeWinnerScreen(currentRepicRoom, currentUser.id){
                         reseted.value = true
+
                     }
                 }
-
 
                 WaitPictureScreen(
                     onClickBackButton = onClickGoToMainScreen,
@@ -707,31 +738,87 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     viewModel = viewModel()
                 )
             }
-
+            // Time to submit photos
             else if (checkInterval(currentTime, picReleaseTime, winnerTime)) {
                 Log.d("TIME", "SUBMIT PHOTO ")
-
-                if(currentRepicRoom.imageUrl.isNullOrEmpty() && !imageGenerated){
+                var imageGenerated by remember { mutableStateOf(false) }
+                if(currentRepicRoom.generatedImagesUrls.size <= currentRepicRoom.currentNumOfChallengesDone
+                    && !imageGenerated){
                     Log.d(TAG,"Generating image")
                     val viewModelPicture: RepicRoomTakePictureViewModel = viewModel()
                     imageGenerated=true
-                    viewModelPicture.getGeneratedImage(currentRepicRoom)
+                    viewModelPicture.generateImage(currentRepicRoom)
+                }
+                if(currentRepicRoom.generatedImagesUrls.size <= currentRepicRoom.currentNumOfChallengesDone){
+                    return@composable
+                }
+
+                val viewModel: RePicCameraViewModel = viewModel()
+
+                val getImageUri = { uri: Uri, context: Context ->
+                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context)
+                }
+
+                var context = LocalContext.current
+                val file = context.createImageFile()
+
+                val uri = FileProvider.getUriForFile(
+                    Objects.requireNonNull(context),
+                    context.packageName + ".provider", file
+                )
+
+                val cameraLauncher =
+                    rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+                        getImageUri(uri, context)
+
+                    }
+
+                val permissionLauncher = rememberLauncherForActivityResult(
+                    ActivityResultContracts.RequestPermission()
+                ) {
+                    if (it) {
+                        Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+                        cameraLauncher.launch(uri)
+                    } else {
+                        Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 RepicRoomTakePicture(
                     onClickBackButton = { onClickGoToMainScreen() },
-                    onClickCameraButton = {navController.navigate(Screens.RePicCamera.route)},
+                    onClickCameraButton = {
+                        val permissionCheckResult =
+                            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                            cameraLauncher.launch(uri)
+                        } else {
+                            // Request a permission
+                            permissionLauncher.launch(Manifest.permission.CAMERA)
+                        }
+
+                    },
                     onClickLeaderboard,
                     viewModel = viewModel(),
                     currentRepicRoom
                 )
-            } else {
+            }
+            // Display winner
+            else {
                 Log.d("TIME", "WINNER ANNOUNCED")
                 val viewModel: DailyWinnerViewModel = viewModel()
+                var context = LocalContext.current
 
-                //TODO: implement comparison
-                val winnerPhoto = viewModel.findMostSimilarPhoto(currentRepicRoom.photosSubmitted,
-                                                                currentRepicRoom.imageUrl)
+                val winnerPhoto = if (currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen })
+                    viewModel.findMostSimilarPhoto(
+                        currentRepicRoom.photosSubmitted.last(),
+                        currentRepicRoom.generatedImagesUrls[currentRepicRoom.currentNumOfChallengesDone],
+                        context
+                    )
+                else currentRepicRoom.winners.last()
+
+                Log.d(TAG, "From: ${currentRepicRoom.photosSubmitted}")
+                Log.d(TAG, "Won $winnerPhoto")
+
                 DailyWinnerScreen(
                     gameType = GameType.REPIC,
                     screenTitle = "Most Similar Photo",
@@ -744,8 +831,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     rating = "",
                     onClickContinue = {
                         //UPDATE ROOM/USER IN THIS IF
-                        if(currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen }){
-                            viewModel.awardUser(winnerPhoto.userId, currentRepicRoom,1) {
+                        if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
+                            viewModel.awardUser(winnerPhoto, currentRepicRoom,1) {
                                 viewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentRepicRoom
