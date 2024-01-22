@@ -94,7 +94,7 @@ class RePicCameraViewModel: ViewModel() {
         )
         val index = room.currentNumOfChallengesDone
         var updatedSubmittedPhotosInChallenge = if(room.photosSubmitted.size==index) mutableListOf()
-                                    else room.photosSubmitted[index].filter{ it.userId == userId }.toMutableList()
+                                    else room.photosSubmitted[index].filter{ it.userId != userId }.toMutableList()
         updatedSubmittedPhotosInChallenge.add(photo)
 
         val photosSubmittedUpdated = room.photosSubmitted.toMutableList()
