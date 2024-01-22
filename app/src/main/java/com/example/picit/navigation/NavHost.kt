@@ -93,12 +93,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         var dbutils = DBUtils()
 
         fun checkInterval(currentTime: Time, startTime: Time, endTime: Time): Boolean {
-            return ((startTime.hours<currentTime.hours && currentTime.hours<endTime.hours) ||
+            return ((startTime.hours<=currentTime.hours && currentTime.hours<endTime.hours) ||
 
                     (startTime.hours==currentTime.hours && currentTime.hours==endTime.hours &&
-                            startTime.minutes<currentTime.minutes && currentTime.minutes < endTime.minutes) ||
+                            startTime.minutes<=currentTime.minutes && currentTime.minutes < endTime.minutes) ||
 
-                    (startTime.hours == currentTime.hours && startTime.minutes<currentTime.minutes && currentTime.hours < endTime.hours)||
+                    (startTime.hours == currentTime.hours && startTime.minutes<=currentTime.minutes && currentTime.hours < endTime.hours)||
 
                     (currentTime.hours == endTime.hours && currentTime.minutes < endTime.minutes && startTime.hours < currentTime.hours))
         }
@@ -541,66 +541,84 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
             // show winner
             else{
+                Log.d(TAG, currentTime.toString())
+                Log.d(TAG, checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime).toString())
                 if(currentPicDescRoom.id.isNullOrEmpty()) return@composable
 
                 var dailyWinnerViewModel: DailyWinnerViewModel = viewModel()
 
+                val index =
+                    if (currentPicDescRoom.leaderboard.none {  it.didSeeWinnerScreen })
+                        currentPicDescRoom.currentNumOfChallengesDone
+                    else
+                        currentPicDescRoom.currentNumOfChallengesDone-1
 
-                val fastestValidPhoto = dailyWinnerViewModel.findFastestValidPhoto(currentPicDescRoom.allPhotosSubmitted.last())
-                val bestRatedPhoto = dailyWinnerViewModel.findBestRatedPhoto(currentPicDescRoom.allPhotosSubmitted.last())
-
-
-                // false -> show fastest; true -> show best rated
-                var pressedContinue = remember{ mutableStateOf(false) }
-                val gameType = GameType.PICDESC
-                val screenTitle:String
-                val usernameWinner: String
-                val photoUrl:String
-                val timestamp:String
-                val location:String
-                val rating:String
-                val onClickContinue: ()->Unit
-
-                if(!pressedContinue.value){
-                    screenTitle = "Fastest Valid Photo"
-                    usernameWinner = fastestValidPhoto.username
-                    photoUrl = fastestValidPhoto.photoUrl
-                    timestamp = String.format("%02d", fastestValidPhoto.submissionTime.hours) + ":"+
-                        String.format("%02d", fastestValidPhoto.submissionTime.minutes)
-                    location = fastestValidPhoto.location
-                    rating = dailyWinnerViewModel.getPhotoRating(fastestValidPhoto).toString()
-                    onClickContinue = {pressedContinue.value = true}
-                }
-                else{
-                    screenTitle = "Photo With The Highest Rating"
-                    usernameWinner = bestRatedPhoto.username
-                    photoUrl = bestRatedPhoto.photoUrl
-                    timestamp = String.format("%02d", bestRatedPhoto.submissionTime.hours) + ":" +
-                            String.format("%02d", bestRatedPhoto.submissionTime.minutes)
-                    location = bestRatedPhoto.location
-                    rating = dailyWinnerViewModel.getPhotoRating(bestRatedPhoto).toString()
-                    onClickContinue = {
-                        // check if no one awarded the users, to avoid awarding users multiple times
-                        //UPDATE ROOM/USER IN THIS IF
-                        if(currentPicDescRoom.leaderboard.none {  it.didSeeWinnerScreen }){
-                            if(fastestValidPhoto.userId == bestRatedPhoto.userId){
-                                dailyWinnerViewModel.awardUser(fastestValidPhoto.userId, currentPicDescRoom,2) {
-                                    dailyWinnerViewModel.userSawWinnerScreen(
-                                        currentUser.id,
-                                        currentPicDescRoom
-                                    ){
-                                        dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
-                                            dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
-                                                onClickGoToMainScreen()
-                                            }
-                                        }
+                // No winners in this challenge
+                if(currentPicDescRoom.allPhotosSubmitted.size <= index){
+                    NoWinnerScreen(
+                        onClickContinueButton = {
+                            if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
+                                dailyWinnerViewModel.userSawWinnerScreen(
+                                    currentUser.id,
+                                    currentPicDescRoom
+                                ){
+                                    dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
+                                        onClickGoToMainScreen()
                                     }
                                 }
                             }
                             else{
-                                Log.d(TAG, "Awarded user")
-                                dailyWinnerViewModel.awardUser(fastestValidPhoto.userId, currentPicDescRoom,1){
-                                    dailyWinnerViewModel.awardUser(bestRatedPhoto.userId, currentPicDescRoom,1){
+                                dailyWinnerViewModel.userSawWinnerScreen(
+                                    currentUser.id,
+                                    currentPicDescRoom
+                                ){
+                                    onClickGoToMainScreen()
+                                }
+                            }
+                        }
+                    )
+                }
+                else{
+
+                    val fastestValidPhoto = dailyWinnerViewModel.findFastestValidPhoto(currentPicDescRoom.allPhotosSubmitted.last())
+                    val bestRatedPhoto = dailyWinnerViewModel.findBestRatedPhoto(currentPicDescRoom.allPhotosSubmitted.last())
+
+
+                    // false -> show fastest; true -> show best rated
+                    var pressedContinue = remember{ mutableStateOf(false) }
+                    val gameType = GameType.PICDESC
+                    val screenTitle:String
+                    val usernameWinner: String
+                    val photoUrl:String
+                    val timestamp:String
+                    val location:String
+                    val rating:String
+                    val onClickContinue: ()->Unit
+
+                    if(!pressedContinue.value){
+                        screenTitle = "Fastest Valid Photo"
+                        usernameWinner = fastestValidPhoto.username
+                        photoUrl = fastestValidPhoto.photoUrl
+                        timestamp = String.format("%02d", fastestValidPhoto.submissionTime.hours) + ":"+
+                                String.format("%02d", fastestValidPhoto.submissionTime.minutes)
+                        location = fastestValidPhoto.location
+                        rating = dailyWinnerViewModel.getPhotoRating(fastestValidPhoto).toString()
+                        onClickContinue = {pressedContinue.value = true}
+                    }
+                    else{
+                        screenTitle = "Photo With The Highest Rating"
+                        usernameWinner = bestRatedPhoto.username
+                        photoUrl = bestRatedPhoto.photoUrl
+                        timestamp = String.format("%02d", bestRatedPhoto.submissionTime.hours) + ":" +
+                                String.format("%02d", bestRatedPhoto.submissionTime.minutes)
+                        location = bestRatedPhoto.location
+                        rating = dailyWinnerViewModel.getPhotoRating(bestRatedPhoto).toString()
+                        onClickContinue = {
+                            // check if no one awarded the users, to avoid awarding users multiple times
+                            //UPDATE ROOM/USER IN THIS IF
+                            if(currentPicDescRoom.leaderboard.none {  it.didSeeWinnerScreen }){
+                                if(fastestValidPhoto.userId == bestRatedPhoto.userId){
+                                    dailyWinnerViewModel.awardUser(fastestValidPhoto.userId, currentPicDescRoom,2) {
                                         dailyWinnerViewModel.userSawWinnerScreen(
                                             currentUser.id,
                                             currentPicDescRoom
@@ -612,32 +630,50 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                             }
                                         }
                                     }
+                                }
+                                else{
+                                    Log.d(TAG, "Awarded user")
+                                    dailyWinnerViewModel.awardUser(fastestValidPhoto.userId, currentPicDescRoom,1){
+                                        dailyWinnerViewModel.awardUser(bestRatedPhoto.userId, currentPicDescRoom,1){
+                                            dailyWinnerViewModel.userSawWinnerScreen(
+                                                currentUser.id,
+                                                currentPicDescRoom
+                                            ){
+                                                dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
+                                                    dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+                                                        onClickGoToMainScreen()
+                                                    }
+                                                }
+                                            }
+                                        }
 
+                                    }
+                                }
+                            }
+                            else{
+                                dailyWinnerViewModel.userSawWinnerScreen(
+                                    currentUser.id,
+                                    currentPicDescRoom
+                                ){
+                                    onClickGoToMainScreen()
                                 }
                             }
                         }
-                        else{
-                            dailyWinnerViewModel.userSawWinnerScreen(
-                                currentUser.id,
-                                currentPicDescRoom
-                            ){
-                                onClickGoToMainScreen()
-                            }
-                        }
                     }
-                }
 
-                DailyWinnerScreen(
-                    gameType = gameType,
-                    screenTitle = screenTitle,
-                    username = usernameWinner,
-                    photoUrl = photoUrl,
-                    timestamp = timestamp,
-                    location = location,
-                    photoDescription = currentPicDescRoom.photoDescriptions.last(),
-                    rating = rating,
-                    onClickContinue = onClickContinue
-                )
+                    DailyWinnerScreen(
+                        gameType = gameType,
+                        screenTitle = screenTitle,
+                        username = usernameWinner,
+                        photoUrl = photoUrl,
+                        timestamp = timestamp,
+                        location = location,
+                        photoDescription = currentPicDescRoom.photoDescriptions.last(),
+                        rating = rating,
+                        onClickContinue = onClickContinue
+                    )
+
+                }
 
             }
 
@@ -750,6 +786,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                 // No winners in this challenge
                 if(currentRepicRoom.photosSubmitted.size <= index){
+                    // TODO implement
                     NoWinnerScreen(
                         onClickContinueButton = {
                             if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
