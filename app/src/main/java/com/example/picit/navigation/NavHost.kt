@@ -67,6 +67,7 @@ import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
 import com.example.picit.winner.DailyWinnerScreen
 import com.example.picit.winner.DailyWinnerViewModel
+import com.example.picit.winner.NoWinnerScreen
 import com.example.picit.winner.RoomWinnerScreen
 import com.example.picit.winner.RoomWinnerViewModel
 import java.io.File
@@ -276,6 +277,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.DefineRoomSettings.route){ backStackEntry->
             val gameType = backStackEntry.arguments?.getString("game_type")
+            val context = LocalContext.current
             val route = if( gameType.equals("0")) Screens.PicDescTimeSettings.route
                         else Screens.RePicTimeSettings.route
 
@@ -283,13 +285,23 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickBackButton = { onClickBackButton() },
                 onClickNextButton = {
                         name, capacity, numChallenges, privacy ->
-                    navController.navigate(
-                        route
-                            .replace("{roomName}", name)
-                            .replace("{capacity}", capacity)
-                            .replace("{numChallenges}", numChallenges)
-                            .replace("{privacy}", privacy)
-                    )
+                    if(name.isEmpty() || capacity.isEmpty() || numChallenges.isEmpty() ||
+                        capacity.toInt() <1 || numChallenges.toInt() <1){
+                        Toast.makeText(
+                            context,
+                            "Invalid fields",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    else{
+                        navController.navigate(
+                            route
+                                .replace("{roomName}", name)
+                                .replace("{capacity}", capacity)
+                                .replace("{numChallenges}", numChallenges)
+                                .replace("{privacy}", privacy)
+                        )
+                    }
                 }
             )
         }
@@ -576,6 +588,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                 var dailyWinnerViewModel: DailyWinnerViewModel = viewModel()
 
+
                 val fastestValidPhoto = dailyWinnerViewModel.findFastestValidPhoto(currentPicDescRoom.allPhotosSubmitted.last())
                 val bestRatedPhoto = dailyWinnerViewModel.findBestRatedPhoto(currentPicDescRoom.allPhotosSubmitted.last())
 
@@ -813,32 +826,17 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 Log.d("TIME", "WINNER ANNOUNCED")
                 val viewModel: DailyWinnerViewModel = viewModel()
                 var context = LocalContext.current
+                val index =
+                    if (currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen })
+                        currentRepicRoom.currentNumOfChallengesDone
+                    else
+                        currentRepicRoom.currentNumOfChallengesDone-1
 
-                val winnerPhoto = if (currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen })
-                    viewModel.findMostSimilarPhoto(
-                        currentRepicRoom.photosSubmitted.last(),
-                        currentRepicRoom.generatedImagesUrls[currentRepicRoom.currentNumOfChallengesDone],
-                        context
-                    )
-                else currentRepicRoom.winners.last()
-
-                Log.d(TAG, "From: ${currentRepicRoom.photosSubmitted}")
-                Log.d(TAG, "Won $winnerPhoto")
-
-                DailyWinnerScreen(
-                    gameType = GameType.REPIC,
-                    screenTitle = "Most Similar Photo",
-                    username = winnerPhoto.username,
-                    photoUrl = winnerPhoto.photoUrl,
-                    timestamp = String.format("%02d", winnerPhoto.submissionTime.hours) + ":" +
-                            String.format("%02d", winnerPhoto.submissionTime.minutes),
-                    location = winnerPhoto.location,
-                    photoDescription = "",
-                    rating = "",
-                    onClickContinue = {
-                        //UPDATE ROOM/USER IN THIS IF
-                        if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
-                            viewModel.awardUser(winnerPhoto, currentRepicRoom,1) {
+                // No winners in this challenge
+                if(currentRepicRoom.photosSubmitted.size <= index){
+                    NoWinnerScreen(
+                        onClickContinueButton = {
+                            if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
                                 viewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentRepicRoom
@@ -848,18 +846,67 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                     }
                                 }
                             }
-                        }
-                        else{
-                            viewModel.userSawWinnerScreen(
-                                currentUser.id,
-                                currentRepicRoom
-                            ){
-                                onClickGoToMainScreen()
+                            else{
+                                viewModel.userSawWinnerScreen(
+                                    currentUser.id,
+                                    currentRepicRoom
+                                ){
+                                    onClickGoToMainScreen()
+                                }
                             }
                         }
-                    }
+                    )
+                }
+                else{
+                    val winnerPhoto = if (currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen })
+                        viewModel.findMostSimilarPhoto(
+                            currentRepicRoom.photosSubmitted.last(),
+                            currentRepicRoom.generatedImagesUrls[currentRepicRoom.currentNumOfChallengesDone],
+                            context
+                        )
+                    else currentRepicRoom.winners.last()
 
-                )
+                    Log.d(TAG, "From: ${currentRepicRoom.photosSubmitted}")
+                    Log.d(TAG, "Won $winnerPhoto")
+
+                    DailyWinnerScreen(
+                        gameType = GameType.REPIC,
+                        screenTitle = "Most Similar Photo",
+                        username = winnerPhoto.username,
+                        photoUrl = winnerPhoto.photoUrl,
+                        timestamp = String.format("%02d", winnerPhoto.submissionTime.hours) + ":" +
+                                String.format("%02d", winnerPhoto.submissionTime.minutes),
+                        location = winnerPhoto.location,
+                        photoDescription = "",
+                        rating = "",
+                        onClickContinue = {
+                            //UPDATE ROOM/USER IN THIS IF
+                            if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
+                                viewModel.awardUser(winnerPhoto, currentRepicRoom,1) {
+                                    viewModel.userSawWinnerScreen(
+                                        currentUser.id,
+                                        currentRepicRoom
+                                    ){
+                                        viewModel.increaseChallengeCount(currentRepicRoom){
+                                            onClickGoToMainScreen()
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                viewModel.userSawWinnerScreen(
+                                    currentUser.id,
+                                    currentRepicRoom
+                                ){
+                                    onClickGoToMainScreen()
+                                }
+                            }
+                        }
+
+                    )
+                }
+
+
             }
         }
 
