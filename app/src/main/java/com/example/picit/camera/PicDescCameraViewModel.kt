@@ -93,9 +93,9 @@ class PicDescCameraViewModel: ViewModel() {
             ratingSum = 0
         )
         val index = room.currentNumOfChallengesDone
-        val updatedSubmittedPhotosInChallenge = if(room.allPhotosSubmitted.size==index) mutableListOf()
-                                                else room.allPhotosSubmitted[index].toMutableList()
-        updatedSubmittedPhotosInChallenge.filter { it.userId != userId }
+        val updatedSubmittedPhotosInChallenge =
+            if(room.allPhotosSubmitted.size==index) mutableListOf()
+            else room.allPhotosSubmitted[index].filter { it.userId != userId }.toMutableList()
         updatedSubmittedPhotosInChallenge.add(photo)
 
         val updatedSubmittedPhotos = room.allPhotosSubmitted.toMutableList()

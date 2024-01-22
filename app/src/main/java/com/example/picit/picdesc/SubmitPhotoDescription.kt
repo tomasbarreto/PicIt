@@ -43,7 +43,14 @@ fun SubmitPhotoDescription(
     timerViewModel: TimerViewModel = viewModel()
 ) {
     var context = LocalContext.current
-    var photoDescription by remember { mutableStateOf(picDescRoom.photoDescription) } // TODO: check if its this
+    var photoDescription by remember {
+        mutableStateOf(
+            if(picDescRoom.photoDescriptions.size == picDescRoom.currentNumOfChallengesDone)
+                ""
+            else
+                picDescRoom.photoDescriptions.last()
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -106,7 +113,7 @@ fun SubmitPhotoDescription(
                 .padding(bottom = 32.dp)){
                 Button(onClick = {
                     if (photoDescription.isNotEmpty()) {
-                        viewModel.submitPhotoDescription(photoDescription, picDescRoom)
+                        viewModel.submitPhotoDescription(photoDescription, picDescRoom, context)
                     }
                     else {
                         Toast.makeText(
