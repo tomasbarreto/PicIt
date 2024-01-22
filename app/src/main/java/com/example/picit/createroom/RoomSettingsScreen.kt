@@ -154,15 +154,15 @@ fun RoomSettingsScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            var publicColor = Color.Black
-            var privateColor = Color.Black
+            var publicColor = Color.Gray
+            var privateColor = Color.Gray
 
             if(isPublic) {
-                publicColor = Color.Gray
+                publicColor = Color.Black
             }
 
             if(isPrivate) {
-                privateColor = Color.Gray
+                privateColor = Color.Black
             }
 
             Row(
