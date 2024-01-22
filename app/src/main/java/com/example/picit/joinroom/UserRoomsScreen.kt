@@ -47,8 +47,6 @@ fun UserRoomsScreen(
     userCurrentPicDescRooms: List<PicDescRoom> = emptyList(),
     userID: String = ""
 ) {
-
-
     Column (
         modifier = Modifier
             .fillMaxSize(),
