@@ -1,8 +1,10 @@
 package com.example.picit.picdesccreateroom
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -59,6 +61,16 @@ fun RoomTimeSettingsRepicScreen(
         )
 
         Spacer(modifier = Modifier.height(40.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(0.85f)
+        ){
+            Text(text = "*All time intervals are processed as being from the same day, so they must " +
+                    "be ascending. Your earliest time interval (Picture release time) must contain " +
+                    "your actual current time", fontSize = 14.sp)
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
 
         Text(text = "Picture release time", fontSize = 20.sp)
 

@@ -1,9 +1,9 @@
 package com.example.picit.camera
 
 import android.content.Context
+import android.location.LocationManager
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
@@ -56,7 +56,7 @@ class PicDescCameraViewModel: ViewModel() {
             Calendar.MINUTE))
 
 
-        if (locationClient.isLocationPermGranted(context)) {
+        if (locationClient.isLocationPermGranted(context) && isGpsEnabled(context)) {
             locationClient.startLocationClient(context)
             locationClient.getLocation(context){location->
                 Log.d(TAG,"Location $location")
@@ -92,18 +92,33 @@ class PicDescCameraViewModel: ViewModel() {
             leaderVote = false,
             ratingSum = 0
         )
+        val index = room.currentNumOfChallengesDone
+        val updatedSubmittedPhotosInChallenge =
+            if(room.allPhotosSubmitted.size==index) mutableListOf()
+            else room.allPhotosSubmitted[index].filter { it.userId != userId }.toMutableList()
+        updatedSubmittedPhotosInChallenge.add(photo)
 
-        // Update the list of submitted photos in the room
-        val updatedSubmittedPhotos = room.photosSubmitted.filter{
-            it.userId != userId
-        }.toMutableList()
-        updatedSubmittedPhotos.add(photo)
+        val updatedSubmittedPhotos = room.allPhotosSubmitted.toMutableList()
+        if(updatedSubmittedPhotos.size == index){
+            updatedSubmittedPhotos.add(updatedSubmittedPhotosInChallenge)
+        }
+        else{
+            updatedSubmittedPhotos[index] = updatedSubmittedPhotosInChallenge
+        }
+
 
         // Update the room object in the Realtime Database
-        val updatedRoom = room.copy(photosSubmitted = updatedSubmittedPhotos)
+        val updatedRoom = room.copy(allPhotosSubmitted = updatedSubmittedPhotos)
         roomRef.setValue(updatedRoom).addOnSuccessListener {
             navigationFunction()
         }
+    }
+
+    private fun isGpsEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        // Check if GPS is enabled
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
 

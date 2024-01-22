@@ -39,11 +39,19 @@ class LoginViewModel: ViewModel() {
                             Log.w(TAG, "signInWithEmail:failure", task.exception)
                             Toast.makeText(
                                 context,
-                                "Authentication failed.",
+                                "Authentication failed",
                                 Toast.LENGTH_SHORT,
                             ).show()
                         }
                     }
+            }
+            else {
+                Log.w(TAG, "signInWithEmail:failure")
+                Toast.makeText(
+                    context,
+                    "Authentication failed",
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
     }
 
