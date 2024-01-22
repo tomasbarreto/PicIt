@@ -34,7 +34,7 @@ class SubmitPhotoDescriptionViewModel: ViewModel() {
             }
         }
 
-        val updatedRoom = room.copy(leaderboard = updatedLeaderboard, photosSubmitted = emptyList())
+        val updatedRoom = room.copy(leaderboard = updatedLeaderboard)
         roomsRef.setValue(updatedRoom).addOnSuccessListener {
             callback()
         }

@@ -14,7 +14,7 @@ data class PicDescRoom(
     //val photoSubmissionClosingTime: Time = Time(), // winnerAnnouncement
     val leaderboard: List<UserInLeaderboard> = emptyList(),
 
-    val photosSubmitted: List<PicDescPhoto> = emptyList(),
+    val allPhotosSubmitted: List<List<PicDescPhoto>> = emptyList(),
     val descriptionSubmissionOpeningTime : Time = Time(),
     //val descriptionSubmissionClosingTime: Time = Time(), // photoSubmissionOpening
     val currentLeader: String = "", // user id

@@ -400,8 +400,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             currentPicDescRoom.maxNumOfChallenges
 
 
-
-
             if (userSawWinScreen && isFinished){
                 val winnerUser = currentPicDescRoom.leaderboard.maxBy { it.points }
                 val roomWinnerViewModel : RoomWinnerViewModel = viewModel()
@@ -426,7 +424,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                 // Reset user see screen
                 val reseted = remember{ mutableStateOf(false) }
-                if(userSawWinScreen && !reseted.value && checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)){
+                if(userSawWinScreen && !reseted.value && checkInterval(currentTime,descriptionSubmissionOpeningTime,winnerAnnouncementTime)){
                     // reset info from previous challenge, seenWinScreen,  photos submitted
                     viewModel.resetInfo(currentPicDescRoom, currentUser.id){
                         reseted.value=true
@@ -470,7 +468,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 Log.d(TAG,"${checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)}")
                 Log.d(TAG, "$photoSubmissionOpeningTime, $currentTime, $winnerAnnouncementTime")
                 Log.d(TAG, "Submit Photo Times: $photoSubmissionOpeningTime; $currentTime; $winnerAnnouncementTime")
-                val photosSubmitted = currentPicDescRoom.photosSubmitted
+                val photosSubmitted =
+                    if(currentPicDescRoom.allPhotosSubmitted.size == currentPicDescRoom.currentNumOfChallengesDone) emptyList()
+                    else currentPicDescRoom.allPhotosSubmitted[currentPicDescRoom.currentNumOfChallengesDone]
                 val photosUserDidntVote = photosSubmitted.filter{
                     it.userId != currentUser.id && !it.usersThatVoted.contains(currentUser.id)
                 }
@@ -532,8 +532,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                 var dailyWinnerViewModel: DailyWinnerViewModel = viewModel()
 
-                val fastestValidPhoto = dailyWinnerViewModel.findFastestValidPhoto(currentPicDescRoom.photosSubmitted)
-                val bestRatedPhoto = dailyWinnerViewModel.findBestRatedPhoto(currentPicDescRoom.photosSubmitted)
+                val fastestValidPhoto = dailyWinnerViewModel.findFastestValidPhoto(currentPicDescRoom.allPhotosSubmitted.last())
+                val bestRatedPhoto = dailyWinnerViewModel.findBestRatedPhoto(currentPicDescRoom.allPhotosSubmitted.last())
 
 
                 // false -> show fastest; true -> show best rated
