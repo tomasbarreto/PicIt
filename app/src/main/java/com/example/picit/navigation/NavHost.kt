@@ -1,6 +1,7 @@
 package com.example.picit.navigation
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -252,6 +253,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.DefineRoomSettings.route){ backStackEntry->
             val gameType = backStackEntry.arguments?.getString("game_type")
+            val context = LocalContext.current
             val route = if( gameType.equals("0")) Screens.PicDescTimeSettings.route
                         else Screens.RePicTimeSettings.route
 
@@ -259,13 +261,23 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 onClickBackButton = { onClickBackButton() },
                 onClickNextButton = {
                         name, capacity, numChallenges, privacy ->
-                    navController.navigate(
-                        route
-                            .replace("{roomName}", name)
-                            .replace("{capacity}", capacity)
-                            .replace("{numChallenges}", numChallenges)
-                            .replace("{privacy}", privacy)
-                    )
+                    if(name.isEmpty() || capacity.isEmpty() || numChallenges.isEmpty() ||
+                        capacity.toInt() <1 || numChallenges.toInt() <1){
+                        Toast.makeText(
+                            context,
+                            "Invalid fields",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    else{
+                        navController.navigate(
+                            route
+                                .replace("{roomName}", name)
+                                .replace("{capacity}", capacity)
+                                .replace("{numChallenges}", numChallenges)
+                                .replace("{privacy}", privacy)
+                        )
+                    }
                 }
             )
         }
