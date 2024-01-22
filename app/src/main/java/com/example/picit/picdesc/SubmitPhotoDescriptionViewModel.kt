@@ -1,5 +1,7 @@
 package com.example.picit.picdesc
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.UserInLeaderboard
@@ -11,7 +13,7 @@ private var database: FirebaseDatabase = Firebase.database
 
 class SubmitPhotoDescriptionViewModel: ViewModel() {
 
-    fun submitPhotoDescription(photoDescription: String, room: PicDescRoom) {
+    fun submitPhotoDescription(photoDescription: String, room: PicDescRoom, context: Context) {
         val picDescRoomRef = database.getReference("picDescRooms/${room.id}")
 
         val index = room.currentNumOfChallengesDone
@@ -25,7 +27,13 @@ class SubmitPhotoDescriptionViewModel: ViewModel() {
 
         val updatedRoom = room.copy(photoDescriptions = updatedPhotoDescriptions)
 
-        picDescRoomRef.setValue(updatedRoom)
+        picDescRoomRef.setValue(updatedRoom).addOnSuccessListener {
+            Toast.makeText(
+                context,
+                "Authentication failed",
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
     }
 
     fun resetInfo(room: PicDescRoom, userId: String, callback: ()->Unit={}) {

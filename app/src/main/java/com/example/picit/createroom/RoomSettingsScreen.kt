@@ -41,7 +41,7 @@ fun RoomSettingsScreen(
     var maxCapacity = 50
     var maxChallenges = 20
 
-    var isPublic by remember { mutableStateOf(false) }
+    var isPublic by remember { mutableStateOf(true) }
     var isPrivate by remember { mutableStateOf(false) }
     var code by remember { mutableStateOf("") }
     var maxCodeDigits = 4
@@ -155,14 +155,16 @@ fun RoomSettingsScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             var publicColor = Color.Black
-            var privateColor = Color.Black
+            var privateColor = Color.Gray
 
             if(isPublic) {
-                publicColor = Color.Gray
+                var publicColor = Color.Black
+                var privateColor = Color.Gray
             }
 
             if(isPrivate) {
-                privateColor = Color.Gray
+                privateColor = Color.Black
+                publicColor = Color.Gray
             }
 
             Row(
