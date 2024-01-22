@@ -45,6 +45,7 @@ fun PromptRoomVoteLeader(
     photo: PicDescPhoto = PicDescPhoto(),
     clickValidButton: ()->Unit = {},
     clickInvalidButton: ()->Unit={},
+    reload: ()->Unit = {},
     endingTime: Time,
     viewModel: TimerViewModel
 ){
@@ -140,7 +141,8 @@ fun PromptRoomVoteLeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Timer(timeFor = "Choose a winner!\n", viewModel = viewModel, endingTime = endingTime)
+        Timer(timeFor = "Choose a winner!\n", viewModel = viewModel, endingTime = endingTime,
+            reload=reload)
 
         Spacer(modifier = Modifier.weight(1f))
 

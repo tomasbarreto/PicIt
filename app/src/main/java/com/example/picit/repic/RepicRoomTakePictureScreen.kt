@@ -37,7 +37,8 @@ fun RepicRoomTakePicture(
     onClickCameraButton: ()->Unit = {},
     onClickLeaderboardButton: () -> Unit = {},
     viewModel: TimerViewModel,
-    room: RePicRoom = RePicRoom()
+    room: RePicRoom = RePicRoom(),
+    reload: ()->Unit = {}
 ){
 
     Column (
@@ -76,7 +77,7 @@ fun RepicRoomTakePicture(
             )
         }
 
-        Timer(timeFor = "Submit Photo", viewModel = viewModel, room.winnerAnnouncementTime)
+        Timer(timeFor = "Submit Photo", viewModel = viewModel, room.winnerAnnouncementTime,reload=reload)
         Spacer(modifier = Modifier.height(20.dp))
         Row(modifier = Modifier
             .fillMaxWidth(),

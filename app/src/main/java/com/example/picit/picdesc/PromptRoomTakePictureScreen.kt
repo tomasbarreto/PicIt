@@ -32,7 +32,8 @@ fun PromptRoomTakePicture(
     onClickCameraButton: ()->Unit = {},
     onClickLeaderboardButton: ()->Unit = {},
     room: PicDescRoom = PicDescRoom(),
-    viewModel: TimerViewModel
+    viewModel: TimerViewModel,
+    reload: ()->Unit = {}
 ){
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -62,7 +63,8 @@ fun PromptRoomTakePicture(
 
         Spacer(modifier = Modifier.height(60.dp))
 
-        Timer(timeFor = "Take your photo! \n", viewModel = viewModel, endingTime = room.winnerAnnouncementTime)
+        Timer(timeFor = "Take your photo! \n", viewModel = viewModel, endingTime = room.winnerAnnouncementTime,
+            reload=reload)
         Spacer(modifier = Modifier.height(70.dp))
 
         Row(modifier = Modifier

@@ -40,7 +40,8 @@ fun SubmitPhotoDescription(
     onClickLeaderboardButton: ()->Unit = {},
     viewModel: SubmitPhotoDescriptionViewModel = viewModel(),
     picDescRoom: PicDescRoom,
-    timerViewModel: TimerViewModel = viewModel()
+    timerViewModel: TimerViewModel = viewModel(),
+    reload: () -> Unit = {}
 ) {
     var context = LocalContext.current
     var photoDescription by remember {
@@ -79,7 +80,7 @@ fun SubmitPhotoDescription(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
-                Timer(timeFor = "Submit Description\n", viewModel = timerViewModel, endingTime = picDescRoom.photoSubmissionOpeningTime)
+                Timer(timeFor = "Submit Description\n", viewModel = timerViewModel, endingTime = picDescRoom.photoSubmissionOpeningTime, reload=reload)
                 Spacer(modifier = Modifier.height(8.dp))
 
                 TextField(

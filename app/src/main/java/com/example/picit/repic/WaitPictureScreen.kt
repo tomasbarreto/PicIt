@@ -27,6 +27,7 @@ fun WaitPictureScreen(
     roomName: String = "Room name",
     endingTime: Time = Time(),
     viewModel: TimerViewModel,
+    reload: ()->Unit = {}
 ){
     Column (
         modifier = Modifier
@@ -44,7 +45,8 @@ fun WaitPictureScreen(
             verticalArrangement = Arrangement.Center
         )
         {
-            Timer(timeFor = "Come back later for the \nphoto release!\n", viewModel = viewModel, endingTime = endingTime)
+            Timer(timeFor = "Come back later for the \nphoto release!\n", viewModel = viewModel,
+                endingTime = endingTime, reload=reload)
         }
 
         Spacer(modifier = Modifier.weight(1f))

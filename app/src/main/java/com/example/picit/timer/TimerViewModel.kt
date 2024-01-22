@@ -2,6 +2,7 @@ package com.example.picit.timer
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.Time
@@ -24,8 +25,9 @@ class TimerViewModel: ViewModel() {
     private var isOver by mutableStateOf(false)
 
     private var second = 1000L
+    private var reloaded = false
 
-    fun startTimer(finalTime: Time) {
+    fun startTimer(finalTime: Time, reload: ()->Unit={}) {
         coroutineScope.launch {
             var finalTimeMillis = getTimeMillis(finalTime)
             var now = LocalDateTime.now()
@@ -49,6 +51,10 @@ class TimerViewModel: ViewModel() {
 
                 if (timeLeftMillis <= 0)
                     isOver = true
+            }
+            if(!reloaded){
+                reload()
+                reloaded=true
             }
         }
     }

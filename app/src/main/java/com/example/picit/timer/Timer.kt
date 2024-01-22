@@ -10,11 +10,11 @@ fun Timer(
     timeFor: String,
     viewModel: TimerViewModel,
     endingTime: Time,
+    reload: ()->Unit = {},
     modifier: Modifier = Modifier
 ) {
-    viewModel.startTimer(endingTime)
+    viewModel.startTimer(endingTime,reload)
     var time = getTimeFromString(viewModel.getFormattedTimer())
-
     TimeLeftDisplay(timeFor = timeFor, hours = time.hours , mins = time.minutes , secs = time.second)
 }
 

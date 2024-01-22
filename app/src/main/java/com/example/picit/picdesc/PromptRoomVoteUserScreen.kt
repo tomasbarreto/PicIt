@@ -52,6 +52,7 @@ fun PromptRoomVoteUserScreen(
     photoDescription: String = "photo description",
     photo: PicDescPhoto = PicDescPhoto(),
     onClickRaitingStars: (Int)->Unit = {},
+    reload: ()->Unit = {},
     endingTime: Time = Time(),
     viewModel: TimerViewModel,
 ){
@@ -154,7 +155,8 @@ fun PromptRoomVoteUserScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Timer(timeFor = "Vote on your favourites!\n", viewModel = viewModel, endingTime = endingTime)
+        Timer(timeFor = "Vote on your favourites!\n", viewModel = viewModel, endingTime = endingTime,
+            reload=reload)
 
         Spacer(modifier = Modifier.weight(1f))
 
