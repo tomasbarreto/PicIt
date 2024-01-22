@@ -8,14 +8,13 @@ import android.location.Geocoder
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
-import okhttp3.internal.wait
 
+private val TAG = "LocationClient"
 
 class LocationClient {
 
@@ -38,7 +37,9 @@ class LocationClient {
         fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, object : CancellationToken() {
             override fun onCanceledRequested(listener: OnTokenCanceledListener) = CancellationTokenSource().token
 
-            override fun isCancellationRequested() = false
+            override fun isCancellationRequested(): Boolean {
+                return false
+            }
         })
             .addOnSuccessListener {
                 if (it != null) {
