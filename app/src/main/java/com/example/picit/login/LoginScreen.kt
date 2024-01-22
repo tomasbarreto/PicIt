@@ -1,5 +1,6 @@
 package com.example.picit.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,10 +19,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.picit.R
 import com.example.picit.entities.User
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.DBUtils
@@ -46,7 +49,7 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        //Image(painter = painterResource(id = R.drawable.picit_logo), contentDescription = "PicIt logo")
+        Image(painter = painterResource(id = R.drawable.picit_logo), contentDescription = "PicIt logo")
 
         Spacer(modifier = Modifier.height(60.dp))
 
