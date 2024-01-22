@@ -65,9 +65,9 @@ fun RoomTimeSettingsRepicScreen(
         Row(
             modifier = Modifier.fillMaxWidth(0.85f)
         ){
-            Text(text = "*All time intervals are processed as being from the same day, so they must " +
-                    "be ascending. Your earliest time interval (Picture release time) must contain " +
-                    "your actual current time", fontSize = 14.sp)
+            Text(text = "*Time is processed as being for the same day.\n" +
+                    "*Your current time must be in the interval defined by " +
+                    "Picture release time and Winner announcement time", fontSize = 14.sp)
         }
 
         Spacer(modifier = Modifier.weight(1f))

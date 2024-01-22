@@ -66,9 +66,9 @@ fun RoomTimeSettingsPicDescScreen(
         Row(
             modifier = Modifier.fillMaxWidth(0.85f)
         ){
-            Text(text = "*All time intervals are processed as being from the same day, so they must " +
-                    "be ascending. Your earliest time interval (Description release time) must contain " +
-                    "your actual current time", fontSize = 14.sp)
+            Text(text = "*Time is processed as being for the same day.\n" +
+                    "*Your current time must be in the interval defined by " +
+                    "Description submission release time and Photo submission time", fontSize = 14.sp)
         }
 
         Spacer(Modifier.weight(1F))
