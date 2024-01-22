@@ -482,7 +482,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         onClickBackButton = {onClickGoToMainScreen()},
                         onClickLeaderboardButton = onClickLeaderboard,
                         roomName = currentPicDescRoom.name,
-                        photoDescription = currentPicDescRoom.photoDescription,
+                        photoDescription = currentPicDescRoom.photoDescriptions.last(),
                         photo = photoDisplayed,
                         clickValidButton =  {
                             viewModel.leaderVote(photoDisplayed,currentUser,currentPicDescRoom,true)
@@ -506,7 +506,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             onClickBackButton = {onClickGoToMainScreen()},
                             onClickLeaderboardButton = onClickLeaderboard,
                             roomName = currentPicDescRoom.name,
-                            photoDescription = currentPicDescRoom.photoDescription,
+                            photoDescription = currentPicDescRoom.photoDescriptions.last(),
                             endingTime = currentPicDescRoom.winnerAnnouncementTime,
                             viewModel = timerViewModel,
                             photo = photoDisplayed,
@@ -612,6 +612,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         }
                     }
                 }
+                val photoDescription =
+                    if(currentPicDescRoom.leaderboard.none {  it.didSeeWinnerScreen })
+                        currentPicDescRoom.photoDescriptions.last()
+                    else
+                        currentPicDescRoom.photoDescriptions[currentPicDescRoom.photoDescriptions.size-2]
+
 
                 DailyWinnerScreen(
                     gameType = gameType,
@@ -620,7 +626,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     photoUrl = photoUrl,
                     timestamp = timestamp,
                     location = location,
-                    photoDescription = currentPicDescRoom.photoDescription,
+                    photoDescription = photoDescription,
                     rating = rating,
                     onClickContinue = onClickContinue
                 )

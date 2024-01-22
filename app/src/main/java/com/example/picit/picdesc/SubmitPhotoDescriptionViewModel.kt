@@ -11,10 +11,19 @@ private var database: FirebaseDatabase = Firebase.database
 
 class SubmitPhotoDescriptionViewModel: ViewModel() {
 
-    fun submitPhotoDescription(photoDescription: String, picDescRoom: PicDescRoom) {
-        val picDescRoomRef = database.getReference("picDescRooms/${picDescRoom.id}")
+    fun submitPhotoDescription(photoDescription: String, room: PicDescRoom) {
+        val picDescRoomRef = database.getReference("picDescRooms/${room.id}")
 
-        val updatedRoom = picDescRoom.copy(photoDescription = photoDescription)
+        val index = room.currentNumOfChallengesDone
+        val updatedPhotoDescriptions = room.photoDescriptions.toMutableList()
+        if(updatedPhotoDescriptions.size == index){
+            updatedPhotoDescriptions.add(photoDescription)
+        }
+        else{
+            updatedPhotoDescriptions[index] = photoDescription
+        }
+
+        val updatedRoom = room.copy(photoDescriptions = updatedPhotoDescriptions)
 
         picDescRoomRef.setValue(updatedRoom)
     }
