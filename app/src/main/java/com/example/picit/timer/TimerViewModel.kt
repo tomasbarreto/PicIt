@@ -21,7 +21,7 @@ class TimerViewModel: ViewModel() {
 
     private var coroutineScope = CoroutineScope(Dispatchers.Main)
 
-    private var isOver by mutableStateOf(false)
+    var isOver by mutableStateOf(false)
 
     private var second = 1000L
 

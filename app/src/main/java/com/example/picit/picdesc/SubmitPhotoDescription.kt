@@ -40,8 +40,12 @@ fun SubmitPhotoDescription(
     onClickLeaderboardButton: ()->Unit = {},
     viewModel: SubmitPhotoDescriptionViewModel = viewModel(),
     picDescRoom: PicDescRoom,
-    timerViewModel: TimerViewModel = viewModel()
+    timerViewModel: TimerViewModel = viewModel(),
+    onClickNextScreen: () -> Unit = {}
 ) {
+    if (timerViewModel.isOver)
+        onClickNextScreen()
+
     var context = LocalContext.current
     var photoDescription by remember {
         mutableStateOf(
