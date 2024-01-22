@@ -30,7 +30,7 @@ class SubmitPhotoDescriptionViewModel: ViewModel() {
         picDescRoomRef.setValue(updatedRoom).addOnSuccessListener {
             Toast.makeText(
                 context,
-                "Authentication failed",
+                "Description submitted",
                 Toast.LENGTH_SHORT,
             ).show()
         }
