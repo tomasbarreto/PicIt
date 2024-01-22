@@ -121,5 +121,23 @@ class PicDescCameraViewModel: ViewModel() {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
+    fun addDefaultDescription(room: PicDescRoom) {
+        val db = Firebase.database
+        val roomRef = db.getReference("picDescRooms/${room.id}")
+
+        val defaultDescription = "Foto de um carro"
+
+        var updatedDescriptions = mutableListOf<String>()
+
+        for (description in room.photoDescriptions)
+            updatedDescriptions.add(description)
+
+        updatedDescriptions.add(defaultDescription)
+
+        // Update the room object in the Realtime Database
+        val updatedRoom = room.copy(photoDescriptions = updatedDescriptions)
+        roomRef.setValue(updatedRoom)
+    }
+
 
 }

@@ -545,6 +545,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             }
                         }
 
+                        if (currentPicDescRoom.photoDescriptions.isEmpty()) {
+                            if (currentPicDescRoom.photoDescriptions[currentPicDescRoom.currentNumOfChallengesDone].isEmpty()) {
+                                // insert default description
+                                viewModel.addDefaultDescription(currentPicDescRoom)
+                            }
+                        }
 
                         PromptRoomTakePicture(
                             onClickBackButton = {onClickGoToMainScreen()},
