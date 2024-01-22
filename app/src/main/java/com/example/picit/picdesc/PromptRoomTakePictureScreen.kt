@@ -32,12 +32,8 @@ fun PromptRoomTakePicture(
     onClickCameraButton: ()->Unit = {},
     onClickLeaderboardButton: ()->Unit = {},
     room: PicDescRoom = PicDescRoom(),
-    viewModel: TimerViewModel,
-    onClickNextScreen: () -> Unit = {}
+    viewModel: TimerViewModel
 ){
-    if (viewModel.isOver)
-        onClickNextScreen()
-
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally

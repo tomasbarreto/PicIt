@@ -46,12 +46,8 @@ fun PromptRoomVoteLeader(
     clickValidButton: ()->Unit = {},
     clickInvalidButton: ()->Unit={},
     endingTime: Time,
-    viewModel: TimerViewModel,
-    onClickNextScreen: () -> Unit = {}
+    viewModel: TimerViewModel
 ){
-    if (viewModel.isOver)
-        onClickNextScreen()
-
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally

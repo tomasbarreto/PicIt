@@ -375,15 +375,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
 
-            var onClickNextScreen = {
-                navController.navigate(
-                    Screens.PicDescRoomScreen.route.replace(
-                        "{room_id}",
-                        roomId
-                    )
-                )
-            }
-
             if (!currentPicDescRoom.id.isNullOrEmpty()){
                 dbutils.removePicDescListener(currentPicDescRoom.id!!)
             }
@@ -457,8 +448,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             roomName = currentPicDescRoom.name,
                             endingTime = currentPicDescRoom.descriptionSubmissionOpeningTime,
                             viewModel = timerViewModel,
-                            isLeader = true,
-                            onClickNextScreen = onClickNextScreen
+                            isLeader = true
                         )
                     }
                     else{
@@ -466,8 +456,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             onClickBackButton = { onClickGoToMainScreen() },
                             onClickLeaderboard,
                             viewModel,
-                            currentPicDescRoom,
-                            onClickNextScreen = onClickNextScreen
+                            currentPicDescRoom
                         )
                     }
 
@@ -479,8 +468,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         roomName = currentPicDescRoom.name,
                         endingTime = currentPicDescRoom.photoSubmissionOpeningTime,
                         viewModel = timerViewModel,
-                        isLeader =false,
-                        onClickNextScreen = onClickNextScreen
+                        isLeader =false
                     )
                 }
             }
@@ -512,8 +500,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             viewModel.leaderVote(photoDisplayed,currentUser,currentPicDescRoom,false)
                                              },
                         endingTime = currentPicDescRoom.winnerAnnouncementTime,
-                        viewModel = timerViewModel,
-                        onClickNextScreen = onClickNextScreen
+                        viewModel = timerViewModel
                     )
                 }
                 else{
@@ -534,8 +521,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             photo = photoDisplayed,
                             onClickRaitingStars = {raiting:Int ->
                                 viewModel.userVote(currentUser,currentPicDescRoom,photoDisplayed,raiting)
-                            },
-                            onClickNextScreen = onClickNextScreen
+                            }
                         )
                     }
                     else{
@@ -591,8 +577,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                     // Request a permission
                                     permissionLauncher.launch(Manifest.permission.CAMERA)
                                 }
-                            },
-                            onClickNextScreen = onClickNextScreen
+                            }
                         )
                     }
                 }

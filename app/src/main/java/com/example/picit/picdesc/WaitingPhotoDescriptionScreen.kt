@@ -27,12 +27,8 @@ fun WaitingPhotoDescriptionScreen(
     roomName: String = "Room name",
     endingTime: Time = Time(),
     viewModel: TimerViewModel,
-    isLeader: Boolean = false,
-    onClickNextScreen: () -> Unit = {}
+    isLeader: Boolean = false
 ){
-    if (viewModel.isOver)
-        onClickNextScreen()
-
     Column (
         modifier = Modifier
             .fillMaxSize(),

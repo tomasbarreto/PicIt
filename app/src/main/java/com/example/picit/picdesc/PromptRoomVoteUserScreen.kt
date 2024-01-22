@@ -54,11 +54,7 @@ fun PromptRoomVoteUserScreen(
     onClickRaitingStars: (Int)->Unit = {},
     endingTime: Time = Time(),
     viewModel: TimerViewModel,
-    onClickNextScreen: () -> Unit = {}
 ){
-    if (viewModel.isOver)
-        onClickNextScreen()
-
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
