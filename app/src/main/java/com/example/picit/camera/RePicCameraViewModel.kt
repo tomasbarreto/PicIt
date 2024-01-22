@@ -1,6 +1,7 @@
 package com.example.picit.camera
 
 import android.content.Context
+import android.location.LocationManager
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -57,10 +58,9 @@ class RePicCameraViewModel: ViewModel() {
             Calendar.MINUTE))
 
 
-        if (locationClient.isLocationPermGranted(context)) {
+        if (locationClient.isLocationPermGranted(context) && isGpsEnabled(context)) {
             locationClient.startLocationClient(context)
             locationClient.getLocation(context){location->
-                Log.d("LOCATION PERMISSION VALUE ", "Entrou na funcao de localizacao")
                 insertPhoto(imageUrl, user.id, user.username, location, currentTime, room){
                     navigationFunction()
                 }
@@ -106,6 +106,13 @@ class RePicCameraViewModel: ViewModel() {
         roomRef.setValue(updatedRoom).addOnSuccessListener {
             navigationFunction()
          }
+    }
+
+    private fun isGpsEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        // Check if GPS is enabled
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.picit.camera
 
 import android.content.Context
+import android.location.LocationManager
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -55,7 +56,7 @@ class PicDescCameraViewModel: ViewModel() {
             Calendar.MINUTE))
 
 
-        if (locationClient.isLocationPermGranted(context)) {
+        if (locationClient.isLocationPermGranted(context) && isGpsEnabled(context)) {
             locationClient.startLocationClient(context)
             locationClient.getLocation(context){location->
                 Log.d(TAG,"Location $location")
@@ -111,6 +112,13 @@ class PicDescCameraViewModel: ViewModel() {
         roomRef.setValue(updatedRoom).addOnSuccessListener {
             navigationFunction()
         }
+    }
+
+    private fun isGpsEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        // Check if GPS is enabled
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
 
