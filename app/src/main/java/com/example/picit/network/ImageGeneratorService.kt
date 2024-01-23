@@ -18,7 +18,7 @@ private val retrofit = Retrofit.Builder()
 
 interface StableDiffusionService {
     @Headers(
-        "Authorization:sk-1XB99bzty5eZMzRu1vEWPSOw4yEQwhFuoExxTbFnRXgk9Blj",
+        "Authorization:sk-hDARwxmYNq1G2kGsIi7JZtHCpEZyJQGA7TILLptRLyJuS6oA",
         "Content-Type:application/json"
     )
     @POST("text-to-image")

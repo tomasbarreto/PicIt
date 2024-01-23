@@ -100,7 +100,7 @@ fun SubmitPhotoDescription(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     // get this dynamically (Text generator API)
-                    var suggestions = arrayOf("suggestion1","suggestion2","suggestion3")
+                    var suggestions = arrayOf("Yellow Car","Unpeeled orange","An airplane")
                     for (s in suggestions){
                         Text(text = s, fontSize = 20.sp, textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth())

@@ -32,6 +32,7 @@ class RePicCameraViewModel: ViewModel() {
         val uploadImage = roomImageStorageRef.putFile(uri)
 
         uploadImage.addOnSuccessListener { taskSnapshot ->
+            Log.d(TAG, taskSnapshot.uploadSessionUri.toString())
             // Image uploaded successfully
             roomImageStorageRef.downloadUrl.addOnSuccessListener { uri ->
                 // Get the download URL

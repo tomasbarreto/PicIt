@@ -379,7 +379,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val reload = {
                 navController.navigate(
                     Screens.PicDescRoomScreen.route.replace("{room_id}", currentPicDescRoom.id!!)
-                )
+                ){ launchSingleTop = true }
             }
 
             if (!currentPicDescRoom.id.isNullOrEmpty()){
@@ -748,7 +748,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route = Screens.RepicRoomScreen.route){ backStackEntry ->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
             val reload = {
-                navController.navigate(Screens.RepicRoomScreen.route.replace("{room_id}", currentRepicRoom.id!!))
+                navController.navigate(
+                    Screens.RepicRoomScreen.route.replace("{room_id}", currentRepicRoom.id!!)
+                ){ launchSingleTop = true }
             }
 
             if (!currentRepicRoom.id.isNullOrEmpty()) {
