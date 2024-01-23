@@ -51,7 +51,7 @@ fun RepicRoomTakePicture(
             onClickBackButton = onClickBackButton
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Row (modifier = Modifier
             .fillMaxWidth()
@@ -78,7 +78,7 @@ fun RepicRoomTakePicture(
         }
 
         Timer(timeFor = "Submit Photo", viewModel = viewModel, room.winnerAnnouncementTime,reload=reload)
-        Spacer(modifier = Modifier.height(20.dp))
+//        Spacer(modifier = Modifier.height(20.dp))
         Row(modifier = Modifier
             .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center) {

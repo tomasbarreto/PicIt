@@ -29,6 +29,7 @@ import com.example.picit.entities.UserInLeaderboard
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.BackButton
 import com.example.picit.utils.RoomHeader
+import com.example.picit.utils.ScreenHeader
 
 
 @Composable
@@ -41,21 +42,12 @@ fun LeaderboardScreen(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Spacer(modifier = Modifier.height(60.dp))
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            BackButton(onButtonClick= onClickBackButton)
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Leaderboard", fontSize = 32.sp, fontWeight = FontWeight.Bold)
-            }
-        }
-
-        RoomHeader(roomName)
+        ScreenHeader(
+            text = "Leaderboard",
+            headerFontSize = 28.sp,
+            withBackButton = true,
+            onClickBackButton = onClickBackButton
+        )
 
         Row(
             modifier = Modifier
@@ -93,7 +85,8 @@ fun LeaderboardPanel(modifier : Modifier = Modifier, leaderboard: List<UserInLea
 fun LeaderboardRow(place: String, name: String, points: String, modifier : Modifier = Modifier) {
     Row(
         modifier = Modifier
-            .fillMaxWidth().height(70.dp),
+            .fillMaxWidth()
+            .height(70.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column (modifier = Modifier.padding(end = 5.dp),

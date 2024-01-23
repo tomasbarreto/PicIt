@@ -42,7 +42,7 @@ fun UserRoomsScreen(
     onClickCreateRoom: () -> Unit = {},
     onClickInvitesButton: ()-> Unit = {},
     onClickSettings: ()-> Unit = {},
-    onClickRoom: (String?, GameType) -> Unit,
+    onClickRoom: (String?, GameType) -> Unit = {_,_ ->},
     userCurrentRepicRooms: List<RePicRoom> = emptyList(),
     userCurrentPicDescRooms: List<PicDescRoom> = emptyList(),
     userID: String = ""
@@ -68,7 +68,7 @@ fun UserRoomsScreen(
             SearchBar()
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Row(
             horizontalArrangement = Arrangement.End,
             modifier = Modifier.fillMaxWidth(0.8f)
@@ -77,6 +77,8 @@ fun UserRoomsScreen(
                 Icon(Icons.Filled.Email, contentDescription = null)
             }
         }
+        Spacer(modifier = Modifier.height(16.dp))
+
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
@@ -155,6 +157,6 @@ fun SearchBar() {
 @Composable
 fun UserRoomsScreenPreview() {
     PicItTheme {
-//        UserRoomsScreen()
+        UserRoomsScreen()
     }
 }

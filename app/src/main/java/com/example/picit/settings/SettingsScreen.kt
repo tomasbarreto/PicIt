@@ -58,11 +58,13 @@ fun SettingsScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(550.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             Button(onClick = onClickLogOutButton) {
                 Text(text = "Logout", fontSize = 22.sp)
             }
+
+            Spacer(modifier = Modifier.weight(0.1f))
         }
 
 
