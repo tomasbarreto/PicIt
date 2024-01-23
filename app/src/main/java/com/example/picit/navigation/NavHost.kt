@@ -711,7 +711,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                 dailyWinnerViewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentPicDescRoom
-                                )
+                                ){
+                                    reload()
+                                }
                             }
                         }
                     }
