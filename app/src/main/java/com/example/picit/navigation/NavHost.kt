@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,11 +72,17 @@ import com.example.picit.winner.DailyWinnerViewModel
 import com.example.picit.winner.NoWinnerScreen
 import com.example.picit.winner.RoomWinnerScreen
 import com.example.picit.winner.RoomWinnerViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Objects
+import kotlin.coroutines.CoroutineContext
 
 private val TAG = "NavHost"
 
@@ -556,6 +563,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         }
 
                         var context = LocalContext.current
+                        var coroutineContext = Dispatchers.Default
                         val file = context.createImageFile()
 
                         val uri = FileProvider.getUriForFile(
@@ -565,7 +573,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                         val cameraLauncher =
                             rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-                                getImageUri(uri, context)
+                                CoroutineScope(coroutineContext).async() {
+                                    getImageUri(uri, context)
+                                }
+
 
                             }
 
