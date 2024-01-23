@@ -543,7 +543,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                     else{
                         val getImageUri = { uri: Uri, context: Context ->
-                            picDescCameraViewModel.submitImage(currentPicDescRoom,currentUser,uri, context)
+                            picDescCameraViewModel.submitImage(currentPicDescRoom,currentUser,uri, context){
+                                reload()
+                            }
                         }
 
                         var context = LocalContext.current
@@ -824,7 +826,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val viewModel: RePicCameraViewModel = viewModel()
 
                 val getImageUri = { uri: Uri, context: Context ->
-                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context)
+                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
+                        reload()
+                    }
                 }
 
                 var context = LocalContext.current
