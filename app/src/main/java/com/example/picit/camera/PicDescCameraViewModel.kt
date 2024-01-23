@@ -126,7 +126,7 @@ class PicDescCameraViewModel: ViewModel() {
         val db = Firebase.database
         val roomRef = db.getReference("picDescRooms/${room.id}")
 
-        val defaultDescription = "Foto de um carro"
+        val defaultDescription = "Yellow car"
 
         var updatedDescriptions = mutableListOf<String>()
 
