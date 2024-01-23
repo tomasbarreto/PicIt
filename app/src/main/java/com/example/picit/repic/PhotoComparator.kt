@@ -14,8 +14,8 @@ class PhotoComparator {
 
         var counter = 0F
 
-        for (i in 0..(width - 1)) {
-            for (j in 0..(height - 1)) {
+        for (i in 3*width/7..4*width/7) {
+            for (j in 3*width/7..4*height/7) {
                 if (inPixelInPixelRange(modelMutableBitmap.getPixel(i, j), photoToCompareMutableBitmap.getPixel(i, j))) {
                     counter++
                 }
