@@ -135,7 +135,7 @@ class DBUtils() {
         val db = Firebase.database
         val userRef = db.getReference("users/${user.id}")
 
-        var updatedNumPhotos by mutableStateOf(user.nrPhotosTaken)
+        var updatedNumPhotos = user.nrPhotosTaken
         updatedNumPhotos += 1
         val updatedUser = user.copy(nrPhotosTaken = updatedNumPhotos)
 
