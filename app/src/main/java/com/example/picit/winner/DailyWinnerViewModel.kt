@@ -32,7 +32,7 @@ import java.net.URL
 private val TAG = "DailyWinnerViewModel"
 class DailyWinnerViewModel: ViewModel() {
     fun findFastestValidPhoto(photos: List<PicDescPhoto>) : PicDescPhoto {
-        var res = PicDescPhoto()
+        var res = photos[0]
 
         val validPhotos = photos.filter { it.leaderVote }
 
