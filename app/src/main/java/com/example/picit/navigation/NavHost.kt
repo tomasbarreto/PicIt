@@ -493,6 +493,16 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
                 val photoDisplayed = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto()
 
+                val picDescCameraViewModel: PicDescCameraViewModel = viewModel()
+
+                if (currentPicDescRoom.photoDescriptions.size <= currentPicDescRoom.currentNumOfChallengesDone) {
+                    // insert default description
+                    picDescCameraViewModel.addDefaultDescription(currentPicDescRoom)
+                    if (currentPicDescRoom.photoDescriptions.size <= currentPicDescRoom.currentNumOfChallengesDone) {
+                        return@composable
+                    }
+                }
+
                 val viewModel: PromptRoomVoteLeaderViewModel = viewModel()
                 if(currentUserIsLeader){
                     PromptRoomVoteLeader(
@@ -535,11 +545,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         )
                     }
                     else{
-
-                        val viewModel: PicDescCameraViewModel = viewModel()
-
                         val getImageUri = { uri: Uri, context: Context ->
-                            viewModel.submitImage(currentPicDescRoom,currentUser,uri, context)
+                            picDescCameraViewModel.submitImage(currentPicDescRoom,currentUser,uri, context)
                         }
 
                         var context = LocalContext.current
@@ -566,7 +573,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                 Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
                             }
                         }
-
 
                         PromptRoomTakePicture(
                             onClickBackButton = {onClickGoToMainScreen()},
