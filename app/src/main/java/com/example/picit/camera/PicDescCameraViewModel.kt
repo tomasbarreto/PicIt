@@ -10,6 +10,7 @@ import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.Time
 import com.example.picit.entities.User
 import com.example.picit.location.LocationClient
+import com.example.picit.utils.DBUtils
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.storage.storage
@@ -17,6 +18,7 @@ import java.util.Calendar
 
 private val TAG = "PicDescCameraViewModel"
 class PicDescCameraViewModel: ViewModel() {
+    val dbUtils = DBUtils()
 
     fun submitImage(room: PicDescRoom, user: User, uri: Uri, context: Context,
                     navigationFunction:()->Unit={}){
@@ -35,7 +37,7 @@ class PicDescCameraViewModel: ViewModel() {
                 val imageUrl = uri.toString()
 
                 // Now that you have the image URL, update the Realtime Database
-                updateDatabase(room, user, imageUrl, context){
+                updateDatabase(room, user, imageUrl, context) {
                     navigationFunction()
                 }
             }
@@ -72,14 +74,13 @@ class PicDescCameraViewModel: ViewModel() {
             }
         }
 
-
+        dbUtils.incrementUserNumPhotosSubmited(user)
     }
 
     private fun insertPhoto(imageUrl:String, userId:String,username:String ,location:String,
                             time:Time, room:PicDescRoom,navigationFunction: () -> Unit){
         val db = Firebase.database
         val roomRef = db.getReference("picDescRooms/${room.id}")
-
 
         // Create PicDescPhoto with the image URL
         val photo = PicDescPhoto(

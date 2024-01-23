@@ -10,6 +10,7 @@ import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.Time
 import com.example.picit.entities.User
 import com.example.picit.location.LocationClient
+import com.example.picit.utils.DBUtils
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.storage.storage
@@ -19,7 +20,7 @@ import java.util.Calendar
 private val TAG = "RePicCameraViewModel"
 
 class RePicCameraViewModel: ViewModel() {
-
+    val dbUtils = DBUtils()
 
     fun submitImage(room: RePicRoom, user: User, uri: Uri, context: Context,
                     navigationFunction:()->Unit={}){
@@ -72,6 +73,8 @@ class RePicCameraViewModel: ViewModel() {
                 navigationFunction()
             }
         }
+
+        dbUtils.incrementUserNumPhotosSubmited(user)
 
 
     }
