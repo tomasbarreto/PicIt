@@ -65,6 +65,7 @@ import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.utils.DBUtils
+import com.example.picit.utils.LoadScreen
 import com.example.picit.winner.DailyWinnerScreen
 import com.example.picit.winner.DailyWinnerViewModel
 import com.example.picit.winner.NoWinnerScreen
@@ -431,8 +432,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     onClickLeaderboardButton = onClickLeaderboard
                 )
             }
-
-
             else if (userSawWinScreen||
                 checkInterval(currentTime,descriptionSubmissionOpeningTime,photoSubmissionOpeningTime)) {
 
@@ -824,6 +823,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     viewModelPicture.generateImage(currentRepicRoom)
                 }
                 if(currentRepicRoom.generatedImagesUrls.size <= currentRepicRoom.currentNumOfChallengesDone){
+                    LoadScreen()
                     return@composable
                 }
 
