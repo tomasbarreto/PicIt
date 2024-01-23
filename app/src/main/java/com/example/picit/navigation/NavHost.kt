@@ -589,8 +589,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
             // show winner
             else{
-                Log.d(TAG, currentTime.toString())
-                Log.d(TAG, checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime).toString())
                 if(currentPicDescRoom.id.isNullOrEmpty()) return@composable
 
                 var dailyWinnerViewModel: DailyWinnerViewModel = viewModel()
@@ -610,14 +608,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                     currentUser.id,
                                     currentPicDescRoom
                                 ){
-                                    dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom)
+                                    dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
+                                        reload()
+                                    }
                                 }
                             }
                             else{
                                 dailyWinnerViewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentPicDescRoom
-                                )
+                                ){
+                                    reload()
+                                }
                             }
                         }
                     )
@@ -668,7 +670,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                             currentPicDescRoom
                                         ){
                                             dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
-                                                dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom)
+                                                dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+                                                    reload()
+                                                }
                                             }
                                         }
                                     }
@@ -682,7 +686,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                                 currentPicDescRoom
                                             ){
                                                 dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
-                                                    dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom)
+                                                    dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+                                                        reload()
+                                                    }
                                                 }
                                             }
                                         }
@@ -886,7 +892,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                 viewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentRepicRoom
-                                )
+                                ){
+                                    reload()
+                                }
                             }
                         }
                     )
@@ -921,7 +929,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                         currentUser.id,
                                         currentRepicRoom
                                     ){
-                                        viewModel.increaseChallengeCount(currentRepicRoom)
+                                        viewModel.increaseChallengeCount(currentRepicRoom){
+                                            reload()
+                                        }
                                     }
                                 }
                             }
@@ -929,7 +939,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                 viewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentRepicRoom
-                                )
+                                ){
+                                    reload()
+                                }
                             }
                         }
 
