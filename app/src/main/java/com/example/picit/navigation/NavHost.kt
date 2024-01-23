@@ -563,7 +563,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         }
 
                         var context = LocalContext.current
-                        var coroutineContext = Dispatchers.Default
                         val file = context.createImageFile()
 
                         val uri = FileProvider.getUriForFile(
@@ -573,11 +572,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
                         val cameraLauncher =
                             rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-                                CoroutineScope(coroutineContext).async() {
-                                    getImageUri(uri, context)
-                                }
-
-
+                                getImageUri(uri, context)
                             }
 
                         val permissionLauncher = rememberLauncherForActivityResult(

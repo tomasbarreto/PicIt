@@ -33,9 +33,10 @@ class PicDescCameraViewModel: ViewModel() {
         uploadImage.addOnSuccessListener { taskSnapshot ->
             // Image uploaded successfully
             roomImageStorageRef.downloadUrl.addOnSuccessListener { uri ->
+
                 // Get the download URL
                 val imageUrl = uri.toString()
-
+                Log.d(TAG, imageUrl)
                 // Now that you have the image URL, update the Realtime Database
                 updateDatabase(room, user, imageUrl, context) {
                     navigationFunction()
