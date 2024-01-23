@@ -1,7 +1,13 @@
 package com.example.picit.navigation
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,10 +15,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.picit.camera.Camera2
 import com.example.picit.camera.CameraScreen
 import com.example.picit.camera.PicDescCameraViewModel
 import com.example.picit.camera.RePicCameraViewModel
@@ -44,7 +53,6 @@ import com.example.picit.picdesc.PromptRoomVoteUserScreen
 import com.example.picit.picdesc.PromptRoomVoteUserViewModel
 import com.example.picit.picdesc.SubmitPhotoDescription
 import com.example.picit.picdesc.SubmitPhotoDescriptionViewModel
-import com.example.picit.repic.WaitPictureScreen
 import com.example.picit.picdesc.WaitingPhotoDescriptionScreen
 import com.example.picit.picdesccreateroom.ChooseGameScreen
 import com.example.picit.picdesccreateroom.RoomSettingsScreen
@@ -53,6 +61,7 @@ import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
+import com.example.picit.repic.WaitPictureScreen
 import com.example.picit.repic.WaitPictureViewModel
 import com.example.picit.settings.SettingsScreen
 import com.example.picit.settings.SettingsViewModel
@@ -63,7 +72,11 @@ import com.example.picit.winner.DailyWinnerViewModel
 import com.example.picit.winner.NoWinnerScreen
 import com.example.picit.winner.RoomWinnerScreen
 import com.example.picit.winner.RoomWinnerViewModel
+import java.io.File
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Objects
 
 private val TAG = "NavHost"
 
@@ -101,6 +114,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     (startTime.hours == currentTime.hours && startTime.minutes<=currentTime.minutes && currentTime.hours < endTime.hours)||
 
                     (currentTime.hours == endTime.hours && currentTime.minutes < endTime.minutes && startTime.hours < currentTime.hours))
+        }
+
+        fun Context.createImageFile(): File {
+            // Create an image file name
+            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+            val imageFileName = "JPEG_" + timeStamp + "_"
+            val image = File.createTempFile(
+                imageFileName, /* prefix */
+                ".jpg", /* suffix */
+                externalCacheDir      /* directory */
+            )
+            return image
         }
 
         composable(route= Screens.Login.route) {
@@ -366,16 +391,29 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route= Screens.RePicCamera.route){
             val viewModel: RePicCameraViewModel = viewModel()
-            var context = LocalContext.current
 
-            CameraScreen(
-                onClickBackButton = {onClickBackButton()},
-                getImageUri = { uri ->
+            val getImageUri = { uri: Uri, context: Context ->
                     viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
                         navController.navigate(Screens.RepicRoomScreen.route)
                     }
-                }
-            )
+            }
+
+            Camera2(getImageUri = getImageUri)
+
+
+
+
+
+
+//
+//            CameraScreen(
+//                onClickBackButton = {onClickBackButton()},
+//                getImageUri = { uri ->
+//                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
+//                        navController.navigate(Screens.RepicRoomScreen.route)
+//                    }
+//                }
+//            )
         }
         composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
@@ -536,13 +574,56 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         )
                     }
                     else{
+
+                        val viewModel: RePicCameraViewModel = viewModel()
+
+                        val getImageUri = { uri: Uri, context: Context ->
+                            viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
+                                navController.navigate(Screens.RepicRoomScreen.route)
+                            }
+                        }
+
+                        var context = LocalContext.current
+                        val file = context.createImageFile()
+
+                        val uri = FileProvider.getUriForFile(
+                            Objects.requireNonNull(context),
+                            context.packageName + ".provider", file
+                        )
+
+                        val cameraLauncher =
+                            rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+                                getImageUri(uri, context)
+
+                            }
+
+                        val permissionLauncher = rememberLauncherForActivityResult(
+                            ActivityResultContracts.RequestPermission()
+                        ) {
+                            if (it) {
+                                Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+                                cameraLauncher.launch(uri)
+                            } else {
+                                Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+
                         PromptRoomTakePicture(
                             onClickBackButton = {onClickGoToMainScreen()},
                             onClickLeaderboardButton = onClickLeaderboard,
                             room = currentPicDescRoom,
                             viewModel = timerViewModel,
-                            onClickCameraButton = {navController.navigate(Screens.PicDescCamera.route)},
-                            reload = reload
+                            reload = reload,
+                            onClickCameraButton = { val permissionCheckResult =
+                                ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                                if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                                    cameraLauncher.launch(uri)
+                                } else {
+                                    // Request a permission
+                                    permissionLauncher.launch(Manifest.permission.CAMERA)
+                                }
+                            }
                         )
                     }
                 }
@@ -680,7 +761,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
             val reload = { navController.navigate(Screens.RepicRoomScreen.route) }
 
-            if (!currentRepicRoom.id.isNullOrEmpty()){
+            if (!currentRepicRoom.id.isNullOrEmpty()) {
                 dbutils.removeRePicListener(currentRepicRoom.id!!)
             }
             dbutils.setRePicRoomListener(roomId, {room -> currentRepicRoom = room})
@@ -765,9 +846,52 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     return@composable
                 }
 
+                val viewModel: RePicCameraViewModel = viewModel()
+
+                val getImageUri = { uri: Uri, context: Context ->
+                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
+                        navController.navigate(Screens.RepicRoomScreen.route)
+                    }
+                }
+
+                var context = LocalContext.current
+                val file = context.createImageFile()
+
+                val uri = FileProvider.getUriForFile(
+                    Objects.requireNonNull(context),
+                    context.packageName + ".provider", file
+                )
+
+                val cameraLauncher =
+                    rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+                        getImageUri(uri, context)
+
+                    }
+
+                val permissionLauncher = rememberLauncherForActivityResult(
+                    ActivityResultContracts.RequestPermission()
+                ) {
+                    if (it) {
+                        Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+                        cameraLauncher.launch(uri)
+                    } else {
+                        Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
                 RepicRoomTakePicture(
                     onClickBackButton = { onClickGoToMainScreen() },
-                    onClickCameraButton = {navController.navigate(Screens.RePicCamera.route)},
+                    onClickCameraButton = {
+                        val permissionCheckResult =
+                            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                            cameraLauncher.launch(uri)
+                        } else {
+                            // Request a permission
+                            permissionLauncher.launch(Manifest.permission.CAMERA)
+                        }
+
+                    },
                     onClickLeaderboard,
                     viewModel = viewModel(),
                     currentRepicRoom,

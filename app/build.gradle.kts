@@ -57,7 +57,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     implementation("androidx.compose.material:material:1.4.2")
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.0")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
@@ -112,4 +112,5 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     // Location Services
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("androidx.core:core:1.10.0")
 }
