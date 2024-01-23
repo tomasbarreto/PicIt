@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.dp
 import com.example.picit.ui.theme.PicItTheme
 
 @Composable
-fun LoadingIndicator(modifier: Modifier = Modifier) {
+fun LoadingIndicator() {
     CircularProgressIndicator(
         color = MaterialTheme.colorScheme.secondary,
         trackColor = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = modifier
+        modifier = Modifier.width(64.dp),
     )
 }
 

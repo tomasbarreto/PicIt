@@ -376,7 +376,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
-            val reload = { navController.navigate(Screens.PicDescRoomScreen.route) }
+            val reload = {
+                navController.navigate(
+                    Screens.PicDescRoomScreen.route.replace("{room_id}", currentPicDescRoom.id!!)
+                )
+            }
 
             if (!currentPicDescRoom.id.isNullOrEmpty()){
                 dbutils.removePicDescListener(currentPicDescRoom.id!!)
@@ -389,7 +393,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
 
             dbutils.setPicDescRoomListener(roomId, {room -> currentPicDescRoom = room})
-            if (currentPicDescRoom.id.isNullOrEmpty()) return@composable
+            if (currentPicDescRoom.id.isNullOrEmpty()){
+                LoadScreen()
+                return@composable
+            }
 
             val currentCalendar = Calendar.getInstance()
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
@@ -495,6 +502,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     // insert default description
                     picDescCameraViewModel.addDefaultDescription(currentPicDescRoom)
                     if (currentPicDescRoom.photoDescriptions.size <= currentPicDescRoom.currentNumOfChallengesDone) {
+                        LoadScreen()
                         return@composable
                     }
                 }
@@ -593,7 +601,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
             // show winner
             else{
-                if(currentPicDescRoom.id.isNullOrEmpty()) return@composable
+                if(currentPicDescRoom.id.isNullOrEmpty()) {
+                    LoadScreen()
+                    return@composable
+                }
 
                 var dailyWinnerViewModel: DailyWinnerViewModel = viewModel()
 
@@ -736,13 +747,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.RepicRoomScreen.route){ backStackEntry ->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
-            val reload = { navController.navigate(Screens.RepicRoomScreen.route) }
+            val reload = {
+                navController.navigate(Screens.RepicRoomScreen.route.replace("{room_id}", currentRepicRoom.id!!))
+            }
 
             if (!currentRepicRoom.id.isNullOrEmpty()) {
                 dbutils.removeRePicListener(currentRepicRoom.id!!)
             }
             dbutils.setRePicRoomListener(roomId, {room -> currentRepicRoom = room})
-            if(currentRepicRoom.id.isNullOrEmpty()) return@composable
+            if(currentRepicRoom.id.isNullOrEmpty()) {
+                LoadScreen()
+                return@composable
+            }
 
 
 

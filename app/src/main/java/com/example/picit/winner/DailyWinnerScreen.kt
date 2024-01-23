@@ -30,9 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.picit.R
 import com.example.picit.entities.GameType
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.LoadingIndicator
 import com.example.picit.utils.ScreenHeader
 
 @Composable
@@ -132,15 +134,20 @@ fun DailyWinnerScreen(
 
                 Spacer(modifier = modifier.height(5.dp))
 
-                // TO DO COLOCAR A IMAGEM
-                AsyncImage(
+            Row (
+                modifier = Modifier
+                    .fillMaxHeight(0.5f)
+                    .fillMaxWidth(0.9f)
+                    .clip(shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 20.dp)),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
+                SubcomposeAsyncImage(
                     model = photoUrl,
                     contentDescription = photoDescription,
-                    modifier = Modifier
-                        .fillMaxHeight(0.45f)
-                        .fillMaxWidth(0.8f)
-                        .clip(shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 20.dp))
+                    loading = { LoadingIndicator() }
                 )
+            }
 
                 Spacer(modifier = modifier.weight(1f))
 

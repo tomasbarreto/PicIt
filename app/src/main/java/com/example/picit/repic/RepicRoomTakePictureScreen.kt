@@ -22,12 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.picit.R
 import com.example.picit.entities.RePicRoom
 import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.timer.Timer
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.LoadingIndicator
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.utils.TakePhotoButton
 
@@ -64,16 +66,16 @@ fun RepicRoomTakePicture(
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxHeight(0.45f)
+                .fillMaxWidth(0.9f)
                 .padding(20.dp),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
+            SubcomposeAsyncImage(
                 model = room.generatedImagesUrls[room.currentNumOfChallengesDone],
                 contentDescription = "",
-                modifier = Modifier
-                    .fillMaxHeight(0.45f)
-                    .fillMaxWidth(0.8f)
+                loading = { LoadingIndicator() }
             )
         }
 
