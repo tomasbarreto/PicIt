@@ -24,7 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.picit.R
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.Time
@@ -33,6 +35,7 @@ import com.example.picit.timer.Timer
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.ui.theme.PicItTheme
 import com.example.picit.utils.InvalidButton
+import com.example.picit.utils.LoadingIndicator
 import com.example.picit.utils.ScreenHeader
 import com.example.picit.utils.ValidButton
 
@@ -46,7 +49,7 @@ fun PromptRoomVoteLeader(
     clickValidButton: ()->Unit = {},
     clickInvalidButton: ()->Unit={},
     reload: ()->Unit = {},
-    endingTime: Time,
+    endingTime: Time  = Time(),
     viewModel: TimerViewModel
 ){
     Column (
@@ -59,15 +62,6 @@ fun PromptRoomVoteLeader(
             onClickBackButton = onClickBackButton
         )
 
-        Spacer(modifier = Modifier.height(15.dp))
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically)
-        {
-            Text(text="Time To Vote!", fontSize = 30.sp)
-        }
 
         PromptDisplay(photoDescription)
         Row (modifier = Modifier
@@ -101,13 +95,19 @@ fun PromptRoomVoteLeader(
                         val submissionMins=String.format("%02d",photo.submissionTime.minutes)
                         Text(text="$submissionHours:$submissionMins", fontSize = 12.sp)
                     }
-                    AsyncImage(
-                        model = photo.photoUrl,
-                        contentDescription = photoDescription,
+                    Row(
                         modifier = Modifier
-                            .fillMaxHeight(0.45f)
-                            .fillMaxWidth(0.8f)
-                    )
+                            .fillMaxHeight(0.5f)
+                            .fillMaxWidth(0.9f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        SubcomposeAsyncImage(
+                            model = photo.photoUrl,
+                            contentDescription = photoDescription,
+                            loading = { LoadingIndicator() }
+                        )
+                    }
                     Row (modifier = Modifier.height(25.dp)) {
                         Icon(Icons.Filled.LocationOn, contentDescription = null, modifier = Modifier
                             .fillMaxWidth(0.1F))
@@ -139,7 +139,6 @@ fun PromptRoomVoteLeader(
 
 
 
-        Spacer(modifier = Modifier.weight(1f))
 
         Timer(timeFor = "Choose a winner!\n", viewModel = viewModel, endingTime = endingTime,
             reload=reload)
@@ -161,6 +160,6 @@ fun PromptRoomVoteLeader(
 @Composable
 fun PromptRoomVotePreview() {
     PicItTheme {
-        //PromptRoomVoteLeader()
+        PromptRoomVoteLeader(viewModel=viewModel())
     }
 }

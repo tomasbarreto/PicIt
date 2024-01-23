@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.picit.R
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.Time
@@ -42,6 +43,7 @@ import com.example.picit.leaderboard.LeaderboardButton
 import com.example.picit.timer.Timer
 import com.example.picit.timer.TimerViewModel
 import com.example.picit.ui.theme.PicItTheme
+import com.example.picit.utils.LoadingIndicator
 import com.example.picit.utils.ScreenHeader
 
 @Composable
@@ -108,13 +110,17 @@ fun PromptRoomVoteUserScreen(
                         val submissionMins=String.format("%02d",photo.submissionTime.minutes)
                         Text(text="$submissionHours:$submissionMins", fontSize = 12.sp)
                     }
-                    AsyncImage(
-                        model = photo.photoUrl,
-                        contentDescription = photoDescription,
+                    Row(
                         modifier = Modifier
-                            .fillMaxHeight(0.45f)
-                            .fillMaxWidth(0.8f)
-                    )
+                            .fillMaxHeight(0.5f)
+                            .fillMaxWidth(0.9f),
+                    ){
+                        SubcomposeAsyncImage(
+                            model = photo.photoUrl,
+                            contentDescription = photoDescription,
+                            loading = { LoadingIndicator() }
+                        )
+                    }
 
                     if (photo.location.isNotEmpty()) {
                         Row(modifier = Modifier.height(25.dp)) {
