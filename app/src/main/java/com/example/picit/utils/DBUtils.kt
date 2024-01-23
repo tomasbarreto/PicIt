@@ -2,9 +2,6 @@ package com.example.picit.utils
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.User
@@ -135,7 +132,7 @@ class DBUtils() {
         val db = Firebase.database
         val userRef = db.getReference("users/${user.id}")
 
-        var updatedTotalWins by mutableStateOf(user.totalWins)
+        var updatedTotalWins = user.totalWins
         updatedTotalWins += 1
         val updatedUser = user.copy(totalWins = updatedTotalWins)
 
