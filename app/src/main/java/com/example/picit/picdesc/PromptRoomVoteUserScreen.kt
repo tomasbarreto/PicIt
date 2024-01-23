@@ -68,16 +68,6 @@ fun PromptRoomVoteUserScreen(
             onClickBackButton = onClickBackButton
         )
 
-        Spacer(modifier = Modifier.height(15.dp))
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically)
-        {
-            Text(text="Time To Vote!", fontSize = 30.sp)
-        }
-
         PromptDisplay(photoDescription)
 
         Row (modifier = Modifier
@@ -159,7 +149,6 @@ fun PromptRoomVoteUserScreen(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
 
         Timer(timeFor = "Vote on your favourites!\n", viewModel = viewModel, endingTime = endingTime,
             reload=reload)
