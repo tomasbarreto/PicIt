@@ -2,6 +2,9 @@ package com.example.picit.utils
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.example.picit.entities.PicDescRoom
 import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.User
@@ -126,5 +129,16 @@ class DBUtils() {
         }
         roomRef.addValueEventListener(eventListener)
         rePicRoomEventListener = eventListener
+    }
+
+    fun incrementUserNumWins(user: User){
+        val db = Firebase.database
+        val userRef = db.getReference("users/${user.id}")
+
+        var updatedTotalWins by mutableStateOf(user.totalWins)
+        updatedTotalWins += 1
+        val updatedUser = user.copy(totalWins = updatedTotalWins)
+
+        userRef.setValue(updatedUser)
     }
 }

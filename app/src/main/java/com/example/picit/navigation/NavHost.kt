@@ -422,6 +422,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     onClickBackButton = onClickGoToMainScreen,
                     onClickLeaveButton = {
                         roomWinnerViewModel.removeRoomForUserRooms(currentPicDescRoom,currentUser){
+                            if(winnerUser.userId.equals(currentUser.id)) {
+                                dbutils.incrementUserNumWins(currentUser)
+                            }
                             onClickGoToMainScreen()
                         }
                     },
@@ -746,7 +749,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
 
             //check if all challenges have been done
-            val isFinished =currentRepicRoom.currentNumOfChallengesDone ==
+            val isFinished = currentRepicRoom.currentNumOfChallengesDone ==
                     currentRepicRoom.maxNumOfChallenges
 
             if (userSawWinScreen && isFinished){
@@ -759,7 +762,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     winnerPoints = winnerUser.points,
                     onClickBackButton = onClickGoToMainScreen,
                     onClickLeaveButton = {
-                        roomWinnerViewModel.removeRoomForUserRooms(currentRepicRoom,currentUser){
+                        roomWinnerViewModel.removeRoomForUserRooms(currentRepicRoom,currentUser) {
+                            if(winnerUser.userId.equals(currentUser.id)) {
+                                dbutils.incrementUserNumWins(currentUser)
+                            }
                             onClickGoToMainScreen()
                         }
                     },
