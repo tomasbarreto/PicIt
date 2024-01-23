@@ -18,6 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,7 +55,7 @@ fun LoginScreen(
         TextField(
             value = email,
             onValueChange = {
-                if (it.length <= 20) {
+                if (it.length <= 40) {
                     email = it
                 }
             },
@@ -71,7 +73,8 @@ fun LoginScreen(
                 }
             },
             label = { Text("Password") },
-            maxLines = 1
+            maxLines = 1,
+            visualTransformation = PasswordVisualTransformation()
         )
 
         Spacer(modifier = Modifier.height(60.dp))

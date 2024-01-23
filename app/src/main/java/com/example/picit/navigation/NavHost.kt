@@ -21,8 +21,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.picit.camera.Camera2
-import com.example.picit.camera.CameraScreen
 import com.example.picit.camera.PicDescCameraViewModel
 import com.example.picit.camera.RePicCameraViewModel
 import com.example.picit.createroom.picdesc.RoomTimeSettingsPicDescScreen
@@ -375,46 +373,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 viewModel = viewModel
             )
         }
-        composable(route= Screens.PicDescCamera.route){
-            val viewModel: PicDescCameraViewModel = viewModel()
-            val context = LocalContext.current
-
-            CameraScreen(
-                onClickBackButton = {onClickBackButton()},
-                getImageUri = { uri ->
-                    viewModel.submitImage(currentPicDescRoom,currentUser,uri, context){
-                        navController.navigate(Screens.PicDescRoomScreen.route)
-                    }
-
-                }
-            )
-        }
-        composable(route= Screens.RePicCamera.route){
-            val viewModel: RePicCameraViewModel = viewModel()
-
-            val getImageUri = { uri: Uri, context: Context ->
-                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
-                        navController.navigate(Screens.RepicRoomScreen.route)
-                    }
-            }
-
-            Camera2(getImageUri = getImageUri)
-
-
-
-
-
-
-//
-//            CameraScreen(
-//                onClickBackButton = {onClickBackButton()},
-//                getImageUri = { uri ->
-//                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
-//                        navController.navigate(Screens.RepicRoomScreen.route)
-//                    }
-//                }
-//            )
-        }
         composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
             val reload = { navController.navigate(Screens.PicDescRoomScreen.route) }
@@ -575,12 +533,10 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                     else{
 
-                        val viewModel: RePicCameraViewModel = viewModel()
+                        val viewModel: PicDescCameraViewModel = viewModel()
 
                         val getImageUri = { uri: Uri, context: Context ->
-                            viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
-                                navController.navigate(Screens.RepicRoomScreen.route)
-                            }
+                            viewModel.submitImage(currentPicDescRoom,currentUser,uri, context)
                         }
 
                         var context = LocalContext.current
@@ -849,9 +805,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val viewModel: RePicCameraViewModel = viewModel()
 
                 val getImageUri = { uri: Uri, context: Context ->
-                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
-                        navController.navigate(Screens.RepicRoomScreen.route)
-                    }
+                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context)
                 }
 
                 var context = LocalContext.current
