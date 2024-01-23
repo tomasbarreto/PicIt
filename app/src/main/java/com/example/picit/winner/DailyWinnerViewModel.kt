@@ -34,12 +34,24 @@ class DailyWinnerViewModel: ViewModel() {
     fun findFastestValidPhoto(photos: List<PicDescPhoto>) : PicDescPhoto {
         var res = PicDescPhoto()
 
-        for (photo in photos){
-            if (!res.leaderVote||
-                (photo.submissionTime.hours < res.submissionTime.hours ||
-                (photo.submissionTime.hours == res.submissionTime.hours &&
-                        photo.submissionTime.minutes < res.submissionTime.minutes)) ){
-                res = photo
+        val validPhotos = photos.filter { it.leaderVote }
+
+        if(validPhotos.isNotEmpty()){
+            for(photo in validPhotos){
+                if(photo.submissionTime.hours < res.submissionTime.hours ||
+                    (photo.submissionTime.hours == res.submissionTime.hours &&
+                     photo.submissionTime.minutes<res.submissionTime.minutes)){
+                        res = photo
+                    }
+            }
+        }
+        else{
+            for(photo in photos){
+                if(photo.submissionTime.hours < res.submissionTime.hours ||
+                    (photo.submissionTime.hours == res.submissionTime.hours &&
+                            photo.submissionTime.minutes<res.submissionTime.minutes)){
+                    res = photo
+                }
             }
         }
 
