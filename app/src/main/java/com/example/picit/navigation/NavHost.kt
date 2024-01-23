@@ -621,12 +621,12 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     NoWinnerScreen(
                         onClickContinueButton = {
                             if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
-                                dailyWinnerViewModel.userSawWinnerScreen(
-                                    currentUser.id,
-                                    currentPicDescRoom
-                                ){
-                                    dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
-                                        dbutils.addPhotosSubmittedList(currentPicDescRoom){
+                                dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
+                                    dbutils.addPhotosSubmittedList(currentPicDescRoom){
+                                        dailyWinnerViewModel.userSawWinnerScreen(
+                                            currentUser.id,
+                                            currentPicDescRoom
+                                        ){
                                             reload()
                                         }
                                     }
@@ -686,32 +686,36 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             if(currentPicDescRoom.leaderboard.none {  it.didSeeWinnerScreen }){
                                 if(fastestValidPhoto.userId == bestRatedPhoto.userId){
                                     dailyWinnerViewModel.awardUser(fastestValidPhoto.userId, currentPicDescRoom,2) {
-                                        dailyWinnerViewModel.userSawWinnerScreen(
-                                            currentUser.id,
-                                            currentPicDescRoom
-                                        ){
-                                            dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
-                                                dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+
+                                        dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
+                                            dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+                                                dailyWinnerViewModel.userSawWinnerScreen(
+                                                    currentUser.id,
+                                                    currentPicDescRoom
+                                                ){
                                                     reload()
                                                 }
                                             }
                                         }
+
+
                                     }
                                 }
                                 else{
                                     Log.d(TAG, "Awarded user")
                                     dailyWinnerViewModel.awardUser(fastestValidPhoto.userId, currentPicDescRoom,1){
                                         dailyWinnerViewModel.awardUser(bestRatedPhoto.userId, currentPicDescRoom,1){
-                                            dailyWinnerViewModel.userSawWinnerScreen(
-                                                currentUser.id,
-                                                currentPicDescRoom
-                                            ){
-                                                dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
-                                                    dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+                                            dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
+                                                dailyWinnerViewModel.setNewLeader(fastestValidPhoto.userId, currentPicDescRoom){
+                                                    dailyWinnerViewModel.userSawWinnerScreen(
+                                                        currentUser.id,
+                                                        currentPicDescRoom
+                                                    ){
                                                         reload()
                                                     }
                                                 }
                                             }
+
                                         }
 
                                     }
@@ -914,16 +918,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     NoWinnerScreen(
                         onClickContinueButton = {
                             if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
-                                viewModel.userSawWinnerScreen(
-                                    currentUser.id,
-                                    currentRepicRoom
-                                ){
-                                    viewModel.increaseChallengeCount(currentRepicRoom){
-                                        dbutils.addPhotosSubmittedList(currentRepicRoom){
+                                viewModel.increaseChallengeCount(currentRepicRoom){
+                                    dbutils.addPhotosSubmittedList(currentRepicRoom){
+                                        viewModel.userSawWinnerScreen(
+                                            currentUser.id,
+                                            currentRepicRoom
+                                        ){
                                             reload()
                                         }
                                     }
                                 }
+
+
                             }
                             else{
                                 viewModel.userSawWinnerScreen(
@@ -962,11 +968,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             //UPDATE ROOM/USER IN THIS IF
                             if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
                                 viewModel.awardUser(winnerPhoto, currentRepicRoom,1) {
-                                    viewModel.userSawWinnerScreen(
-                                        currentUser.id,
-                                        currentRepicRoom
-                                    ){
-                                        viewModel.increaseChallengeCount(currentRepicRoom){
+                                    viewModel.increaseChallengeCount(currentRepicRoom){
+                                        viewModel.userSawWinnerScreen(
+                                            currentUser.id,
+                                            currentRepicRoom
+                                        ){
                                             reload()
                                         }
                                     }
