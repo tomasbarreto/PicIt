@@ -77,7 +77,7 @@ class PicDescCameraViewModel: ViewModel() {
         dbUtils.incrementUserNumPhotosSubmited(user)
     }
 
-    private fun insertPhoto(imageUrl:String, userId:String,username:String ,location:String,
+     fun insertPhoto(imageUrl:String, userId:String,username:String ,location:String,
                             time:Time, room:PicDescRoom,navigationFunction: () -> Unit){
         val db = Firebase.database
         val roomRef = db.getReference("picDescRooms/${room.id}")

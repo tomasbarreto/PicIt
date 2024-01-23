@@ -482,9 +482,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
             // time to submit photo
             else if (checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)){
-                Log.d(TAG,"${checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)}")
-                Log.d(TAG, "$photoSubmissionOpeningTime, $currentTime, $winnerAnnouncementTime")
-                Log.d(TAG, "Submit Photo Times: $photoSubmissionOpeningTime; $currentTime; $winnerAnnouncementTime")
                 val photosSubmitted =
                     if(currentPicDescRoom.allPhotosSubmitted.size == currentPicDescRoom.currentNumOfChallengesDone) emptyList()
                     else currentPicDescRoom.allPhotosSubmitted[currentPicDescRoom.currentNumOfChallengesDone]
@@ -606,7 +603,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         currentPicDescRoom.currentNumOfChallengesDone-1
 
                 // No winners in this challenge
-                if(currentPicDescRoom.allPhotosSubmitted.size <= index){
+                if(currentPicDescRoom.allPhotosSubmitted.size <= index ||
+                    currentPicDescRoom.allPhotosSubmitted[index][0].photoUrl=="" ){
+
                     NoWinnerScreen(
                         onClickContinueButton = {
                             if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
@@ -615,7 +614,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                     currentPicDescRoom
                                 ){
                                     dailyWinnerViewModel.increaseChallengeCount(currentPicDescRoom){
-                                        reload()
+                                        dbutils.addPhotosSubmittedList(currentPicDescRoom){
+                                            reload()
+                                        }
                                     }
                                 }
                             }
@@ -882,8 +883,8 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         currentRepicRoom.currentNumOfChallengesDone-1
 
                 // No winners in this challenge
-                if(currentRepicRoom.photosSubmitted.size <= index){
-                    // TODO implement
+                if(currentRepicRoom.photosSubmitted.size <= index ||
+                    currentRepicRoom.photosSubmitted[index][0].photoUrl=="" ){
                     NoWinnerScreen(
                         onClickContinueButton = {
                             if(currentRepicRoom.leaderboard.none {it.didSeeWinnerScreen }){
@@ -891,7 +892,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                     currentUser.id,
                                     currentRepicRoom
                                 ){
-                                    viewModel.increaseChallengeCount(currentRepicRoom)
+                                    viewModel.increaseChallengeCount(currentRepicRoom){
+                                        dbutils.addPhotosSubmittedList(currentRepicRoom){
+                                            reload()
+                                        }
+                                    }
                                 }
                             }
                             else{

@@ -5,9 +5,12 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.RePicPhoto
 import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.User
+import com.google.android.gms.location.LocationCallback
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -149,5 +152,29 @@ class DBUtils() {
         val updatedUser = user.copy(nrPhotosTaken = updatedNumPhotos)
 
         userRef.setValue(updatedUser)
+    }
+
+    fun addPhotosSubmittedList(room: PicDescRoom, callback: ()->Unit = {}) {
+        val db = Firebase.database
+        val roomRef = db.getReference("picDescRooms/${room.id}")
+
+        val updatedSubmittedPhotos = room.allPhotosSubmitted.toMutableList()
+        updatedSubmittedPhotos.add(listOf(PicDescPhoto()))
+        val updateRoom = room.copy(allPhotosSubmitted = updatedSubmittedPhotos)
+        roomRef.setValue(updateRoom).addOnSuccessListener {
+            callback()
+        }
+    }
+
+    fun addPhotosSubmittedList(room: RePicRoom, callback: ()->Unit = {}) {
+        val db = Firebase.database
+        val roomRef = db.getReference("repicRooms/${room.id}")
+
+        val updatedSubmittedPhotos = room.photosSubmitted.toMutableList()
+        updatedSubmittedPhotos.add(listOf(RePicPhoto()))
+        val updateRoom = room.copy(photosSubmitted = updatedSubmittedPhotos)
+        roomRef.setValue(updateRoom).addOnSuccessListener {
+            callback()
+        }
     }
 }
