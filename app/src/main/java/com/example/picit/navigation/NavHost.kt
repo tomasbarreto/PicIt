@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -561,9 +562,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                     else{
                         val getImageUri = { uri: Uri, context: Context ->
-                            picDescCameraViewModel.submitImage(currentPicDescRoom,currentUser,uri, context){
-                                reload()
-                            }
+                            picDescCameraViewModel.submitImage(currentPicDescRoom,currentUser,uri, context)
                         }
 
                         var context = LocalContext.current
@@ -636,9 +635,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                         dailyWinnerViewModel.userSawWinnerScreen(
                                             currentUser.id,
                                             currentPicDescRoom
-                                        ){
-                                            reload()
-                                        }
+                                        )
                                     }
                                 }
                             }
@@ -646,9 +643,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                 dailyWinnerViewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentPicDescRoom
-                                ){
-                                    reload()
-                                }
+                                )
                             }
                         }
                     )
@@ -702,9 +697,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                                 dailyWinnerViewModel.userSawWinnerScreen(
                                                     currentUser.id,
                                                     currentPicDescRoom
-                                                ){
-                                                    reload()
-                                                }
+                                                )
                                             }
                                         }
 
@@ -720,9 +713,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                                     dailyWinnerViewModel.userSawWinnerScreen(
                                                         currentUser.id,
                                                         currentPicDescRoom
-                                                    ){
-                                                        reload()
-                                                    }
+                                                    )
                                                 }
                                             }
 
@@ -735,9 +726,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                 dailyWinnerViewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentPicDescRoom
-                                ){
-                                    reload()
-                                }
+                                )
                             }
                         }
                     }
@@ -779,8 +768,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 return@composable
             }
 
-
-
             val currentCalendar = Calendar.getInstance()
             val currentTime = Time(currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE))
 
@@ -798,8 +785,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
 
             val userSawWinScreen = currentRepicRoom.leaderboard.any{it.userId == currentUser.id} &&
                     currentRepicRoom.leaderboard.filter { it.userId == currentUser.id }[0].didSeeWinnerScreen
-
-
 
             //check if all challenges have been done
             val isFinished = currentRepicRoom.currentNumOfChallengesDone ==
@@ -865,9 +850,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val viewModel: RePicCameraViewModel = viewModel()
 
                 val getImageUri = { uri: Uri, context: Context ->
-                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context){
-                        reload()
-                    }
+                    viewModel.submitImage(currentRepicRoom,currentUser,uri, context)
                 }
 
                 var context = LocalContext.current
@@ -881,7 +864,6 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 val cameraLauncher =
                     rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
                         getImageUri(uri, context)
-
                     }
 
                 val permissionLauncher = rememberLauncherForActivityResult(
@@ -936,9 +918,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                         viewModel.userSawWinnerScreen(
                                             currentUser.id,
                                             currentRepicRoom
-                                        ){
-                                            reload()
-                                        }
+                                        )
                                     }
                                 }
 
@@ -948,9 +928,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                 viewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentRepicRoom
-                                ){
-                                    reload()
-                                }
+                                )
                             }
                         }
                     )
@@ -985,9 +963,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                         viewModel.userSawWinnerScreen(
                                             currentUser.id,
                                             currentRepicRoom
-                                        ){
-                                            reload()
-                                        }
+                                        )
                                     }
                                 }
                             }
@@ -995,9 +971,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                 viewModel.userSawWinnerScreen(
                                     currentUser.id,
                                     currentRepicRoom
-                                ){
-                                    reload()
-                                }
+                                )
                             }
                         }
 
