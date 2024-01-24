@@ -1,6 +1,8 @@
 package com.example.picit.timer
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.example.picit.entities.Time
 import com.example.picit.utils.TimeLeftDisplay
@@ -13,8 +15,16 @@ fun Timer(
     reload: ()->Unit = {},
     modifier: Modifier = Modifier
 ) {
-    viewModel.startTimer(endingTime,reload)
+
+    DisposableEffect(endingTime) {
+        viewModel.startTimer(endingTime, reload)
+
+        onDispose {
+            viewModel.cancelTimer()
+        }
+    }
     var time = getTimeFromString(viewModel.getFormattedTimer())
+
     TimeLeftDisplay(timeFor = timeFor, hours = time.hours , mins = time.minutes , secs = time.second)
 }
 

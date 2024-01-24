@@ -3,8 +3,10 @@ package com.example.picit.timer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.picit.entities.Time
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +30,7 @@ class TimerViewModel: ViewModel() {
     private var reloaded = false
 
     fun startTimer(finalTime: Time, reload: ()->Unit={}) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             var finalTimeMillis = getTimeMillis(finalTime)
             var now = LocalDateTime.now()
             var currentMillis = getTimeMillis(Time(hours = now.hour, minutes = now.minute, second = now.second))
@@ -79,5 +81,9 @@ class TimerViewModel: ViewModel() {
 
     fun getFormattedTimer(): String {
         return formattedTime
+    }
+
+    fun cancelTimer() {
+        isOver = true
     }
 }
