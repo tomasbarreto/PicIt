@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -383,10 +384,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.PicDescRoomScreen.route){ backStackEntry->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
+            val scope = rememberCoroutineScope()
             val reload = {
-                navController.navigate(
-                    Screens.PicDescRoomScreen.route.replace("{room_id}", currentPicDescRoom.id!!)
-                )
+                scope.launch{
+                    navController.navigate(
+                        Screens.PicDescRoomScreen.route.replace("{room_id}", currentPicDescRoom.id!!)
+                    )
+                }
             }
 
             if (!currentPicDescRoom.id.isNullOrEmpty()){
@@ -467,13 +471,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             endingTime = currentPicDescRoom.descriptionSubmissionOpeningTime,
                             viewModel = timerViewModel,
                             isLeader = true,
-                            reload = reload
+                            reload = { reload() }
                         )
                     }
                     else{
                         SubmitPhotoDescription(
                             onClickBackButton = { onClickGoToMainScreen() },
-                            reload = reload,
+                            reload = { reload() },
                             onClickLeaderboardButton =  onClickLeaderboard,
                             viewModel = viewModel,
                             picDescRoom = currentPicDescRoom,
@@ -489,7 +493,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                         endingTime = currentPicDescRoom.photoSubmissionOpeningTime,
                         viewModel = timerViewModel,
                         isLeader =false,
-                        reload = reload
+                        reload = { reload() }
                     )
                 }
             }
@@ -530,7 +534,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                                              },
                         endingTime = currentPicDescRoom.winnerAnnouncementTime,
                         viewModel = timerViewModel,
-                        reload = reload
+                        reload = { reload() }
                     )
                 }
                 else{
@@ -552,7 +556,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             onClickRaitingStars = {raiting:Int ->
                                 viewModel.userVote(currentUser,currentPicDescRoom,photoDisplayed,raiting)
                             },
-                            reload = reload
+                            reload = { reload() }
                         )
                     }
                     else{
@@ -591,7 +595,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                             onClickLeaderboardButton = onClickLeaderboard,
                             room = currentPicDescRoom,
                             viewModel = timerViewModel,
-                            reload = reload,
+                            reload = { reload() },
                             onClickCameraButton = { val permissionCheckResult =
                                 ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                                 if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
@@ -757,10 +761,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         }
         composable(route = Screens.RepicRoomScreen.route){ backStackEntry ->
             val roomId = backStackEntry.arguments?.getString("room_id") ?: return@composable
+            val scope = rememberCoroutineScope()
             val reload = {
-                navController.navigate(
-                    Screens.RepicRoomScreen.route.replace("{room_id}", currentRepicRoom.id!!)
-                )
+                scope.launch{
+                    navController.navigate(
+                        Screens.RepicRoomScreen.route.replace("{room_id}", currentRepicRoom.id!!)
+                    )
+                }
             }
 
             if (!currentRepicRoom.id.isNullOrEmpty()) {
@@ -836,7 +843,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     roomName = currentRepicRoom.name,
                     endingTime = currentRepicRoom.pictureReleaseTime,
                     viewModel = viewModel(),
-                    reload = reload
+                    reload = { reload() }
                 )
             }
             // Time to submit photos
@@ -904,7 +911,7 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     onClickLeaderboard,
                     viewModel = viewModel(),
                     currentRepicRoom,
-                    reload = reload
+                    reload = { reload() }
                 )
             }
             // Display winner
