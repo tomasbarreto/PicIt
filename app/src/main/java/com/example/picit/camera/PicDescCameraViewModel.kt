@@ -7,12 +7,18 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.Time
 import com.example.picit.entities.User
 import com.example.picit.location.LocationClient
 import com.example.picit.utils.DBUtils
 import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.MutableData
+import com.google.firebase.database.Transaction
 import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 import com.google.firebase.storage.storage
 import java.util.Calendar
 
@@ -79,7 +85,7 @@ class PicDescCameraViewModel: ViewModel() {
     }
 
      fun insertPhoto(imageUrl:String, userId:String,username:String ,location:String,
-                            time:Time, room:PicDescRoom,navigationFunction: () -> Unit){
+                            time:Time, room:PicDescRoom,callback: () -> Unit){
         val db = Firebase.database
         val roomRef = db.getReference("picDescRooms/${room.id}")
 
@@ -95,25 +101,45 @@ class PicDescCameraViewModel: ViewModel() {
             ratingSum = 0
         )
         val index = room.currentNumOfChallengesDone
-        val updatedSubmittedPhotosInChallenge =
-            if(room.allPhotosSubmitted.size==index) mutableListOf()
-            else room.allPhotosSubmitted[index].filter { it.userId != userId }.toMutableList()
-        updatedSubmittedPhotosInChallenge.add(photo)
 
-        val updatedSubmittedPhotos = room.allPhotosSubmitted.toMutableList()
-        if(updatedSubmittedPhotos.size == index){
-            updatedSubmittedPhotos.add(updatedSubmittedPhotosInChallenge)
-        }
-        else{
-            updatedSubmittedPhotos[index] = updatedSubmittedPhotosInChallenge
-        }
+         roomRef.runTransaction(object : Transaction.Handler{
+             override fun doTransaction(currentData: MutableData): Transaction.Result {
+                 val currentRoom = currentData.getValue<PicDescRoom>()!!
+                 val updatedSubmittedPhotosInChallenge =
+                     if(currentRoom.allPhotosSubmitted.size==index) mutableListOf()
+                     else currentRoom.allPhotosSubmitted[index].filter { it.userId != userId }.toMutableList()
+                 updatedSubmittedPhotosInChallenge.add(photo)
+
+                 val updatedSubmittedPhotos = currentRoom.allPhotosSubmitted.toMutableList()
+                 if(updatedSubmittedPhotos.size == index){
+                     updatedSubmittedPhotos.add(updatedSubmittedPhotosInChallenge)
+                 }
+                 else{
+                     updatedSubmittedPhotos[index] = updatedSubmittedPhotosInChallenge
+                 }
 
 
-        // Update the room object in the Realtime Database
-        val updatedRoom = room.copy(allPhotosSubmitted = updatedSubmittedPhotos)
-        roomRef.setValue(updatedRoom).addOnSuccessListener {
-            navigationFunction()
-        }
+                 // Update the room object in the Realtime Database
+                 val updatedRoom = currentRoom.copy(allPhotosSubmitted = updatedSubmittedPhotos)
+                 currentData.value = updatedRoom
+                 return Transaction.success(currentData)
+             }
+
+             override fun onComplete(
+                 error: DatabaseError?,
+                 committed: Boolean,
+                 currentData: DataSnapshot?
+             ) {
+                 if (committed) {
+                     Log.d(TAG,currentData.toString())
+                 } else {
+                     // Handle the case where the transaction failed
+                 }
+                 callback()
+             }
+
+         })
+
     }
 
     private fun isGpsEnabled(context: Context): Boolean {

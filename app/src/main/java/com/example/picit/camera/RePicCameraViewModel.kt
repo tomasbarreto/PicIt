@@ -85,7 +85,7 @@ class RePicCameraViewModel: ViewModel() {
 
     }
     private fun insertPhoto(imageUrl:String, userId:String, username:String, location:String,
-                            time:Time, room: RePicRoom, navigationFunction: () -> Unit){
+                            time:Time, room: RePicRoom, callback: () -> Unit){
         val db = Firebase.database
         val roomRef = db.getReference("repicRooms/${room.id}")
 
@@ -129,6 +129,7 @@ class RePicCameraViewModel: ViewModel() {
                 } else {
                     // Handle the case where the transaction failed
                 }
+                callback()
             }
         })
     }
