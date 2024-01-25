@@ -30,6 +30,7 @@ import com.example.picit.createroom.picdesc.RoomTimeSettingsPicDescScreen
 import com.example.picit.entities.GameType
 import com.example.picit.entities.PicDescPhoto
 import com.example.picit.entities.PicDescRoom
+import com.example.picit.entities.RePicPhoto
 import com.example.picit.entities.RePicRoom
 import com.example.picit.entities.Time
 import com.example.picit.entities.User
@@ -78,6 +79,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import okhttp3.internal.wait
 import java.io.File
 import java.text.SimpleDateFormat
@@ -934,16 +936,25 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     )
                 }
                 else{
-                    val winnerPhoto = if (currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen })
+                    var winnerPhoto by remember{mutableStateOf(RePicPhoto())}
+
+                    if (currentRepicRoom.leaderboard.none {  it.didSeeWinnerScreen }){
                         viewModel.findMostSimilarPhoto(
                             currentRepicRoom.photosSubmitted.last(),
                             currentRepicRoom.generatedImagesUrls[currentRepicRoom.currentNumOfChallengesDone],
-                            context
-                        )
-                    else currentRepicRoom.winners.last()
+                            newSingleThreadContext("ctx1")
+                        ){ winner->
+                            winnerPhoto = winner
+                            Log.d(TAG,winnerPhoto.toString())
+                        }
+                    }
+                    else
+                        winnerPhoto = currentRepicRoom.winners.last()
 
-                    Log.d(TAG, "From: ${currentRepicRoom.photosSubmitted}")
-                    Log.d(TAG, "Won $winnerPhoto")
+                    if(winnerPhoto.photoUrl.isEmpty()){
+                        LoadScreen()
+                        return@composable
+                    }
 
                     DailyWinnerScreen(
                         gameType = GameType.REPIC,

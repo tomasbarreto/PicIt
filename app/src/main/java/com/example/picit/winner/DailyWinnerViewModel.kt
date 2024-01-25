@@ -22,12 +22,14 @@ import com.example.picit.repic.PhotoComparator
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.coroutines.CoroutineContext
 
 private val TAG = "DailyWinnerViewModel"
 class DailyWinnerViewModel: ViewModel() {
@@ -248,33 +250,36 @@ class DailyWinnerViewModel: ViewModel() {
         }
     }
 
-    fun findMostSimilarPhoto(photosSubmitted: List<RePicPhoto>, imageUrl: String, context: Context): RePicPhoto {
-        var photoComparator = PhotoComparator()
-        var submittedPhotoUrls = getSubmittedPhotoUrls(photosSubmitted)
+    fun findMostSimilarPhoto(photosSubmitted: List<RePicPhoto>, imageUrl: String,coroutineContext: CoroutineContext ,callback: (RePicPhoto) -> Unit) {
+        viewModelScope.launch(coroutineContext){
 
-        var bestPhotoIndex = 0
-        var maxPhotoClassification = 0.0F
+            var photoComparator = PhotoComparator()
+            var submittedPhotoUrls = getSubmittedPhotoUrls(photosSubmitted)
+
+            var bestPhotoIndex = 0
+            var maxPhotoClassification = 0.0F
 
 
-        // Get the bitmap of the model photo to repic
-        val modelPhotoBitmap = imageUrlToBitmap(imageUrl)
+            // Get the bitmap of the model photo to repic
+            val modelPhotoBitmap = imageUrlToBitmap(imageUrl)
 
-        // Get the classification of the first submitted photo
-        val firstSubmittedPhotoBitmap = imageUrlToBitmap(submittedPhotoUrls[0])
-        maxPhotoClassification = photoComparator.comparePhoto(modelPhotoBitmap, firstSubmittedPhotoBitmap)
+            // Get the classification of the first submitted photo
+            val firstSubmittedPhotoBitmap = imageUrlToBitmap(submittedPhotoUrls[0])
+            maxPhotoClassification = photoComparator.comparePhoto(modelPhotoBitmap, firstSubmittedPhotoBitmap)
 
-        // Loop through the rest of the submitted photos to find the maximum classification
-        for (index in 1..(submittedPhotoUrls.size - 1)) {
-            val currentPhotoBitmap = imageUrlToBitmap(submittedPhotoUrls[index])
-            val currentPhotoClassification = photoComparator.comparePhoto(modelPhotoBitmap, currentPhotoBitmap)
+            // Loop through the rest of the submitted photos to find the maximum classification
+            for (index in 1..(submittedPhotoUrls.size - 1)) {
+                val currentPhotoBitmap = imageUrlToBitmap(submittedPhotoUrls[index])
+                val currentPhotoClassification = photoComparator.comparePhoto(modelPhotoBitmap, currentPhotoBitmap)
 
-            if (currentPhotoClassification > maxPhotoClassification) {
-                maxPhotoClassification = currentPhotoClassification
-                bestPhotoIndex = index
+                if (currentPhotoClassification > maxPhotoClassification) {
+                    maxPhotoClassification = currentPhotoClassification
+                    bestPhotoIndex = index
+                }
             }
+            callback(photosSubmitted[bestPhotoIndex])
         }
 
-        return photosSubmitted[bestPhotoIndex]
     }
 
     private fun getSubmittedPhotoUrls(photosSubmitted: List<RePicPhoto>): MutableList<String> {
