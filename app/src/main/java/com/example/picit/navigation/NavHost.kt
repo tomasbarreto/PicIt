@@ -500,19 +500,13 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
             }
             // time to submit photo
             else if (checkInterval(currentTime,photoSubmissionOpeningTime,winnerAnnouncementTime)){
-
-                var photoDisplayed = PicDescPhoto()
-                var photosSubmitted = emptyList<PicDescPhoto>()
-                LaunchedEffect(currentPicDescRoom){
-                    photosSubmitted =
-                        if(currentPicDescRoom.allPhotosSubmitted.size == currentPicDescRoom.currentNumOfChallengesDone) emptyList()
-                        else currentPicDescRoom.allPhotosSubmitted[currentPicDescRoom.currentNumOfChallengesDone]
-                    val photosUserDidntVote = photosSubmitted.filter{
-                        it.userId != currentUser.id && !it.usersThatVoted.contains(currentUser.id)
-                    }
-                    photoDisplayed= if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]}
-                                    else PicDescPhoto()
+                val photosSubmitted =
+                    if(currentPicDescRoom.allPhotosSubmitted.size == currentPicDescRoom.currentNumOfChallengesDone) emptyList()
+                    else currentPicDescRoom.allPhotosSubmitted[currentPicDescRoom.currentNumOfChallengesDone]
+                val photosUserDidntVote = photosSubmitted.filter{
+                    it.userId != currentUser.id && !it.usersThatVoted.contains(currentUser.id)
                 }
+                val photoDisplayed = if (photosUserDidntVote.isNotEmpty()) {photosUserDidntVote[0]} else PicDescPhoto()
 
                 val picDescCameraViewModel: PicDescCameraViewModel = viewModel()
 
