@@ -61,6 +61,7 @@ import com.example.picit.picdesccreateroom.RoomSettingsScreen
 import com.example.picit.picdesccreateroom.RoomTimeSettingsRepicScreen
 import com.example.picit.profile.UserProfileScreen
 import com.example.picit.register.RegisterScreen
+import com.example.picit.repic.ImageScreen
 import com.example.picit.repic.RepicRoomTakePicture
 import com.example.picit.repic.RepicRoomTakePictureViewModel
 import com.example.picit.repic.WaitPictureScreen
@@ -82,6 +83,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import okhttp3.internal.wait
 import java.io.File
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -879,6 +882,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     }
                 }
 
+                val photosSubmitted =
+                    if(currentRepicRoom.photosSubmitted.size == currentRepicRoom.currentNumOfChallengesDone) emptyList()
+                    else currentRepicRoom.photosSubmitted[currentRepicRoom.currentNumOfChallengesDone]
+                val submittedImage = photosSubmitted.filter{ it.userId == currentUser.id}.size == 1
+                val onClickYourPhotoButton = {
+                    if(submittedImage){
+                        val photo = photosSubmitted.find { it.userId == currentUser.id }!!
+                        val encodedUrl = URLEncoder.encode(photo.photoUrl, StandardCharsets.UTF_8.toString())
+                        navController.navigate(Screens.RePicUserPhotoPreviewScreen.route
+                            .replace("{photo_url}", encodedUrl))
+                    }
+                }
                 RepicRoomTakePicture(
                     onClickBackButton = { onClickGoToMainScreen() },
                     onClickCameraButton = {
@@ -895,7 +910,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                     onClickLeaderboard,
                     viewModel = viewModel(),
                     currentRepicRoom,
-                    reload = { reload() }
+                    reload = { reload() },
+                    submittedPhoto = submittedImage,
+                    onClickYourPhotoButton = {onClickYourPhotoButton()}
                 )
             }
             // Display winner
@@ -1011,6 +1028,11 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 }
 
             }
+        }
+        composable(route=Screens.RePicUserPhotoPreviewScreen.route){ backStackEntry->
+            val photoUrl = backStackEntry.arguments?.getString("photo_url")!!
+
+            ImageScreen(onClickBackButton = {onClickBackButton()}, imageUrl = photoUrl)
         }
     }
 }

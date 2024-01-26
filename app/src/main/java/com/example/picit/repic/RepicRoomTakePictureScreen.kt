@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,7 +41,9 @@ fun RepicRoomTakePicture(
     onClickLeaderboardButton: () -> Unit = {},
     viewModel: TimerViewModel,
     room: RePicRoom = RePicRoom(),
-    reload: ()->Unit = {}
+    reload: ()->Unit = {},
+    submittedPhoto: Boolean = false,
+    onClickYourPhotoButton: () ->Unit={}
 ){
 
     Column (
@@ -92,7 +95,12 @@ fun RepicRoomTakePicture(
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp),
-            horizontalArrangement = Arrangement.End) {
+            horizontalArrangement = if(submittedPhoto)Arrangement.SpaceBetween else Arrangement.End) {
+            if(submittedPhoto){
+                Button(onClick = onClickYourPhotoButton) {
+                    Text(text = "Your photo", fontSize = 16.sp)
+                }
+            }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 LeaderboardButton(onClickLeaderboardButton)
             }
