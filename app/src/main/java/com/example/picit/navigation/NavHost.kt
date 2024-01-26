@@ -1032,7 +1032,9 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
         composable(route=Screens.RePicUserPhotoPreviewScreen.route){ backStackEntry->
             val photoUrl = backStackEntry.arguments?.getString("photo_url")!!
 
-            ImageScreen(onClickBackButton = {onClickBackButton()}, imageUrl = photoUrl)
+            ImageScreen(onClickBackButton = {navController.navigate(
+                Screens.RepicRoomScreen.route.replace("{room_id}", currentRepicRoom.id!!)
+            )}, imageUrl = photoUrl)
         }
     }
 }
