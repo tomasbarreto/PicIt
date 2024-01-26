@@ -1019,12 +1019,18 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 if (gameType.equals(GameType.REPIC.toString())) {
                     dbutils.findRepicRoomById(roomId, {room -> currentRepicRoom = room})
                     leaderboardViewModel.getLeaderboardRepic(currentRepicRoom)
-                    LeaderboardScreen(currentRepicRoom.name, leaderboardViewModel.usersInLeaderboard, {onClickBackButton()})
+                    val onClickBack = {navController.navigate(
+                        Screens.RepicRoomScreen.route.replace("{room_id}", currentRepicRoom.id!!)
+                    )}
+                    LeaderboardScreen(currentRepicRoom.name, leaderboardViewModel.usersInLeaderboard, {onClickBack()})
                 }
                 else {
                     dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
                     leaderboardViewModel.getLeaderboardPicDesc(currentPicDescRoom)
-                    LeaderboardScreen(currentPicDescRoom.name, leaderboardViewModel.usersInLeaderboard, {onClickBackButton()})
+                    val onClickBack = {navController.navigate(
+                        Screens.PicDescRoomScreen.route.replace("{room_id}", currentPicDescRoom.id!!)
+                    )}
+                    LeaderboardScreen(currentPicDescRoom.name, leaderboardViewModel.usersInLeaderboard, {onClickBack()})
                 }
 
             }
