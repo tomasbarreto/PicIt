@@ -97,7 +97,7 @@ class DBUtils() {
     }
 
     fun removePicDescListener(roomId:String){
-        if(picDescRoomEventListener == null) return
+        if(!this::picDescRoomEventListener.isInitialized) return
 
         val roomRef = db.getReference("picDescRooms/$roomId")
 
@@ -105,7 +105,7 @@ class DBUtils() {
     }
 
     fun removeCurrentUserListener(userId:String) {
-        if(userEventListener == null) return
+        if(!this::userEventListener.isInitialized) return
 
         val userRef = db.getReference("users/$userId")
 
@@ -113,7 +113,7 @@ class DBUtils() {
     }
 
     fun removeRePicListener(roomId:String){
-        if(rePicRoomEventListener == null) return
+        if(!this::rePicRoomEventListener.isInitialized) return
 
         val roomRef = db.getReference("repicRooms/$roomId")
 
