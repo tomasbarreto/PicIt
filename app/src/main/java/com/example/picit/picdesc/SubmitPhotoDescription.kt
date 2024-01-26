@@ -58,7 +58,7 @@ fun SubmitPhotoDescription(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var roomName = "Room Name" // get in room details stored in the bd
+        var roomName = picDescRoom.name // get in room details stored in the bd
         ScreenHeader(
             withBackButton = true,
             text = roomName,
