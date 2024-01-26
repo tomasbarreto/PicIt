@@ -1019,17 +1019,33 @@ fun PicItNavHost(navController: NavHostController, modifier: Modifier = Modifier
                 if (gameType.equals(GameType.REPIC.toString())) {
                     dbutils.findRepicRoomById(roomId, {room -> currentRepicRoom = room})
                     leaderboardViewModel.getLeaderboardRepic(currentRepicRoom)
-                    val onClickBack = {navController.navigate(
-                        Screens.RepicRoomScreen.route.replace("{room_id}", currentRepicRoom.id!!)
-                    )}
+                    val onClickBack =
+                        if(currentRepicRoom.leaderboard.any { it.userId == currentUser.id }) {
+                            {
+                                navController.navigate(
+                                    Screens.RepicRoomScreen.route
+                                        .replace("{room_id}", currentRepicRoom.id!!)
+                                )
+                            }
+                        }
+                        else
+                            onClickBackButton
                     LeaderboardScreen(currentRepicRoom.name, leaderboardViewModel.usersInLeaderboard, {onClickBack()})
                 }
                 else {
                     dbutils.findPicDescRoomById(roomId, {room -> currentPicDescRoom = room})
                     leaderboardViewModel.getLeaderboardPicDesc(currentPicDescRoom)
-                    val onClickBack = {navController.navigate(
-                        Screens.PicDescRoomScreen.route.replace("{room_id}", currentPicDescRoom.id!!)
-                    )}
+                    val onClickBack =
+                        if(currentPicDescRoom.leaderboard.any { it.userId == currentUser.id }) {
+                            {
+                                navController.navigate(
+                                    Screens.PicDescRoomScreen.route
+                                        .replace("{room_id}", currentPicDescRoom.id!!)
+                                )
+                            }
+                        }
+                        else
+                            onClickBackButton
                     LeaderboardScreen(currentPicDescRoom.name, leaderboardViewModel.usersInLeaderboard, {onClickBack()})
                 }
 
