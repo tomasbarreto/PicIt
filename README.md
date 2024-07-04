@@ -4,6 +4,8 @@ PicIt is a competitive photography mobile game that was built using Kotlin and F
 
 In this game you can create your own virtual rooms to play with your friends and family where everyone will be challenged everyday!
 
+## Game Modes
+
 PicIt has 2 game mode: PicDesc and RePic.
 
 When playing PicDesc every player can be a room leader! The room leader is the player that has the power to submit a description of a photo to be taken by the rest of the players in the room. This picture could be whatever the leader desires! After the description is released (at the same time for all the players) the objetive for the rest of the players is to take a picture as similar and as fast as possible to the given description.
